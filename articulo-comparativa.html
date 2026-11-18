@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EasyMarket vs Redes Sociales · EasyMarket</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    :root {
+      --primary: #2563eb;
+      --primary-dark: #1d4ed8;
+      --primary-soft: #dbeafe;
+      --accent: #f97316;
+      --success: #10b981;
+      --gray-800: #1f2937;
+      --gray-600: #4b5563;
+    }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: white;
+      color: var(--gray-800);
+      line-height: 1.6;
+    }
+    .container { 
+      max-width: 800px; 
+      margin: 0 auto; 
+      padding: 2rem; 
+    }
+    
+    /* Header con navegación */
+    .article-header { 
+      margin-bottom: 2rem; 
+      padding-bottom: 1rem; 
+      border-bottom: 2px solid var(--primary-soft); 
+    }
+    
+    .article-title { 
+      font-size: 2.5rem; 
+      font-weight: 800; 
+      margin-bottom: 1rem; 
+      background: linear-gradient(135deg, var(--gray-800) 0%, var(--primary) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    
+    .article-meta { 
+      color: var(--gray-600); 
+      margin-bottom: 1rem; 
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+    
+    .article-content h2 { 
+      font-size: 1.8rem; 
+      margin: 2rem 0 1rem; 
+      color: var(--primary);
+      scroll-margin-top: 2rem;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    
+    /* Tabla comparativa con scroll horizontal */
+    .comparison-wrapper {
+      width: 100%;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      margin: 2rem 0;
+      border-radius: 12px;
+      border: 1px solid var(--primary-soft);
+    }
+
+    .comparison-table {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(180px, 1fr));
+      gap: 0;
+      min-width: 550px;
+      background: white;
+    }
+
+    .comparison-item {
+      padding: 1rem 1.2rem;
+      border-right: 1px solid var(--primary-soft);
+      border-bottom: 1px solid var(--primary-soft);
+      display: flex;
+      align-items: center;
+    }
+
+    .comparison-item:last-child {
+      border-right: none;
+    }
+
+    /* Encabezados */
+    .comparison-item.header {
+      background: var(--primary-soft);
+      font-weight: 700;
+      color: var(--primary-dark);
+      border-bottom: 2px solid var(--primary);
+      justify-content: center;
+    }
+
+    /* Filas de datos */
+    .comparison-item:not(.header) {
+      background: white;
+    }
+
+    .check { 
+      color: var(--success); 
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    
+    .times { 
+      color: #ef4444; 
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    /* Botón volver */
+    .nav-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+    }
+
+    .back-link { 
+      display: inline-flex; 
+      align-items: center; 
+      gap: 8px; 
+      color: var(--primary); 
+      text-decoration: none; 
+      font-weight: 600;
+      padding: 0.5rem 1rem;
+      border-radius: 40px;
+      background: var(--primary-soft);
+      transition: all 0.3s ease;
+    }
+
+    .back-link:hover { 
+      gap: 12px; 
+      background: var(--primary);
+      color: white;
+    }
+
+    .home-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--gray-600);
+      text-decoration: none;
+      font-weight: 500;
+      padding: 0.5rem 1rem;
+      border-radius: 40px;
+      background: #f3f4f6;
+      transition: all 0.3s ease;
+    }
+
+    .home-link:hover {
+      background: var(--primary-soft);
+      color: var(--primary);
+    }
+
+    /* Listas */
+    ul {
+      margin: 1rem 0 1rem 2rem;
+    }
+    
+    li {
+      margin-bottom: 0.5rem;
+    }
+
+    @media (max-width: 600px) {
+      .container { padding: 1rem; }
+      .article-title { font-size: 2rem; }
+      .nav-header { flex-direction: column; gap: 0.5rem; align-items: flex-start; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- Navegación con enlaces corregidos -->
+    <div class="nav-header">
+      <a href="../brain.html" class="back-link">
+        <i class="fas fa-arrow-left"></i> Volver
+      </a>
+      <a href="../index.html" class="home-link">
+        <i class="fas fa-home"></i> Ir a la tienda
+      </a>
+    </div>
+
+    <article>
+      <header class="article-header">
+        <h1 class="article-title">EasyMarket vs Grupos de Redes Sociales</h1>
+        <div class="article-meta">
+          <span><i class="far fa-clock"></i> 6 min lectura</span>
+          <span><i class="far fa-calendar"></i> Actualizado: 10 Feb 2026</span>
+        </div>
+      </header>
+
+      <div class="article-content" id="comparativa-redes">
+        <p>Si has estado vendiendo en grupos de Facebook o WhatsApp, sabes que puede ser efectivo pero también caótico. Aquí te mostramos por qué EasyMarket es la evolución natural para tus ventas.</p>
+
+        <h2>📊 Comparativa rápida</h2>
+        
+        <!-- Wrapper para scroll horizontal -->
+        <div class="comparison-wrapper">
+          <div class="comparison-table">
+            <!-- Fila 1: Encabezados -->
+            <div class="comparison-item header">
+              <strong>Característica</strong>
+            </div>
+            <div class="comparison-item header">
+              <strong>EasyMarket</strong>
+            </div>
+            <div class="comparison-item header">
+              <strong>Grupos Redes</strong>
+            </div>
+
+            <!-- Fila 2: Organización -->
+            <div class="comparison-item">Organización</div>
+            <div class="comparison-item">
+              <span class="check"><i class="fas fa-check-circle"></i> Categorías y filtros</span>
+            </div>
+            <div class="comparison-item">
+              <span class="times"><i class="fas fa-times-circle"></i> Solo lista cronológica</span>
+            </div>
+
+            <!-- Fila 3: Búsqueda -->
+            <div class="comparison-item">Búsqueda</div>
+            <div class="comparison-item">
+              <span class="check"><i class="fas fa-check-circle"></i> Motor avanzado</span>
+            </div>
+            <div class="comparison-item">
+              <span class="times"><i class="fas fa-times-circle"></i> Buscar en conversaciones</span>
+            </div>
+
+            <!-- Fila 4: Alcance -->
+            <div class="comparison-item">Alcance</div>
+            <div class="comparison-item">
+              <span class="check"><i class="fas fa-check-circle"></i> Compradores activos</span>
+            </div>
+            <div class="comparison-item">
+              <span class="times"><i class="fas fa-times-circle"></i> Limitado a miembros</span>
+            </div>
+
+            <!-- Fila 5: Publicación -->
+            <div class="comparison-item">Publicación</div>
+            <div class="comparison-item">
+              <span class="check"><i class="fas fa-check-circle"></i> Una vez para todos</span>
+            </div>
+            <div class="comparison-item">
+              <span class="times"><i class="fas fa-times-circle"></i> Múltiples grupos</span>
+            </div>
+
+            <!-- Fila 6: Visibilidad -->
+            <div class="comparison-item">Visibilidad</div>
+            <div class="comparison-item">
+              <span class="check"><i class="fas fa-check-circle"></i> 24/7 en búsquedas</span>
+            </div>
+            <div class="comparison-item">
+              <span class="times"><i class="fas fa-times-circle"></i> Se pierde en el feed</span>
+            </div>
+          </div>
+        </div>
+
+        <h2>⏱️ Ahorro de tiempo real</h2>
+        <p>En grupos de redes, tienes que:</p>
+        <ul>
+          <li>Publicar manualmente en múltiples grupos</li>
+          <li>Responder el mismo mensaje a varios interesados</li>
+          <li>Buscar mensajes antiguos cuando alguien pregunta</li>
+        </ul>
+        <p>En EasyMarket, todo está centralizado. Publicas una vez y llegas a todos los compradores interesados. El sistema de preguntas y respuestas queda visible para todos, evitando duplicados.</p>
+
+        <h2>📈 Mayor alcance y visibilidad</h2>
+        <p>Los grupos de redes tienen un alcance limitado a sus miembros. En EasyMarket, cualquier persona que busque tu producto te encontrará a través de:</p>
+        <ul>
+          <li>Búsquedas por categoría</li>
+          <li>Filtros por ubicación</li>
+          <li>Productos recomendados</li>
+        </ul>
+
+        <h2>🛡️ Profesionalismo y confianza</h2>
+        <p>Tener un perfil organizado, con todos tus productos listados de manera estructurada, genera mucha más confianza que publicaciones dispersas en redes. Los compradores ven que eres un vendedor serio.</p>
+
+        <h2>💡 Conclusión</h2>
+        <p>Las redes sociales son excelentes para construir comunidad, pero para vender de manera eficiente y profesional, necesitas una plataforma diseñada para el comercio. EasyMarket te da las herramientas para vender más, en menos tiempo y con mayor organización.</p>
+      </div>
+    </article>
+  </div>
+</body>
+</html>

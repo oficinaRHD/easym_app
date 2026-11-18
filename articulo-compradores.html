@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Guía para Compradores · EasyMarket</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    :root {
+      --primary: #2563eb;
+      --primary-soft: #dbeafe;
+      --accent: #f97316;
+      --gray-800: #1f2937;
+    }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: white;
+      color: var(--gray-800);
+      line-height: 1.6;
+    }
+    .container { max-width: 800px; margin: 0 auto; padding: 2rem; }
+    .article-header { margin-bottom: 2rem; padding-bottom: 1rem; border-bottom: 2px solid var(--primary-soft); }
+    .article-title { font-size: 2.5rem; font-weight: 800; margin-bottom: 1rem; }
+    .article-meta { color: #666; margin-bottom: 1rem; }
+    .article-content h2 { 
+      font-size: 1.8rem; 
+      margin: 2rem 0 1rem; 
+      color: var(--primary);
+      scroll-margin-top: 2rem;
+    }
+    .article-content h3 { font-size: 1.4rem; margin: 1.5rem 0 1rem; }
+    .tip-box {
+      background: var(--primary-soft);
+      border-left: 4px solid var(--primary);
+      padding: 1.5rem;
+      border-radius: 8px;
+      margin: 1.5rem 0;
+    }
+    .back-link { 
+      display: inline-flex; 
+      align-items: center; 
+      gap: 8px; 
+      margin-bottom: 2rem; 
+      color: var(--primary); 
+      text-decoration: none; 
+      font-weight: 600;
+    }
+    .back-link:hover { gap: 12px; }
+    .step-list {
+      list-style: none;
+      counter-reset: step-counter;
+    }
+    .step-list li {
+      counter-increment: step-counter;
+      margin-bottom: 1.5rem;
+      padding-left: 3rem;
+      position: relative;
+    }
+    .step-list li::before {
+      content: counter(step-counter);
+      background: var(--primary);
+      color: white;
+      width: 2rem;
+      height: 2rem;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: absolute;
+      left: 0;
+      font-weight: bold;
+    }
+    @media (max-width: 600px) {
+      .article-title { font-size: 2rem; }
+      .container { padding: 1rem; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <a href="../brain.html" class="back-link">
+      <i class="fas fa-arrow-left"></i> Volver
+    </a>
+
+    <article>
+      <header class="article-header">
+        <h1 class="article-title">Guía para Compradores</h1>
+        <div class="article-meta">
+          <i class="far fa-clock"></i> 5 min lectura · 
+          <i class="far fa-calendar"></i> Actualizado: 5 Feb 2026
+        </div>
+      </header>
+
+      <div class="article-content" id="guia-compradores">
+        <p>Encontrar lo que buscas en EasyMarket es fácil si conoces los trucos. Aquí te enseñamos a sacar el máximo provecho de nuestras herramientas de búsqueda.</p>
+
+        <h2>🏷️ Cómo identificar las mejores ofertas</h2>
+        <ul>
+          <li><strong>Compara precios:</strong> Busca productos similares y compara precios. Si ves uno muy por debajo del promedio, verifica bien el estado.</li>
+          <li><strong>Lee la descripción completa:</strong> Asegúrate de entender el estado del producto, si tiene garantía y qué incluye.</li>
+          <li><strong>Revisa las fotos:</strong> Las fotos de calidad son señal de un vendedor confiable. Si las fotos son pocas o borrosas, pide más.</li>
+        </ul>
+
+        <h2>📱 Búsquedas avanzadas desde el móvil</h2>
+        <p>Nuestra plataforma está optimizada para móviles. Puedes usar la búsqueda por voz para encontrar productos rápidamente mientras estás en movimiento.</p>
+
+        <h2>🛒 Consejos de seguridad para compradores</h2>
+        <ul>
+          <li><strong>Comunícate siempre dentro de la plataforma:</strong> Así tienes un registro de la conversación.</li>
+          <li><strong>Pregunta todo antes de comprar:</strong> Estado, medidas, tiempo de entrega, formas de pago.</li>
+          <li><strong>Prefiere puntos de encuentro seguros</strong> si la compra es presencial.</li>
+        </ul>
+
+        <div class="tip-box">
+          <p><i class="fas fa-check-circle" style="color: var(--primary);"></i> <strong>Recuerda:</strong> Un comprador informado es un comprador satisfecho. Usa todas las herramientas que EasyMarket pone a tu disposición para encontrar exactamente lo que necesitas al mejor precio.</p>
+        </div>
+      </div>
+    </article>
+  </div>
+</body>
+</html>
