@@ -1,0 +1,687 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Mi Cuenta | EasyMarket</title>
+    
+    <!-- Font Awesome 6 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    
+    <!-- SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    
+    <!-- Estilos del bottom-nav -->
+    <link rel="stylesheet" href="/css/global_btn_nav.css">
+    
+    <style>
+        /* ============================================
+           MI CUENTA - ESTILOS MODERNOS
+           Coherentes con el diseño de EasyMarket
+           Paleta: blanco, grises suaves, naranja (#ff6b4a)
+        ============================================ */
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f5f7fa;
+            color: #1a1f36;
+            min-height: 100vh;
+        }
+        
+        /* ===== HEADER MODERNO ===== */
+        .main-header {
+            background: #ffffff;
+            border-bottom: 1px solid #eef2f8;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .top-bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 24px;
+            max-width: 1280px;
+            margin: 0 auto;
+        }
+        
+        .nav-left .btn-back {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+            color: #64748b;
+            font-size: 0.9rem;
+            font-weight: 500;
+            padding: 8px 16px;
+            border-radius: 40px;
+            transition: all 0.2s ease;
+        }
+        
+        .nav-left .btn-back:hover {
+            background: #f1f5f9;
+            color: #ff6b4a;
+        }
+        
+        .logo-wrapper .logo-link {
+            text-decoration: none;
+        }
+        
+        .logo-text {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #1a1f36;
+            letter-spacing: -0.02em;
+        }
+        
+        .logo-highlight {
+            background: linear-gradient(135deg, #ff6b4a 0%, #ff9a3c 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        
+        .header-actions .btn-exit {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px;
+            border-radius: 40px;
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            color: #64748b;
+            font-weight: 500;
+            transition: all 0.2s ease;
+        }
+        
+        .header-actions .btn-exit:hover {
+            background: #fef2f2;
+            color: #ef4444;
+        }
+        
+        /* ===== CONTENEDOR PRINCIPAL ===== */
+        .container {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 32px 24px 80px 24px;
+            min-height: calc(100vh - 70px);
+        }
+        
+        /* ===== LOADER ===== */
+        .loader-placeholder {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 400px;
+            color: #64748b;
+            font-size: 0.9rem;
+        }
+        
+        /* ===== TARJETA DE BIENVENIDA ===== */
+        .user-welcome-card {
+            background: linear-gradient(135deg, #1a1f36 0%, #2d3a5e 100%);
+            border-radius: 24px;
+            padding: 32px;
+            margin-bottom: 32px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+        }
+        
+        .welcome-info h2 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: white;
+            margin-bottom: 8px;
+        }
+        
+        .welcome-info p {
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.7);
+        }
+        
+        .user-badge .badge-status {
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            padding: 8px 20px;
+            border-radius: 40px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+        
+        /* ===== GRID DE AJUSTES ===== */
+        .grid-ajustes {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 20px;
+        }
+        
+        /* ===== TARJETA DE AJUSTE ===== */
+        .ajuste-card {
+            background: #ffffff;
+            border-radius: 20px;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 1px solid #eef2f8;
+            box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.03);
+        }
+        
+        .ajuste-card:hover {
+            transform: translateY(-3px);
+            border-color: #ff6b4a;
+            box-shadow: 0 20px 25px -12px rgba(255, 107, 74, 0.15);
+        }
+        
+        .icon-box {
+            width: 52px;
+            height: 52px;
+            border-radius: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            flex-shrink: 0;
+            transition: all 0.2s ease;
+        }
+        
+        .ajuste-card:hover .icon-box {
+            transform: scale(1.05);
+        }
+        
+        /* Colores de iconos */
+        .icon-perfil { background: #dbeafe; color: #3b82f6; }
+        .icon-notif { background: #fef3c7; color: #f59e0b; }
+        .icon-mensaj { background: #dcfce7; color: #10b981; }
+        .icon-wish { background: #ffe4e6; color: #ec4899; }
+        .icon-sync { background: #e0e7ff; color: #6366f1; }
+        .icon-gestor { background: #f3e8ff; color: #9333ea; }
+        .icon-crown { background: #fef3c7; color: #fbbf24; }
+        .icon-boule { background: #e0f2fe; color: #0ea5e9; }
+        
+        .info {
+            flex: 1;
+        }
+        
+        .info h3 {
+            font-size: 1rem;
+            font-weight: 600;
+            color: #1a1f36;
+            margin-bottom: 5px;
+        }
+        
+        .info p {
+            font-size: 0.8rem;
+            color: #64748b;
+        }
+        
+        .arrow {
+            color: #cbd5e1;
+            font-size: 0.9rem;
+            transition: all 0.2s ease;
+        }
+        
+        .ajuste-card:hover .arrow {
+            color: #ff6b4a;
+            transform: translateX(4px);
+        }
+        
+        /* Tarjeta de eliminar cuenta */
+        .ajuste-card.eliminar {
+            background: #fef2f2;
+            border-color: #fecaca;
+        }
+        
+        .ajuste-card.eliminar .icon-box {
+            background: #fee2e2;
+            color: #ef4444;
+        }
+        
+        .ajuste-card.eliminar .info h3 {
+            color: #dc2626;
+        }
+        
+        .ajuste-card.eliminar .info p {
+            color: #ef4444;
+        }
+        
+        .ajuste-card.eliminar:hover {
+            border-color: #ef4444;
+            box-shadow: 0 20px 25px -12px rgba(239, 68, 68, 0.15);
+        }
+        
+        /* Tarjetas especiales */
+        .easysync-style .icon-box {
+            background: linear-gradient(135deg, #6366f1, #8b5cf6);
+            color: white;
+        }
+        
+        .multigestor-style .icon-box {
+            background: linear-gradient(135deg, #10b981, #34d399);
+            color: white;
+        }
+        
+        /* ===== MENSAJE DE ERROR ===== */
+        .error-container {
+            text-align: center;
+            padding: 80px 20px;
+            background: white;
+            border-radius: 24px;
+            border: 1px solid #eef2f8;
+        }
+        
+        .error-container i {
+            font-size: 3rem;
+            color: #cbd5e1;
+            margin-bottom: 16px;
+        }
+        
+        .error-container p {
+            color: #64748b;
+            margin-bottom: 20px;
+            font-size: 0.9rem;
+        }
+        
+        .btn-relogin {
+            display: inline-block;
+            padding: 12px 32px;
+            background: #ff6b4a;
+            color: white;
+            border-radius: 40px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+        
+        .btn-relogin:hover {
+            background: #e55a3b;
+            transform: translateY(-2px);
+        }
+        
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 768px) {
+            .top-bar {
+                padding: 12px 16px;
+            }
+            
+            .nav-left .btn-back span {
+                display: none;
+            }
+            
+            .nav-left .btn-back i {
+                font-size: 1.2rem;
+            }
+            
+            .nav-left .btn-back {
+                padding: 8px;
+            }
+            
+            .header-actions .btn-exit span {
+                display: none;
+            }
+            
+            .header-actions .btn-exit i {
+                font-size: 1.2rem;
+            }
+            
+            .container {
+                padding: 20px 16px 80px 16px;
+            }
+            
+            .user-welcome-card {
+                padding: 24px;
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .welcome-info h2 {
+                font-size: 1.4rem;
+            }
+            
+            .grid-ajustes {
+                grid-template-columns: 1fr;
+                gap: 16px;
+            }
+            
+            .ajuste-card {
+                padding: 16px;
+            }
+            
+            .icon-box {
+                width: 48px;
+                height: 48px;
+                font-size: 1.3rem;
+                border-radius: 14px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .user-welcome-card {
+                padding: 20px;
+            }
+            
+            .welcome-info h2 {
+                font-size: 1.2rem;
+            }
+            
+            .info h3 {
+                font-size: 0.9rem;
+            }
+            
+            .info p {
+                font-size: 0.7rem;
+            }
+        }
+        
+        /* ===== ANIMACIONES ===== */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .grid-ajustes .ajuste-card {
+            animation: fadeInUp 0.3s ease-out forwards;
+            opacity: 0;
+        }
+        
+        .grid-ajustes .ajuste-card:nth-child(1) { animation-delay: 0.05s; }
+        .grid-ajustes .ajuste-card:nth-child(2) { animation-delay: 0.1s; }
+        .grid-ajustes .ajuste-card:nth-child(3) { animation-delay: 0.15s; }
+        .grid-ajustes .ajuste-card:nth-child(4) { animation-delay: 0.2s; }
+        .grid-ajustes .ajuste-card:nth-child(5) { animation-delay: 0.25s; }
+        .grid-ajustes .ajuste-card:nth-child(6) { animation-delay: 0.3s; }
+        .grid-ajustes .ajuste-card:nth-child(7) { animation-delay: 0.35s; }
+        .grid-ajustes .ajuste-card:nth-child(8) { animation-delay: 0.4s; }
+    </style>
+</head>
+
+<body>
+
+    <header class="main-header">
+        <div class="top-bar">
+            
+<div class="nav-left">
+    <a href="#" id="backButton" class="btn-back">
+        <i class="fas fa-arrow-left"></i>
+        <span>Volver</span>
+    </a>
+</div>
+
+            <div class="logo-wrapper">
+                <a href="index.html" class="logo-link">
+                    <span class="logo-text">Easy<span class="logo-highlight">Market</span></span>
+                </a>
+            </div>
+
+            <div class="header-actions">
+                <!-- El logout ahora está en el bottom-nav, este botón es redundante pero lo mantenemos oculto -->
+                <button id="btn-logout" class="btn-exit" style="display: none;">
+                    <i class="fas fa-sign-out-alt"></i>
+                    <span class="text-hide-mobile">Salir</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main id="contenedor-ajustes" class="container">
+        <div class="loader-placeholder" id="loader">
+            <i class="fas fa-spinner fa-spin" style="margin-right: 10px;"></i>
+            Cargando tu configuración...
+        </div>
+    </main>
+
+    <!-- BOTTOM NAV PARA MI CUENTA -->
+    <script src="/js/bottom-nav-account.js"></script>
+    <bottom-nav-account></bottom-nav-account>
+
+    <script type="module">
+        import { supabase } from './js/supabase.js';
+
+        const contenedor = document.getElementById('contenedor-ajustes');
+
+        async function cargarPerfil() {
+            // Mostrar loader animado
+            contenedor.innerHTML = `
+                <div class="loader-placeholder">
+                    <i class="fas fa-spinner fa-spin" style="margin-right: 10px;"></i>
+                    Cargando tu configuración...
+                </div>
+            `;
+
+            const { data: { session } } = await supabase.auth.getSession();
+
+            if (!session) {
+                contenedor.innerHTML = `
+                    <div class="error-container">
+                        <i class="fas fa-lock"></i>
+                        <p>Sesión expirada o no iniciada.</p>
+                        <a href="login.html" class="btn-relogin">Iniciar Sesión</a>
+                    </div>
+                `;
+                return;
+            }
+
+            try {
+                const { data: usuario } = await supabase
+                    .from('usuarios')
+                    .select('username, esVendedor')
+                    .eq('id', session.user.id)
+                    .single();
+
+                const nivelTexto = usuario?.esVendedor > 0 ? `Vendedor Nivel ${usuario.esVendedor}` : "Comprador";
+
+                const { data: membresia } = await supabase
+                    .from('membresias')
+                    .select('tipo_plan')
+                    .eq('usuario_id', session.user.id)
+                    .single();
+
+                let cardAdicional = '';
+
+                if (membresia?.tipo_plan === 'Estandar' || usuario?.esVendedor === 1) {
+                    cardAdicional = `
+                        <div class="ajuste-card easysync-style" onclick="location.href='easysync.html'">
+                            <div class="icon-box"><i class="fas fa-sync-alt"></i></div>
+                            <div class="info">
+                                <h3>EasySync</h3>
+                                <p>Sincroniza y delega la gestión de tu tienda.</p>
+                            </div>
+                            <i class="fas fa-chevron-right arrow"></i>
+                        </div>`;
+                } else if (membresia?.tipo_plan === 'Avanzado' || usuario?.esVendedor >= 2) {
+                    cardAdicional = `
+                        <div class="ajuste-card multigestor-style" onclick="location.href='mgest.html'">
+                            <div class="icon-box"><i class="fas fa-tasks"></i></div>
+                            <div class="info">
+                                <h3>Multi-Gestor</h3>
+                                <p>Administra múltiples tiendas de clientes.</p>
+                            </div>
+                            <i class="fas fa-chevron-right arrow"></i>
+                        </div>`;
+                }
+
+                contenedor.innerHTML = `
+                    <div class="user-welcome-card">
+                        <div class="welcome-info">
+                            <h2>Hola, ${usuario?.username || 'Usuario'} <i class="fa fa-coffee" style="font-size: 1.5rem;"></i></h2>
+                            <p>Gestiona tu cuenta y preferencias de EasyMarket</p>
+                        </div>
+                        <div class="user-badge">
+                            <span class="badge-status">
+                                <i class="fas ${usuario?.esVendedor > 0 ? 'fa-store' : 'fa-user'}"></i> ${nivelTexto}
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="grid-ajustes">
+                        ${cardAdicional}
+
+                        <div class="ajuste-card" onclick="location.href='epfl.html'">
+                            <div class="icon-box icon-perfil"><i class="fas fa-user"></i></div>
+                            <div class="info">
+                                <h3>Perfil</h3>
+                                <p>Datos personales y de contacto.</p>
+                            </div>
+                            <i class="fas fa-chevron-right arrow"></i>
+                        </div>
+
+                        <div class="ajuste-card" onclick="location.href='ntf.html'">
+                            <div class="icon-box icon-notif"><i class="fas fa-bell"></i></div>
+                            <div class="info">
+                                <h3>Notificaciones</h3>
+                                <p>Configura tus alertas y avisos.</p>
+                            </div>
+                            <i class="fas fa-chevron-right arrow"></i>
+                        </div>
+
+                        <div class="ajuste-card" onclick="location.href='msj.html'">
+                            <div class="icon-box icon-mensaj"><i class="fas fa-envelope"></i></div>
+                            <div class="info">
+                                <h3>Mensajes</h3>
+                                <p>Bandeja de entrada y chat.</p>
+                            </div>
+                            <i class="fas fa-chevron-right arrow"></i>
+                        </div>
+
+                        <div class="ajuste-card" onclick="location.href='wlst.html'">
+                            <div class="icon-box icon-wish"><i class="fas fa-heart"></i></div>
+                            <div class="info">
+                                <h3>Lista de deseos</h3>
+                                <p>Tus productos favoritos guardados.</p>
+                            </div>
+                            <i class="fas fa-chevron-right arrow"></i>
+                        </div>
+
+                        <div class="ajuste-card" onclick="location.href='prf.html'">
+                            <div class="icon-box"><i class="fas fa-cog"></i></div>
+                            <div class="info">
+                                <h3>Preferencias</h3>
+                                <p>Personaliza la experiencia EasyMarket.</p>
+                            </div>
+                            <i class="fas fa-chevron-right arrow"></i>
+                        </div>
+
+                        <div class="ajuste-card" onclick="location.href='set-boul.html'">
+                            <div class="icon-box icon-boule"><i class="fas fa-store"></i></div>
+                            <div class="info">
+                                <h3>Boulevar</h3>
+                                <p>Personaliza la apariencia e información de tu tienda.</p>
+                            </div>
+                            <i class="fas fa-chevron-right arrow"></i>
+                        </div>
+
+                        <div class="ajuste-card" onclick="location.href='mbr.html'">
+                            <div class="icon-box icon-crown"><i class="fas fa-crown"></i></div>
+                            <div class="info">
+                                <h3>Membresía</h3>
+                                <p>Plan actual y beneficios.</p>
+                            </div>
+                            <i class="fas fa-chevron-right arrow"></i>
+                        </div>
+
+                        <div class="ajuste-card eliminar" onclick="confirmarEliminar()">
+                            <div class="icon-box"><i class="fas fa-trash-alt"></i></div>
+                            <div class="info">
+                                <h3>Eliminar cuenta</h3>
+                                <p>Cierre permanente de datos.</p>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            } catch (err) {
+                console.error(err);
+                contenedor.innerHTML = `
+                    <div class="error-container">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        <p>Error al cargar la información del perfil.</p>
+                        <button onclick="location.reload()" class="btn-relogin" style="background: #64748b;">Reintentar</button>
+                    </div>
+                `;
+            }
+        }
+
+        // Función global para eliminar cuenta (con SweetAlert)
+        window.confirmarEliminar = () => {
+            Swal.fire({
+                title: '¿Eliminar cuenta?',
+                text: 'Esta acción es irreversible. Todos tus datos serán eliminados permanentemente.',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#ef4444',
+                cancelButtonColor: '#64748b',
+                confirmButtonText: 'Sí, eliminar',
+                cancelButtonText: 'Cancelar'
+            }).then(async (result) => {
+                if (result.isConfirmed) {
+                    Swal.fire({
+                        title: 'Procesando...',
+                        text: 'Eliminando tu cuenta',
+                        allowOutsideClick: false,
+                        didOpen: () => {
+                            Swal.showLoading();
+                        }
+                    });
+                    
+                    // Aquí iría la lógica de eliminación
+                    setTimeout(() => {
+                        Swal.fire({
+                            title: 'Cuenta eliminada',
+                            text: 'Tu cuenta ha sido eliminada correctamente.',
+                            icon: 'success',
+                            confirmButtonColor: '#ff6b4a'
+                        }).then(() => {
+                            window.location.href = 'index.html';
+                        });
+                    }, 2000);
+                }
+            });
+        };
+
+        // Inicializar
+        cargarPerfil();
+    </script>
+
+    <script>
+    // Configurar botón de volver
+    const backButton = document.getElementById('backButton');
+    if (backButton) {
+        backButton.addEventListener('click', (e) => {
+            e.preventDefault();
+            
+            // Verificar si hay una página anterior en el historial
+            if (document.referrer && document.referrer !== '') {
+                // Volver a la página anterior
+                window.location.href = document.referrer;
+            } else {
+                // Si no hay página anterior, ir al index
+                window.location.href = 'index.html';
+            }
+        });
+    }
+</script>
+</body>
+
+</html>

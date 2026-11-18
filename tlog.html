@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Easymarket - Debug Terminal</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        #log-terminal { background: #1a1a1a; color: #00ff00; font-family: monospace; height: 300px; overflow-y: auto; }
+        .log-entry { border-bottom: 1px solid #333; padding: 4px; font-size: 0.85rem; }
+        .status-online { color: #00ff00; }
+        .status-offline { color: #ff4444; }
+    </style>
+</head>
+<body class="bg-gray-900 text-gray-100 min-h-screen p-8">
+
+    <div class="max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8">
+        
+        <div class="bg-gray-800 p-6 rounded-lg shadow-xl border border-gray-700">
+            <h2 class="text-xl font-bold mb-4 text-blue-400 text-center">🔐 Acceso Easymarket</h2>
+            
+            <div id="login-form">
+                <input type="email" id="email" placeholder="Email" class="w-full p-2 mb-3 bg-gray-700 rounded border border-gray-600 outline-none focus:border-blue-500">
+                <input type="password" id="password" placeholder="Password" class="w-full p-2 mb-4 bg-gray-700 rounded border border-gray-600 outline-none focus:border-blue-500">
+                <button onclick="handleLogin()" class="w-full bg-blue-600 hover:bg-blue-700 p-2 rounded font-bold transition">Ingresar</button>
+            </div>
+
+            <div id="user-actions" class="hidden mt-6 border-t border-gray-700 pt-4">
+                <p class="mb-2 text-sm">Sesión: <span id="session-status" class="status-online">Activa</span></p>
+                <button onclick="fetchProfile()" class="w-full bg-green-600 hover:bg-green-700 p-2 rounded font-bold mb-2">Consultar Tabla Usuarios (Test RLS)</button>
+                <button onclick="handleLogout()" class="w-full bg-red-600 hover:bg-red-700 p-2 rounded font-bold">Cerrar Sesión</button>
+            </div>
+        </div>
+
+        <div class="flex flex-col">
+            <h2 class="text-xl font-bold mb-4 text-green-400">📟 Logs del Sistema</h2>
+            <div id="log-terminal" class="rounded-lg p-4 border border-gray-700 shadow-inner">
+                <div class="log-entry">[SISTEMA]: Listo para pruebas...</div>
+            </div>
+            <button onclick="clearLogs()" class="mt-2 text-xs text-gray-400 hover:text-white underline self-end">Limpiar Consola</button>
+        </div>
+    </div>
+
+    <script type="module">
+        import { supabase } from './js/autentica.js';
+
+        // Hacer las funciones disponibles globalmente para los botones
+        window.handleLogin = async () => {
+    const email = document.getElementById('email').value;
+    const password = document.getElementById('password').value;
+    
+    addLog(`Limpiando rastros de sesiones previas...`);
+    await supabase.auth.signOut(); // Esto limpia el estado interno del cliente
+
+    addLog(`Intentando login para: ${email}...`);
+    
+    const { data, error } = await supabase.auth.signInWithPassword({ 
+        email: email.trim(), 
+        password: password.trim() 
+    });
+
+    if (error) {
+        addLog(`ERROR AUTH: ${error.message}`, 'error');
+        console.error(error);
+    } else {
+        addLog(`LOGIN EXITOSO: ID ${data.user.id}`);
+        toggleView(true);
+    }
+};
+
+
+        window.fetchProfile = async () => {
+            addLog('Consultando tabla public.usuarios...');
+            
+            // Aquí es donde probamos el RLS
+            const { data, error } = await supabase
+                .from('usuarios')
+                .select('*');
+
+            if (error) {
+                addLog(`ERROR RLS (Code ${error.code}): ${error.message}`, 'error');
+                if(error.code === '42501') addLog('HINT: Revisa las políticas RLS en el dashboard.');
+            } else {
+                addLog(`DATOS RECIBIDOS: ${JSON.stringify(data)}`);
+            }
+        };
+
+        window.handleLogout = async () => {
+            await supabase.auth.signOut();
+            addLog('Sesión terminada.');
+            toggleView(false);
+        };
+
+        function addLog(msg, type = 'info') {
+            const terminal = document.getElementById('log-terminal');
+            const entry = document.createElement('div');
+            entry.className = 'log-entry';
+            const color = type === 'error' ? 'text-red-400' : 'text-green-400';
+            entry.innerHTML = `<span class="${color}">[${new Date().toLocaleTimeString()}]</span> ${msg}`;
+            terminal.prepend(entry);
+        }
+
+        function toggleView(isLoggedIn) {
+            document.getElementById('login-form').classList.toggle('hidden', isLoggedIn);
+            document.getElementById('user-actions').classList.toggle('hidden', !isLoggedIn);
+        }
+
+        window.clearLogs = () => document.getElementById('log-terminal').innerHTML = '';
+    </script>
+</body>
+</html>

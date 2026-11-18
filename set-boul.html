@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Editar Tienda - Easymarket</title>
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+    <!-- Estilos -->
+    <link rel="stylesheet" href="css/set-boul.css">
+
+    <!-- Estilos adicionales para selectores de imágenes -->
+    <style>
+        .image-selector {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            padding: 24px;
+            border-radius: 16px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+            max-width: 600px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .selector-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            gap: 16px;
+            margin: 20px 0;
+        }
+
+        .selector-item {
+            cursor: pointer;
+            border: 2px solid transparent;
+            border-radius: 8px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .selector-item:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .selector-item.selected {
+            border-color: #00c599;
+            box-shadow: 0 0 0 3px rgba(0, 197, 153, 0.3);
+        }
+
+        .selector-item img {
+            width: 100%;
+            height: 100px;
+            object-fit: cover;
+        }
+
+        .btn-close-selector {
+            width: 100%;
+            padding: 12px;
+            background: #f0f0f0;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: background 0.3s ease;
+        }
+
+        .btn-close-selector:hover {
+            background: #e0e0e0;
+        }
+
+        .image-preview {
+            position: relative;
+            cursor: pointer;
+        }
+
+        .image-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            color: white;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            border-radius: 8px;
+        }
+
+        .image-preview:hover .image-overlay {
+            opacity: 1;
+        }
+
+        .image-overlay i {
+            font-size: 24px;
+            margin-bottom: 8px;
+        }
+
+        .image-overlay span {
+            font-size: 14px;
+        }
+
+        .image-upload-card {
+            position: relative;
+        }
+
+        .hidden-input {
+            display: none;
+        }
+
+        /* Loader */
+        .loader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(255, 255, 255, 0.8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+        }
+
+        .loader.hidden {
+            display: none;
+        }
+
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 5px solid #f3f3f3;
+            border-top: 5px solid #00c599;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* Agrega esto al final de tus estilos en el HTML */
+        .image-selector {
+            display: none;
+            /* Por defecto oculto */
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            padding: 24px;
+            border-radius: 16px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+            z-index: 10000;
+            /* Asegurar que esté por encima de todo */
+            max-width: 600px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        /* Para debugging - temporalmente fuerza la visibilidad */
+        .image-selector[style*="display: block"] {
+            border: 3px solid red;
+            /* Para verificar que se está mostrando */
+        }
+
+        /* Estilos para selector de estado */
+.btn-status:hover {
+    background: #f5f5f5 !important;
+    transform: translateY(-1px);
+}
+
+.dropdown-item:hover {
+    background: #f5f5f5;
+}
+
+.status-dropdown {
+    animation: fadeInDown 0.2s ease;
+}
+
+@keyframes fadeInDown {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+    </style>
+</head>
+
+<body>
+    <!-- Toast Container -->
+    <div id="toast-container"></div>
+
+    <!-- Loader -->
+    <div id="loader" class="loader hidden">
+        <div class="spinner"></div>
+    </div>
+
+    <!-- Header -->
+    <header class="dashboard-header">
+        <div class="header-top">
+            <div class="brand-area">
+                <a href="/index.html" class="nav-btn"><i class="fa fa-home"></i></a>
+                <span class="logo-text">Editar Tienda - Boulevar</span>
+            </div>
+            <div class="header-actions">
+                <a href="#" class="btn-view-store" id="btn-ver-tienda">
+                    <i class="fa fa-store"></i> Ver Tienda
+                </a>
+                <a href="t-c.html" class="btn-dashboard">
+                    <i class="fa fa-tachometer-alt"></i> Dashboard
+                </a>
+                <a href="#" class="btn-dashboard" id="btn-share" data-tienda-id="" data-tienda-nombre="">
+                    <i class="fa fa-share-alt"></i> Compartir tienda
+                </a>
+
+                <!-- Agregar este div para el selector de estado -->
+<div class="store-status-selector" id="store-status-selector" style="display: none;">
+
+</div>
+            </div>
+        </div>
+    </header>
+
+    <main class="container">
+        <!-- Membership Info Banner -->
+        <div id="membership-banner" class="membership-banner hidden">
+            <i class="fa fa-crown"></i>
+            <span id="membership-message"></span>
+            <a href="membresias.html" class="btn-upgrade">Mejorar Plan</a>
+        </div>
+
+        <!-- Formulario de Edición -->
+        <div class="edit-store-container">
+            <div class="form-header">
+                <h1><i class="fa fa-store-alt"></i> Información de tu Tienda</h1>
+                <p>Completa todos los campos para mejorar la visibilidad de tu negocio</p>
+            </div>
+
+            <form id="store-form" class="store-form">
+                <!-- Sección de Imágenes -->
+                <!-- Sección de Imágenes -->
+                <div class="form-section">
+                    <h2><i class="fa fa-image"></i> Imágenes de la Tienda</h2>
+
+                    <div class="images-grid">
+                        <!-- Logo -->
+                        <div class="image-upload-card">
+                            <label class="image-label">
+                                <i class="fa fa-building"></i>
+                                <span>Logo de la Tienda</span>
+                            </label>
+
+                            <div class="image-preview" id="logo-preview">
+                                <img src="/img/placeholder-store.png" alt="Logo preview" id="logo-img">
+                                <div class="image-overlay">
+                                    <i class="fa fa-images"></i>
+                                    <span>Seleccionar logo</span>
+                                </div>
+                            </div>
+
+                            <input type="file" id="logo-input" accept="image/*" class="hidden-input">
+
+                            <p class="image-help">Recomendado: 500x500px, formato cuadrado</p>
+                            <div class="image-actions">
+                                <button type="button" class="btn-remove-image" id="remove-logo" style="display: none;">
+                                    <i class="fa fa-trash"></i> Eliminar
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Banner -->
+                        <div class="image-upload-card">
+                            <label class="image-label">
+                                <i class="fa fa-panorama"></i>
+                                <span>Banner de la Tienda</span>
+                            </label>
+
+                            <div class="image-preview" id="banner-preview">
+                                <img src="/img/default-banner.jpg" alt="Banner preview" id="banner-img">
+                                <div class="image-overlay">
+                                    <i class="fa fa-images"></i>
+                                    <span>Seleccionar banner</span>
+                                </div>
+                            </div>
+
+                            <input type="file" id="banner-input" accept="image/*" class="hidden-input">
+
+                            <p class="image-help">Recomendado: 1200x300px, formato horizontal</p>
+                            <div class="image-actions">
+                                <button type="button" class="btn-remove-image" id="remove-banner"
+                                    style="display: none;">
+                                    <i class="fa fa-trash"></i> Eliminar
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Selector de logos (oculto por defecto) - DEBE ESTAR FUERA DE images-grid -->
+                    <div class="image-selector" id="logo-selector" style="display: none;">
+                        <h3><i class="fa fa-building"></i> Elige un logo</h3>
+                        <p>Selecciona uno de nuestros logos predeterminados</p>
+                        <div class="selector-grid" id="logos-grid"></div>
+                        <button type="button" class="btn-close-selector" id="close-logo-selector">
+                            <i class="fa fa-times"></i> Cerrar
+                        </button>
+                    </div>
+
+                    <!-- Selector de banners (oculto por defecto) -->
+                    <div class="image-selector" id="banner-selector" style="display: none;">
+                        <h3><i class="fa fa-panorama"></i> Elige un banner</h3>
+                        <p>Selecciona uno de nuestros banners predeterminados</p>
+                        <div class="selector-grid" id="banners-grid"></div>
+                        <button type="button" class="btn-close-selector" id="close-banner-selector">
+                            <i class="fa fa-times"></i> Cerrar
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Sección de Información Básica -->
+                <div class="form-section">
+                    <h2><i class="fa fa-info-circle"></i> Información Básica</h2>
+
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="nombre_tienda">
+                                <i class="fa fa-store"></i>
+                                Nombre de la Tienda <span class="required">*</span>
+                            </label>
+                            <input type="text" id="nombre_tienda" name="nombre_tienda"
+                                placeholder="Ej: Tienda Oficial de Easymarket" required>
+                            <small class="form-hint">Máximo 100 caracteres</small>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="email_contacto">
+                                <i class="fa fa-envelope"></i>
+                                Email de Contacto
+                            </label>
+                            <input type="email" id="email_contacto" name="email_contacto"
+                                placeholder="ejemplo@email.com">
+                            <small class="form-hint">Correo para recibir consultas</small>
+                        </div>
+
+                        <div class="form-group full-width">
+                            <label for="descripcion">
+                                <i class="fa fa-align-left"></i>
+                                Descripción de la Tienda
+                            </label>
+                            <textarea id="descripcion" name="descripcion" rows="4"
+                                placeholder="Describe tu tienda, productos y servicios..."></textarea>
+                            <small class="form-hint">Máximo 500 caracteres</small>
+                            <div class="char-counter">
+                                <span id="descripcion-counter">0</span>/500
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sección de Contacto -->
+                <div class="form-section">
+                    <h2><i class="fa fa-phone"></i> Información de Contacto</h2>
+
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="telefono_contacto">
+                                <i class="fa fa-phone"></i>
+                                Teléfono Principal
+                            </label>
+                            <input type="tel" id="telefono_contacto" name="telefono_contacto"
+                                placeholder="Ej: +53 5 1234567">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="whatsapp">
+                                <i class="fa-brands fa-whatsapp"></i>
+                                WhatsApp
+                            </label>
+                            <input type="tel" id="whatsapp" name="whatsapp" placeholder="Ej: +53 5 1234567">
+                            <small class="form-hint">Número con código de país</small>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="telegram">
+                                <i class="fa-brands fa-telegram"></i>
+                                Telegram
+                            </label>
+                            <input type="text" id="telegram" name="telegram" placeholder="Ej: @tu_usuario">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sección de Ubicación -->
+                <div class="form-section">
+                    <h2><i class="fa fa-map-marker-alt"></i> Ubicación y Horarios</h2>
+
+                    <div class="form-grid">
+                        <div class="form-group full-width">
+                            <label for="direccion">
+                                <i class="fa fa-map-pin"></i>
+                                Dirección / Ubicación
+                            </label>
+                            <input type="text" id="direccion" name="direccion" placeholder="Ej: JCWW+5M">
+                            <small class="form-hint">Dirección física Plus Code Google maps</small>
+                        </div>
+
+                        <div class="form-group full-width">
+                            <label for="horario">
+                                <i class="fa fa-clock"></i>
+                                Horario de Atención
+                            </label>
+                            <input type="text" id="horario" name="horario"
+                                placeholder="Ej: Lunes a Viernes 9am-6pm, Sábados 9am-12pm">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Estadísticas de la Tienda -->
+                <div class="form-section stats-section">
+                    <h2><i class="fa fa-chart-line"></i> Estadísticas</h2>
+
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <i class="fa fa-eye"></i>
+                            <div class="stat-info">
+                                <span class="stat-value" id="visitas-count">0</span>
+                                <span class="stat-label">Visitas</span>
+                            </div>
+                        </div>
+
+
+                        <!-- NUEVA TARJETA DE SEGUIDORES -->
+                        <div class="stat-card">
+                            <i class="fa fa-heart" style="color: #ff6b6b;"></i>
+                            <div class="stat-info">
+                                <span class="stat-value" id="seguidores-count">
+                                    <i class="fa fa-spinner fa-spin"></i>
+                                </span>
+                                <span class="stat-label">Seguidores</span>
+                            </div>
+                        </div>
+
+                        <div class="stat-card">
+                            <i class="fa fa-calendar"></i>
+                            <div class="stat-info">
+                                <span class="stat-value" id="fecha-creacion"></span>
+                                <span class="stat-label">Miembro desde</span>
+                            </div>
+                        </div>
+
+                        <div class="stat-card">
+                            <i class="fa fa-sync"></i>
+                            <div class="stat-info">
+                                <span class="stat-value" id="ultima-actualizacion"></span>
+                                <span class="stat-label">Última actualización</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Botones de Acción -->
+                <div class="form-actions">
+                    <button type="button" class="btn-secondary" id="btn-cancelar">
+                        <i class="fa fa-times"></i> Cancelar
+                    </button>
+                    <button type="submit" class="btn-primary" id="btn-guardar">
+                        <i class="fa fa-save"></i> Guardar Cambios
+                    </button>
+                </div>
+            </form>
+        </div>
+    </main>
+
+    <!-- Scripts -->
+    <script type="module" src="js/set-boul.js"></script>
+</body>
+
+</html>

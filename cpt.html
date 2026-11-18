@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cargando... | Reader+</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Merriweather:ital,wght@0,300;0,400;0,700;1,400&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            /* Tema Oscuro (Default - Mejor para programadores 😉) */
+            --bg: #111827;
+            --text-main: #d1d5db;
+            --text-heading: #f9fafb;
+            --surface: #1f2937;
+            --accent: #60a5fa;
+            --scroll-bar: #3b82f6;
+            --border: rgba(255,255,255,0.1);
+        }
+
+        /* Tema Sepia (Para Nathaly/Sailin - Más cálido) */
+        body.sepia-mode {
+            --bg: #f8f4e5;
+            --text-main: #4b3e35;
+            --text-heading: #2c241b;
+            --surface: #eaddc5;
+            --accent: #d97706;
+            --scroll-bar: #d97706;
+            --border: rgba(0,0,0,0.05);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text-main);
+            font-family: 'Inter', sans-serif;
+            transition: background 0.3s ease, color 0.3s ease;
+            overflow-x: hidden;
+        }
+
+        /* Barra de progreso superior */
+        .progress-container {
+            position: fixed; top: 0; left: 0; width: 100%; height: 4px;
+            z-index: 200; background: transparent;
+        }
+        .progress-bar {
+            height: 100%; width: 0%;
+            background: var(--scroll-bar);
+            transition: width 0.1s;
+            box-shadow: 0 0 8px var(--scroll-bar);
+        }
+
+        /* Cabecera Flotante */
+        .toolbar {
+            position: fixed; top: 0; width: 100%;
+            background: rgba(17, 24, 39, 0.85); /* Transparencia estilo vidrio */
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border);
+            padding: 0.8rem 1rem;
+            display: flex; justify-content: space-between; align-items: center;
+            z-index: 100;
+            transition: transform 0.3s;
+        }
+        body.sepia-mode .toolbar { background: rgba(248, 244, 229, 0.85); }
+
+        .btn-icon {
+            background: transparent; border: 1px solid var(--border);
+            color: var(--text-heading); cursor: pointer;
+            padding: 6px 10px; border-radius: 6px;
+            font-size: 0.9rem; transition: 0.2s;
+        }
+        .btn-icon:hover { background: var(--surface); border-color: var(--accent); }
+        .back-link { 
+            text-decoration: none; color: var(--text-main); 
+            display: flex; align-items: center; gap: 5px; font-weight: 600;
+        }
+        .back-link:hover { color: var(--accent); }
+
+        /* Contenedor de Lectura */
+        .reader-wrapper {
+            max-width: 740px; /* Ancho óptimo para lectura humana (60-75 caracteres) */
+            margin: 0 auto;
+            padding: 6rem 1.5rem 4rem 1.5rem;
+        }
+
+        .chapter-header { text-align: center; margin-bottom: 3rem; }
+        .chapter-num { 
+            color: var(--accent); font-size: 0.8rem; letter-spacing: 2px; 
+            text-transform: uppercase; font-weight: 700; display: block; margin-bottom: 0.5rem;
+        }
+        .chapter-title { 
+            font-family: 'Merriweather', serif; 
+            font-size: 2rem; color: var(--text-heading); line-height: 1.3;
+        }
+
+        /* El Texto del Libro */
+        .content-text {
+            font-family: 'Merriweather', serif;
+            font-size: 18px; /* Tamaño base */
+            line-height: 1.8; /* Espaciado cómodo */
+            text-align: left;
+        }
+        /* Estilos para los párrafos inyectados por JS */
+        .content-text p { margin-bottom: 1em; }
+
+        /* Navegación Inferior */
+        .nav-footer {
+            display: flex; gap: 1rem; margin-top: 4rem; padding-top: 2rem;
+            border-top: 1px solid var(--border);
+        }
+        .nav-btn {
+            flex: 1; text-decoration: none;
+            padding: 1.5rem; border-radius: 12px;
+            background: var(--surface); color: var(--text-heading);
+            border: 1px solid transparent;
+            display: none; /* JS activará flex */
+            flex-direction: column; align-items: center; justify-content: center;
+            text-align: center; transition: 0.2s;
+        }
+        .nav-btn:hover { border-color: var(--accent); transform: translateY(-2px); }
+        .nav-label { font-size: 0.75rem; opacity: 0.7; text-transform: uppercase; margin-bottom: 4px; }
+        .nav-title { font-weight: 600; font-size: 1rem; }
+
+        /* Loader */
+        #loading-overlay {
+            position: fixed; inset: 0; background: var(--bg);
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+            z-index: 1000; transition: opacity 0.5s;
+        }
+        .spinner {
+            width: 50px; height: 50px; border: 4px solid var(--surface);
+            border-top-color: var(--accent); border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin { 100% { transform: rotate(360deg); } }
+
+        /* Responsive */
+        @media(max-width: 600px) {
+            .chapter-title { font-size: 1.5rem; }
+            .toolbar { padding: 0.5rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="progress-container">
+        <div id="scroll-bar" class="progress-bar"></div>
+    </div>
+
+    <div id="loading-overlay">
+        <div class="spinner"></div>
+        <p style="margin-top: 1rem; opacity: 0.7; font-size: 0.9rem;">Preparando lectura...</p>
+    </div>
+
+    <header class="toolbar">
+        <a id="link-volver" class="back-link">
+            <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M15 19l-7-7 7-7"></path></svg>
+            Salir
+        </a>
+        <div style="display: flex; gap: 8px;">
+            <button class="btn-icon" onclick="toggleTheme()" title="Modo Día/Noche">🌗</button>
+            <button class="btn-icon" onclick="adjustFont(-1)">A-</button>
+            <button class="btn-icon" onclick="adjustFont(1)">A+</button>
+        </div>
+    </header>
+
+    <main class="reader-wrapper">
+        <header class="chapter-header">
+            <span id="txt-cap-numero" class="chapter-num">Cargando...</span>
+            <h1 id="txt-cap-titulo" class="chapter-title"></h1>
+        </header>
+
+        <article id="readerContent" class="content-text"></article>
+
+        <nav class="nav-footer">
+            <a id="btn-prev" class="nav-btn">
+                <span class="nav-label">Anterior</span>
+                <span class="nav-title">Capítulo Previo</span>
+            </a>
+            <a id="btn-next" class="nav-btn">
+                <span class="nav-label">Siguiente</span>
+                <span class="nav-title">Siguiente Capítulo</span>
+            </a>
+        </nav>
+    </main>
+
+    <script type="module" src="js/view-capitulo.js"></script>
+
+</body>
+</html>

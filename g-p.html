@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gestión de Productos - Easymarket</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="css/pcard.css?v=2.0">
+   <link rel="stylesheet" href="css/modal-plantilla.css?v=2.0">
+    <!-- SweetAlert -->
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+<body>
+  
+  <div id="toast-container"></div>
+
+  <header class="dashboard-header">
+    
+    <div class="header-top">
+      <div class="brand-area">
+        <a href="/index.html" class="nav-btn"><i class="fa fa-home"></i></a>
+        <span class="logo-text">EasyMarkets</span>
+      </div>
+      <div class="search-bar-container">
+        <i class="fa fa-search search-icon"></i>
+        <input type="text" id="local-search" placeholder="Buscar en tarjetas visibles...">
+      </div>
+    </div>
+
+    <div class="header-mid">
+      <p class="system-message" id="header-msg">
+        <i class="fa fa-bolt"></i> Gestiona tu inventario en tiempo real.
+      </p>
+    </div>
+
+    <div class="header-tools">
+      
+      <div class="tool-group client-selector-wrapper">
+        <label for="client-select" class="tool-label"><i class="fa fa-users"></i> Cliente:</label>
+        <div class="select-custom">
+          <select id="client-select">
+            <option value="" disabled selected>Cargando...</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="tool-group view-toggles">
+        <button class="btn-tool view-btn active" data-view="full" title="Vista Completa">
+          <i class="fa fa-th-large"></i>
+        </button>
+        <button class="btn-tool view-btn" data-view="mini" title="Vista Nano">
+          <i class="fa fa-th"></i>
+        </button>
+        <button class="btn-tool view-btn" data-view="micro" title="Vista Lista">
+          <i class="fa fa-list"></i>
+        </button>
+      </div>
+
+      <div class="tool-group actions-right">
+        <button class="btn-tool" id="btn-toggle-filters" title="Filtros avanzados">
+          <i class="fa fa-filter"></i>
+        </button>
+        <button id="btn-publicar" class="btn btn-success">
+          <i class="fa fa-plus"></i> <span class="desktop-only">Nuevo</span>
+        </button>
+      </div>
+    </div>
+
+    <div id="filter-panel" class="filter-panel hidden">
+       <form id="filter-form">
+          <div class="filter-row">
+             <select name="categoria" class="input-sm">
+                <option value="Todas">Todas las Categorías</option>
+                        <option value="Alimentos">Alimentos</option>
+                        <option value="Electrónica">Electrónica</option>
+                        <option value="Ropa y Accesorios">Ropa y Accesorios</option>
+                        <option value="Calzado">Calzado</option>
+                        <option value="Hogar y Cocina">Hogar y Cocina</option>
+                        <option value="Belleza y Cuidado Personal">Belleza y Cuidado Personal</option>
+                        <option value="Juguetes y Juegos">Juguetes y Juegos</option>
+                        <option value="Deportes y Aire Libre">Deportes y Aire Libre</option>
+                        <option value="Automotriz">Automotriz</option>
+                        <option value="Electrodomésticos">Electrodomésticos</option>
+                        <option value="Mascotas">Mascotas</option>
+                        <option value="Herramientas y Ferretería">Herramientas y Ferretería</option>
+                        <option value="Arte y Manualidades">Arte y Manualidades</option>
+                        <option value="Tecnología y Gadgets">Tecnología y Gadgets</option>
+             </select>
+             <select name="estado" class="input-sm">
+                <option value="">Todos los Estados</option>
+                <option value="Nuevo">Nuevo</option>
+                <option value="Usado">Usado</option>
+             </select>
+             <button type="submit" class="btn-xs btn-apply">Aplicar</button>
+          </div>
+       </form>
+    </div>
+
+  </header>
+
+  <main class="container body-content">
+    <div class="productos-container view-mode-full" id="products-grid">
+      </div>
+  </main>
+
+  <script type="module" src="js/gestion.js?v=2.0"></script>
+</body>
+</html>

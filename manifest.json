@@ -1,0 +1,53 @@
+{
+  "name": "EasyMarkets",
+  "short_name": "EM",
+  "description": "Tienda online",
+  "start_url": "/index.html",
+  "display": "standalone",
+  "theme_color": "#004ac6",
+  "background_color": "#f7f9fb",
+  "orientation": "portrait-primary",
+  "scope": "/",
+  "icons": [
+   
+    {
+      "src": "/icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    
+    {
+      "src": "/icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Boulevar",
+      "short_name": "Shops",
+      "description": "Explora todas las tiendas",
+      "url": "/boulevar.html",
+      "icons": [{ "src": "/icons/icon-boule-96.png", "sizes": "96x96" }]
+    },
+    {
+      "name": "Fanfic-Boks",
+      "short_name": "libros",
+      "description": "Explora y descubre historias increibles",
+      "url": "/boks.html",
+      "icons": [{ "src": "/icons/icon-boks-96.png", "sizes": "96x96" }]
+    }
+  ],
+  "categories": ["business", "productivity", "finance"],
+  "screenshots": [
+    {
+      "src": "/screenshots/dashboard-mobile.png",
+      "sizes": "1080x1920",
+      "type": "image/png",
+      "platform": "narrow",
+      "label": "Dashboard principal"
+    }
+  ]
+}

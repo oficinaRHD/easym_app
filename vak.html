@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vende con Nosotros | Profesionaliza tu Negocio</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #2c3e50;
+            --secondary: #3498db;
+            --accent: #27ae60;
+            --danger: #e74c3c;
+            --light: #f8f9fa;
+            --dark: #212529;
+        }
+
+        body {
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            line-height: 1.6;
+            color: var(--dark);
+            background-color: #fff;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container { max-width: 1100px; margin: 0 auto; padding: 0 10px; }
+
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(135deg, var(--primary) 0%, #1a252f 100%);
+            color: white;
+            padding: 80px 0;
+            text-align: center;
+        }
+
+        .hero h1 { font-size: 3rem; margin-bottom: 20px; font-weight: 800; }
+        .hero p { font-size: 1.25rem; opacity: 0.9; max-width: 700px; margin: 0 auto 30px; }
+        .btn-main {
+            background-color: var(--accent);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 1.1rem;
+            transition: transform 0.3s;
+            display: inline-block;
+        }
+        .btn-main:hover { transform: translateY(-3px); box-shadow: 0 10px 20px rgba(0,0,0,0.2); }
+
+        /* Comparativa Section */
+        .comparison-section { padding: 60px 0; background: var(--light); }
+        .section-title { text-align: center; margin-bottom: 50px; }
+        .section-title h2 { font-size: 2rem; color: var(--primary); }
+
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+        }
+
+        .comp-card {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        }
+
+        .comp-card.bad { border-top: 5px solid var(--danger); }
+        .comp-card.good { border-top: 5px solid var(--accent); }
+
+        .comp-card h3 { margin-top: 0; display: flex; align-items: center; gap: 10px; }
+        .comp-card ul { list-style: none; padding: 0; }
+        .comp-card li { margin-bottom: 15px; display: flex; align-items: flex-start; gap: 10px; }
+        .comp-card i { margin-top: 5px; }
+
+        /* Stats Section */
+        .stats-section { padding: 60px 0; }
+        .stats-container {
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            gap: 20px;
+            text-align: center;
+        }
+        .stat-item { flex: 1; min-width: 200px; }
+        .stat-number { font-size: 2.2rem; font-weight: bold; color: var(--secondary); display: block; }
+        .stat-label { font-size: 0.9rem; color: #666; text-transform: uppercase; letter-spacing: 1px; }
+
+        /* Visual Graphic Simulation */
+        .chart-box {
+            background: #fff;
+            border: 1px solid #eee;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 30px;
+        }
+        .bar-container { margin-bottom: 15px; }
+        .bar-label { display: flex; justify-content: space-between; font-size: 0.85rem; margin-bottom: 5px; }
+        .bar-bg { background: #eee; height: 12px; border-radius: 6px; overflow: hidden; }
+        .bar-fill { height: 100%; border-radius: 6px; }
+
+        /* Call to Action Final */
+        .cta-final {
+            background: var(--secondary);
+            color: white;
+            padding: 60px 0;
+            text-align: center;
+        }
+
+        @media (max-width: 768px) {
+            .comparison-grid { grid-template-columns: 1fr; }
+            .hero h1 { font-size: 1.8rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <header class="hero">
+        <div class="container">
+            <h1>Tu negocio no es un hobby. <br>Deja de vender como si lo fuera.</h1>
+            <p>Vender en redes sociales es como gritar en un mercado lleno de gente. En nuestra tienda, eres el dueño de la vitrina principal.</p>
+            <a href="register.html" class="btn-main">Empezar a Vender Ahora</a>
+        </div>
+    </header>
+
+    <section class="comparison-section">
+        <div class="container">
+            <div class="section-title">
+                <h2>¿Por qué dejar de depender de Facebook?</h2>
+                <p>La diferencia entre un "mensaje al privado" perdido y una venta cerrada.</p>
+            </div>
+
+            <div class="comparison-grid">
+                <div class="comp-card bad">
+                    <h3><i class="fa-brands fa-facebook" style="color: #1877f2;"></i> El Caos de las Redes</h3>
+                    <ul>
+                        <li><i class="fa-solid fa-circle-xmark" style="color: var(--danger);"></i> <strong>Visibilidad Efímera:</strong> Tu post desaparece del feed en minutos.</li>
+                        <li><i class="fa-solid fa-circle-xmark" style="color: var(--danger);"></i> <strong>Cero Filtros:</strong> El comprador tiene que hacer scroll infinito para encontrarte.</li>
+                        <li><i class="fa-solid fa-circle-xmark" style="color: var(--danger);"></i> <strong>Fricción Extrema:</strong> "¿Precio?", "¿Disponible?", "¿Ubicación?". 50 mensajes antes de una venta.</li>
+                        <li><i class="fa-solid fa-circle-xmark" style="color: var(--danger);"></i> <strong>Imagen Informal:</strong> Mezclas tu vida personal con tu negocio.</li>
+                    </ul>
+                </div>
+
+                <div class="comp-card good">
+                    <h3><i class="fa-solid fa-store" style="color: var(--accent);"></i> Tu Tienda Profesional</h3>
+                    <ul>
+                        <li><i class="fa-solid fa-circle-check" style="color: var(--accent);"></i> <strong>Inventario Organizado:</strong> Categorías, marcas y precios claros 24/7.</li>
+                        <li><i class="fa-solid fa-circle-check" style="color: var(--accent);"></i> <strong>Ubicación Precisa:</strong> Integración con Plus Codes para que lleguen directo a ti.</li>
+                        <li><i class="fa-solid fa-circle-check" style="color: var(--accent);"></i> <strong>Contacto Directo:</strong> WhatsApp, Telegram y Llamada en un solo toque.</li>
+                        <li><i class="fa-solid fa-circle-check" style="color: var(--accent);"></i> <strong>Confianza:</strong> Una ficha técnica profesional genera 3x más ventas.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="stats-section">
+        <div class="container">
+            <div class="section-title">
+                <h2>Datos que hablan por sí solos</h2>
+                <p>Estadísticas de eficiencia operativa basadas en el comportamiento del usuario.</p>
+            </div>
+
+            <div class="stats-container">
+                <div class="stat-item">
+                    <span class="stat-number">85%</span>
+                    <span class="stat-label">Más visibilidad en Google</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number">12s</span>
+                    <span class="stat-label">Tiempo promedio de hallazgo</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number">4.5x</span>
+                    <span class="stat-label">Más cierres de venta directos</span>
+                </div>
+            </div>
+
+            <div class="chart-box">
+                <h4 style="margin-top:0">Probabilidad de Venta según canal</h4>
+                
+                <div class="bar-container">
+                    <div class="bar-label"><span>Tienda Optimizada (Nuestra Plataforma)</span> <span>92%</span></div>
+                    <div class="bar-bg"><div class="bar-fill" style="width: 92%; background: var(--accent);"></div></div>
+                </div>
+
+                <div class="bar-container">
+                    <div class="bar-label"><span>Marketplace Tradicional</span> <span>35%</span></div>
+                    <div class="bar-bg"><div class="bar-fill" style="width: 35%; background: #f1c40f;"></div></div>
+                </div>
+
+                <div class="bar-container" style="margin-bottom:0">
+                    <div class="bar-label"><span>Grupos de Compra/Venta</span> <span>12%</span></div>
+                    <div class="bar-bg"><div class="bar-fill" style="width: 12%; background: var(--danger);"></div></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="cta-final">
+        <div class="container">
+            <h2>¿Listo para subir de nivel?</h2>
+            <p>Únete a los vendedores que ya automatizaron su flujo de ventas.</p>
+            <br>
+            <a href="register.html" class="btn-main" style="background: white; color: var(--secondary);">Registrar mi primer producto</a>
+        </div>
+    </footer>
+
+</body>
+</html>

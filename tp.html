@@ -1,0 +1,49 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>List Pedidos</title>
+  </head>
+  <body>
+    <h1>Pedidos</h1>
+    <button id="load">Load pedidos</button>
+    <pre id="output">No data yet</pre>
+
+    <script type="module">
+      import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.30.0';
+
+      // Replace with your project values. Use the anon/publishable key here.
+      const SUPABASE_URL = 'https://jdhrepxgzazzxuvfwurz.supabase.co';
+      const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpkaHJlcHhnemF6enh1dmZ3dXJ6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzAzMjg2OTcsImV4cCI6MjA4NTkwNDY5N30.8jpgl-i2HsnFANSFX8oxY7OMhlLJ-pqLalbS-dAqKLQ';
+
+      const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+        // optional global fetch or headers
+        // global: { headers: { 'X-Client-App': 'my-vanilla-app' } }
+      });
+
+      const output = document.getElementById('output');
+      const loadBtn = document.getElementById('load');
+
+      loadBtn.addEventListener('click', async () => {
+        output.textContent = 'Loading...';
+
+        try {
+          // Basic select: all columns, limit 100
+          const { data, error, status } = await supabase
+            .from('pedidos')
+            .select('*')
+            .limit(100);
+
+          if (error) {
+            output.textContent = `Error (${status}): ${error.message}`;
+            return;
+          }
+
+          output.textContent = JSON.stringify(data, null, 2);
+        } catch (err) {
+          output.textContent = `Unexpected error: ${err.message || err}`;
+        }
+      });
+    </script>
+  </body>
+</html>

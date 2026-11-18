@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro - EasyMarkets</title>
+    <link rel="stylesheet" href="css/register.css?v=091">
+    <link rel="stylesheet" href="/css/validation.css">
+    <!-- Versión 6.x de Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+
+<body>
+
+    <div class="planes-contenedor">
+        <div class="header-registro">
+            <h2>
+                <!-- SVG de tienda (más nítido que icono) -->
+                <svg class="store-icon" width="36" height="36" viewBox="0 0 33 33" fill="none"
+                    xmlns="http://www.w3.org/2000/svg">
+                    <path
+                        d="M29.3,15.817c-1.364,0-2.558-0.742-3.2-1.843c-0.642,1.102-1.836,1.843-3.2,1.843s-2.559-0.742-3.2-1.843 c-0.641,1.102-1.835,1.843-3.199,1.843c-1.364,0-2.559-0.742-3.2-1.843c-0.642,1.102-1.836,1.843-3.202,1.843 c-1.364,0-2.558-0.742-3.2-1.843c-0.642,1.102-1.836,1.843-3.2,1.843C1.66,15.817,0,14.158,0,12.119V7.195 c0-0.062,0.012-0.124,0.034-0.182l2.363-6.055c0.075-0.192,0.26-0.318,0.466-0.318h27.273c0.206,0,0.391,0.126,0.466,0.318 l2.363,6.055C32.988,7.071,33,7.133,33,7.195v4.924C33,14.158,31.34,15.817,29.3,15.817z M26.101,11.619c0.276,0,0.5,0.224,0.5,0.5 c0,1.488,1.211,2.698,2.7,2.698s2.7-1.21,2.7-2.698v-4.83l-2.205-5.649H3.205L1,7.289v4.83c0,1.488,1.211,2.698,2.699,2.698 c1.489,0,2.7-1.21,2.7-2.698c0-0.276,0.224-0.5,0.5-0.5s0.5,0.224,0.5,0.5c0,1.488,1.211,2.698,2.7,2.698 c1.49,0,2.702-1.21,2.702-2.698c0-0.276,0.224-0.5,0.5-0.5s0.5,0.224,0.5,0.5c0,1.488,1.211,2.698,2.7,2.698 c1.488,0,2.699-1.21,2.699-2.698c0-0.276,0.224-0.5,0.5-0.5s0.5,0.224,0.5,0.5c0,1.488,1.211,2.698,2.7,2.698s2.7-1.21,2.7-2.698 C25.601,11.843,25.824,11.619,26.101,11.619z M28.39,32.361H4.611c-1.199,0-2.174-0.975-2.174-2.174V19.651c0-0.276,0.224-0.5,0.5-0.5 s0.5,0.224,0.5,0.5v10.536c0,0.647,0.526,1.174,1.174,1.174H28.39c0.648,0,1.175-0.526,1.175-1.174V19.651c0-0.276,0.224-0.5,0.5-0.5 s0.5,0.224,0.5,0.5v10.536C30.564,31.385,29.589,32.361,28.39,32.361z M14.433,32.16H7.194c-0.276,0-0.5-0.224-0.5-0.5V19.306 c0-0.276,0.224-0.5,0.5-0.5h7.238c0.276,0,0.5,0.224,0.5,0.5V31.66C14.933,31.936,14.709,32.16,14.433,32.16z M7.694,31.16h6.238 V19.806H7.694V31.16z M25.805,26.38h-8.566c-0.276,0-0.5-0.224-0.5-0.5v-6.573c0-0.276,0.224-0.5,0.5-0.5h8.566 c0.276,0,0.5,0.224,0.5,0.5v6.573C26.305,26.156,26.081,26.38,25.805,26.38z M17.738,25.38h7.566v-5.573h-7.566V25.38z"
+                        fill="url(#gradient-store)" />
+                    <defs>
+                        <linearGradient id="gradient-store" x1="0" y1="0" x2="33" y2="33"
+                            gradientUnits="userSpaceOnUse">
+                            <stop stop-color="#2563eb" />
+                            <stop offset="1" stop-color="#f97316" />
+                        </linearGradient>
+                    </defs>
+                </svg>
+                Elige tu experiencia en
+                <a href="/index.html" class="logo-link">
+                    <span class="logo-text-nav">Easy<span class="logo-highlight-nav">Markets</span></span>
+                </a>
+            </h2>
+            <p>
+                <svg class="tag-icon" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                    xmlns="http://www.w3.org/2000/svg" style="margin-right: 6px;">
+                    <path
+                        d="M20.59 13.41L13.42 20.58C13.2343 20.766 13.0137 20.9135 12.7709 21.0141C12.5281 21.1148 12.2678 21.1666 12.005 21.1666C11.7422 21.1666 11.4819 21.1148 11.2391 21.0141C10.9963 20.9135 10.7757 20.766 10.59 20.58L3 13V3H13L20.59 10.59C20.9625 10.9647 21.1716 11.4716 21.1716 12C21.1716 12.5284 20.9625 13.0353 20.59 13.41Z"
+                        fill="#f97316" stroke="#f97316" stroke-width="1.5" />
+                    <circle cx="7.5" cy="7.5" r="1.5" fill="white" />
+                </svg>
+                Selecciona el plan que mejor se adapte a tus necesidades
+            </p>
+        </div>
+
+        <div class="planes-grid">
+            <div class="plan-box">
+                <div class="plan-badge">Usuario Básico</div>
+                <h3>Básico</h3>
+                <p class="plan-precio">Gratis</p>
+                <ul class="plan-features">
+                    <li><i class="fas fa-check"></i> Compras ilimitadas</li>
+                    <li><i class="fas fa-check"></i> Lista de favoritos</li>
+                    <li><i class="fas fa-check"></i> Notificaciones integrales</li>
+                    <li><i class="fas fa-check"></i> Recomendaciones de productos</li>
+                    <li><i class="fas fa-check"></i> Seguimiento de libros + Biblioteca</li>
+                    <li><i class="fas fa-check"></i> Ajustes de preferencias</li>
+                    <li><i class="fas fa-check"></i> Colocar pedidos<span class="limit-number">2</span></li>
+                    <li class="disabled"><i class="fas fa-times"></i> Publicación de productos</li>
+                </ul>
+                <button class="btn-comenzar" data-tipo="0">Empezar ahora</button>
+            </div>
+
+
+            <div class="plan-box destacado">
+                <div class="plan-badge top-seller">Popular</div>
+                <h3>Estándar</h3>
+                <p class="plan-precio">🎁 Gratis por 30 días <small> Luego <span
+                            class="limit-number">500.00$</span>/mes</small></p>
+                <ul class="plan-features">
+                    <li><i class="fas fa-check"></i> Compras ilimitadas</li>
+                    <li><i class="fas fa-check"></i> Lista de favoritos</li>
+                    <li><i class="fas fa-check"></i> Notificaciones integrales</li>
+                    <li><i class="fas fa-check"></i> Recomendaciones de productos</li>
+                    <li><i class="fas fa-check"></i> Seguimiento de libros + Biblioteca</li>
+                    <li><i class="fas fa-check"></i> Ajustes de preferencias</li>
+                    <li><i class="fas fa-check"></i> Colocar pedidos<span class="limit-number">5</span></li>
+                    <li>
+                        <i class="fas fa-check"></i>Publicación productos <span class="limit-number">50</span>
+                        <div class="info-wrapper">
+                            <i class="fas fa-info-circle text-primary info-icon"></i>
+                            <div class="modern-tooltip">
+                                <h4><i class="fa fa-cube"></i>Aumentable</h4>
+                                <p>Puede aumentar el número de productos de su plan, cada producto adicional tiene un
+                                    coste de 6 cup</p>
+                            </div>
+                        </div>
+                    </li>
+                    <li><i class="fas fa-check"></i> Mensajería directa</li>
+
+                    <li>
+                        <i class="fas fa-check"></i> EasySinc
+                        <div class="info-wrapper">
+                            <i class="fas fa-info-circle text-primary info-icon"></i>
+                            <div class="modern-tooltip">
+                                <h4><i class="fas fa-sync-alt"></i> Sincronización Total</h4>
+                                <p>EasySinc sincroniza tu tienda con un gestor profesional y ofrécele permisos de
+                                    gestión sobre tus productos.</p>
+                            </div>
+                        </div>
+                    </li>
+
+
+
+                    <li>
+                        <i class="fas fa-check"></i> Tienda personal
+                        <div class="info-wrapper">
+                            <i class="fas fa-info-circle text-primary info-icon"></i>
+                            <div class="modern-tooltip">
+                                <h4><i class="fas fa-store"></i> Boulevard</h4>
+                                <p>Disfruta de una tienda personal asociada a EasyMarket, donde se mostraran todos tus
+                                    productos junto con información que agregues sobre tu local, comparte tu enlace y
+                                    que los clientes te sigan.</p>
+                            </div>
+                        </div>
+                    </li>
+
+                </ul>
+                <button class="btn-comenzar" id="btn-estandar">Contactar</button>
+            </div>
+
+            <div class="plan-box avanzado">
+                <div class="plan-badge silver">Emprendedor</div>
+                <h3>Avanzado</h3>
+                <p class="plan-precio">$500.00 <small>/mes</small></p>
+                <ul class="plan-features">
+                    <li><i class="fas fa-check"></i> Compras ilimitadas</li>
+                    <li><i class="fas fa-check"></i> Lista de favoritos</li>
+                    <li><i class="fas fa-check"></i> Notificaciones integrales</li>
+                    <li><i class="fas fa-check"></i> Recomendaciones de productos</li>
+                    <li><i class="fas fa-check"></i> Seguimiento de libros + Biblioteca</li>
+                    <li><i class="fas fa-check"></i> Ajustes de preferencias</li>
+                    <li><i class="fas fa-check"></i> Colocar pedidos<span class="limit-number">8</span></li>
+                    <li>
+                        <i class="fas fa-check"></i>Publicación productos <span class="limit-number">20</span>
+                        <div class="info-wrapper">
+                            <i class="fas fa-info-circle text-primary info-icon"></i>
+                            <div class="modern-tooltip">
+                                <h4><i class="fa fa-cube"></i>Aumentable</h4>
+                                <p>Puede aumentar el número de productos de su plan, cada producto adicional tiene un
+                                    coste de 8 cup</p>
+                            </div>
+                        </div>
+                    </li>
+                    <li><i class="fas fa-check"></i> Mensajería directa</li>
+                    <li>
+                        <i class="fas fa-check"></i> Gestión de tiendas
+                        <div class="info-wrapper">
+                            <i class="fas fa-info-circle text-primary info-icon"></i>
+                            <div class="modern-tooltip">
+                                <h4><i class="fas fa-store"></i> Multi-Gestor</h4>
+                                <p>Sincroniza con clientes y gestiona sus productos de forma centralizada y eficiente.
+                                </p>
+                            </div>
+                        </div>
+                    </li>
+
+                    <li>
+                        <i class="fas fa-check"></i> Tienda personal
+                        <div class="info-wrapper">
+                            <i class="fas fa-info-circle text-primary info-icon"></i>
+                            <div class="modern-tooltip">
+                                <h4><i class="fas fa-store"></i> Boulevard</h4>
+                                <p>Disfruta de una tienda personal asociada a EasyMarket, donde se mostraran todos tus
+                                    productos junto con información que agregues sobre tu local, comparte tu enlace y
+                                    que los clientes te sigan.</p>
+                            </div>
+                        </div>
+                    </li>
+
+                </ul>
+                <button class="btn-comenzar" id="btn-emprendedor">Contactar</button>
+            </div>
+
+
+            <div class="plan-box premium">
+                <div class="plan-badge gold">VIP</div>
+                <h3>Negocio</h3>
+                <p class="plan-precio">$800.00 <small>/mes</small></p>
+                <ul class="plan-features">
+                    <li><i class="fas fa-star"></i> <strong> Publicacion asistida</strong> <span
+                            class="limit-number">local / a
+                            distancia</span></li>
+                    <li><i class="fas fa-check"></i> Compras ilimitadas</li>
+                    <li><i class="fas fa-check"></i> Lista de favoritos</li>
+                    <li><i class="fas fa-check"></i> Notificaciones integrales</li>
+                    <li><i class="fas fa-check"></i> Recomendaciones de productos</li>
+                    <li><i class="fas fa-check"></i> Seguimiento de libros + Biblioteca</li>
+                    <li><i class="fas fa-check"></i> Ajustes de preferencias</li>
+                    <li><i class="fas fa-check"></i> Colocar pedidos<span class="limit-number">10</span></li>
+                    <li>
+                        <i class="fas fa-check"></i>Publicación productos <span class="limit-number">100</span>
+                        <div class="info-wrapper">
+                            <i class="fas fa-info-circle text-primary info-icon"></i>
+                            <div class="modern-tooltip">
+                                <h4><i class="fa fa-cube"></i>Aumentable</h4>
+                                <p>Puede aumentar el número de productos de su plan, cada producto adicional tiene un
+                                    coste de 20 cup</p>
+                            </div>
+                        </div>
+                    </li>
+                    <li><i class="fas fa-check"></i> Mensajería directa</li>
+                    <li>
+                        <i class="fas fa-check"></i> Etiqueta de "Confianza"
+                        <div class="info-wrapper">
+                            <i class="fas fa-info-circle text-primary info-icon"></i>
+                            <div class="modern-tooltip">
+                                <h4><i class="fas fa-shield-alt"></i> Verificación Oficial</h4>
+                                <p>Distintivo exclusivo solo para establecimientos verificados, aumentando la seguridad
+                                    de tus compradores.</p>
+                            </div>
+                        </div>
+                    </li>
+                    <li><i class="fas fa-check"></i> Soporte 24/7 personalizado</li>
+
+                    <li>
+                        <i class="fas fa-check"></i> Tienda personal
+                        <div class="info-wrapper">
+                            <i class="fas fa-info-circle text-primary info-icon"></i>
+                            <div class="modern-tooltip">
+                                <h4><i class="fas fa-store"></i> Boulevard</h4>
+                                <p>Disfruta de una tienda personal asociada a EasyMarket, donde se mostraran todos tus
+                                    productos junto con información que agregues sobre tu local, comparte tu enlace y
+                                    que los clientes te sigan.</p>
+                            </div>
+                        </div>
+                    </li>
+
+                    <li>
+                        <i class="fas fa-check"></i> EasySinc
+                        <div class="info-wrapper">
+                            <i class="fas fa-info-circle text-primary info-icon"></i>
+                            <div class="modern-tooltip">
+                                <h4><i class="fas fa-sync-alt"></i> Sincronización Total</h4>
+                                <p>EasySinc sincroniza tu tienda con un gestor profesional y ofrécele permisos de
+                                    gestión sobre tus productos.</p>
+                            </div>
+                        </div>
+                    </li>
+
+
+                </ul>
+                <button class="btn-comenzar" id="btn-vip">Contactar</button>
+            </div>
+
+
+
+        </div>
+    </div>
+
+    <!-- Modal lateral -->
+    <div id="modalRegistro" class="modal-lateral oculto">
+        <div class="modal-contenido">
+            <button class="cerrar" onclick="cerrarModal()">×</button>
+
+            <!-- Encabezado visual -->
+            <div class="modal-header">
+                <img src="img/logot1.png" alt="Bienvenido" class="modal-icon">
+                <h2 class="modal-bienvenida">¡Bienvenido a EasyMarkets!</h2>
+                <p class="modal-frase">Tu cuenta es el primer paso para vender sin límites.</p>
+                <div id="modalEslogan" class="modal-eslogan">Registro <span class="etiqueta-eslogan">BÁSICO</span></div>
+                <hr class="modal-divisor">
+            </div>
+
+
+
+            <form id="formRegistro">
+                <input type="hidden" id="tipoUsuario" name="tipoUsuario" value="0">
+
+                <!-- Nombre público -->
+                <label for="username">Nombre público</label>
+                <div class="input-icon-wrapper">
+                    <i class="fas fa-user"></i>
+                    <input type="text" id="username" name="username" required>
+                </div>
+
+                <!-- Email -->
+                <label for="email">Correo electrónico</label>
+                <div class="input-icon-wrapper">
+                    <i class="fas fa-envelope"></i>
+                    <input type="email" id="email" name="email" required>
+                </div>
+
+                <label for="password">Contraseña</label>
+                <div class="input-icon-wrapper">
+                    <i class="fas fa-lock"></i>
+                    <input type="password" id="password" name="password" required>
+                    <i class="fas fa-eye toggle-password" onclick="toggleVisibility('password', this)"></i>
+                </div>
+
+                <label for="confirmPassword">Confirmar contraseña</label>
+                <div class="input-icon-wrapper">
+                    <i class="fas fa-lock"></i>
+                    <input type="password" id="confirmPassword" name="confirmPassword" required>
+                    <i class="fas fa-eye toggle-password" onclick="toggleVisibility('confirmPassword', this)"></i>
+                </div>
+
+
+                <!-- Provincia -->
+                <label for="provincia">Provincia</label>
+                <div class="input-icon-wrapper">
+                    <i class="fas fa-map-marker-alt"></i>
+                    <select id="provincia" name="provincia" required>
+                        <option value="" disabled selected>Seleccione su provincia</option>
+
+                        <option value="Pinar del Río">Pinar del Río</option>
+                        <option value="Artemisa">Artemisa</option>
+                        <option value="La Habana">La Habana</option>
+                        <option value="Mayabeque">Mayabeque</option>
+                        <option value="Matanzas">Matanzas</option>
+
+                        <option value="Villa Clara">Villa Clara</option>
+                        <option value="Cienfuegos">Cienfuegos</option>
+                        <option value="Sancti Spíritus">Sancti Spíritus</option>
+                        <option value="Ciego de Ávila">Ciego de Ávila</option>
+                        <option value="Camagüey">Camagüey</option>
+
+                        <option value="Las Tunas">Las Tunas</option>
+                        <option value="Holguín">Holguín</option>
+                        <option value="Granma">Granma</option>
+                        <option value="Santiago de Cuba">Santiago de Cuba</option>
+                        <option value="Guantánamo">Guantánamo</option>
+
+                        <option value="Isla de la Juventud">Isla de la Juventud</option>
+                    </select>
+                </div>
+
+
+                <!-- Check de políticas -->
+                <div class="politica-check">
+                    <label>
+                        <input type="checkbox" id="aceptaPolitica" name="aceptaPolitica" required>
+                        Acepto las
+                        <a href="/teu.html" target="_blank" class="politica-link"
+                            title="Abrir políticas de privacidad en nueva pestaña">
+                            políticas de privacidad y seguridad
+                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2" style="display: inline-block; margin-left: 2px;">
+                                <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+                                <polyline points="15 3 21 3 21 9"></polyline>
+                                <line x1="10" y1="14" x2="21" y2="3"></line>
+                            </svg>
+                        </a>
+                        de EasyMarkets
+                    </label>
+                </div>
+
+                <!-- Botón -->
+                <div class="boton-centro">
+                    <button type="submit">Registrarse</button>
+                </div>
+            </form>
+
+
+
+        </div>
+    </div>
+    <script>
+        function toggleVisibility(inputId, iconElement) {
+            const input = document.getElementById(inputId);
+
+            if (input.type === "password") {
+                input.type = "text";
+                // Cambia el icono a ojo tachado
+                iconElement.classList.remove('fa-eye');
+                iconElement.classList.add('fa-eye-slash');
+            } else {
+                input.type = "password";
+                // Cambia el icono a ojo abierto
+                iconElement.classList.remove('fa-eye-slash');
+                iconElement.classList.add('fa-eye');
+            }
+        }
+
+
+        document.addEventListener("DOMContentLoaded", () => {
+
+            const numero = "+5350049728"; // tu número en formato internacional
+
+            // Botón Emprendedor
+            document.getElementById("btn-emprendedor").addEventListener("click", () => {
+                const mensaje = "Hola, quiero información sobre el plan Emprendedor";
+                const url = `https://wa.me/${numero}?text=${encodeURIComponent(mensaje)}`;
+                window.open(url, "_blank");
+            });
+
+            // Botón Premium
+            document.getElementById("btn-vip").addEventListener("click", () => {
+                const mensaje = "Hola, quiero información sobre el plan Negocio VIP";
+                const url = `https://wa.me/${numero}?text=${encodeURIComponent(mensaje)}`;
+                window.open(url, "_blank");
+            });
+
+            // Botón estándar 
+            document.getElementById("btn-estandar").addEventListener("click", () => {
+                const mensaje = "Hola, quiero información sobre el plan Estándar";
+                const url = `https://wa.me/${numero}?text=${encodeURIComponent(mensaje)}`;
+                window.open(url, "_blank");
+            });
+
+            // --- Lógica para Tooltips Modernos ---
+            const infoIcons = document.querySelectorAll('.info-icon');
+
+            infoIcons.forEach(icon => {
+                icon.addEventListener('click', function (e) {
+                    e.stopPropagation(); // Evita que el click cierre el tooltip inmediatamente
+                    const tooltip = this.nextElementSibling;
+
+                    // Cerrar todos los demás tooltips primero
+                    document.querySelectorAll('.modern-tooltip.active').forEach(activeTooltip => {
+                        if (activeTooltip !== tooltip) {
+                            activeTooltip.classList.remove('active');
+                        }
+                    });
+
+                    // Alternar el tooltip actual
+                    tooltip.classList.toggle('active');
+                });
+            });
+
+            // Cerrar los tooltips al hacer clic en cualquier parte fuera de ellos
+            document.addEventListener('click', function (e) {
+                if (!e.target.closest('.info-wrapper')) {
+                    document.querySelectorAll('.modern-tooltip.active').forEach(tooltip => {
+                        tooltip.classList.remove('active');
+                    });
+                }
+            });
+            // ------------------------------------
+        });
+
+
+    </script>
+
+    <!-- Asegura que el JS se cargue al final -->
+    <script type=module src="js/register.js?v=0088" defer></script>
+</body>
+
+</html>

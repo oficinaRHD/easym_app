@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="es" class="h-full bg-gray-50">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Centro de Ayuda y Contacto</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <style>
+        /* Animación suave de entrada */
+        .slide-up { animation: slideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1); }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+    </style>
+</head>
+<body class="h-full flex items-center justify-center p-4">
+
+    <div class="w-full max-w-md slide-up">
+        
+        <div class="bg-white rounded-2xl shadow-xl overflow-hidden border border-gray-100">
+            
+            <div class="bg-gradient-to-r from-indigo-600 to-blue-500 p-8 text-center">
+                <div class="inline-flex items-center justify-center w-12 h-12 rounded-full bg-white/20 text-white mb-4 backdrop-blur-sm">
+                    <i class="ph-fill ph-chat-circle-text text-2xl"></i>
+                </div>
+                <h2 class="text-2xl font-bold text-white">¿En qué podemos ayudarte?</h2>
+                <p class="text-indigo-100 text-sm mt-2">Escribe tu consulta y elige tu canal preferido.</p>
+            </div>
+
+            <div class="p-8">
+                <div class="mb-6 relative">
+                    <textarea id="mensaje" 
+                        class="w-full h-32 p-4 text-gray-700 border border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all resize-none bg-gray-50 focus:bg-white text-sm"
+                        placeholder="Hola, quisiera saber el precio de..."></textarea>
+                    <div class="absolute bottom-3 right-3 text-xs text-gray-400 pointer-events-none">
+                        <i class="ph ph-pencil-simple"></i>
+                    </div>
+                </div>
+
+                <div class="space-y-3">
+                    <button onclick="enviar('whatsapp')" class="group w-full flex items-center justify-center px-4 py-3 bg-[#25D366] hover:bg-[#20bd5a] text-white rounded-xl transition-all shadow-md hover:shadow-lg transform hover:-translate-y-0.5">
+                        <i class="ph-fill ph-whatsapp-logo text-xl mr-3"></i>
+                        <span class="font-semibold">Contactar por WhatsApp</span>
+                        <i class="ph-bold ph-arrow-right ml-auto opacity-0 group-hover:opacity-100 transition-opacity"></i>
+                    </button>
+
+                    <button onclick="enviar('telegram')" class="group w-full flex items-center justify-center px-4 py-3 bg-[#0088cc] hover:bg-[#0077b5] text-white rounded-xl transition-all shadow-md hover:shadow-lg transform hover:-translate-y-0.5">
+                        <i class="ph-fill ph-telegram-logo text-xl mr-3"></i>
+                        <span class="font-semibold">Contactar por Telegram</span>
+                        <i class="ph-bold ph-arrow-right ml-auto opacity-0 group-hover:opacity-100 transition-opacity"></i>
+                    </button>
+
+                    <button onclick="enviar('gmail')" class="w-full flex items-center justify-center px-4 py-3 bg-white border border-gray-200 text-gray-700 hover:bg-gray-50 rounded-xl transition-all">
+                        <i class="ph-fill ph-envelope-simple text-xl mr-3 text-red-500"></i>
+                        <span class="font-medium">Enviar un Correo</span>
+                    </button>
+                </div>
+
+                <div class="relative flex py-6 items-center">
+                    <div class="flex-grow border-t border-gray-200"></div>
+                    <span class="flex-shrink-0 mx-4 text-gray-400 text-xs uppercase tracking-wider">Información Directa</span>
+                    <div class="flex-grow border-t border-gray-200"></div>
+                </div>
+
+                <div class="flex justify-center space-x-6 text-sm text-gray-500">
+                    <div class="flex items-center hover:text-indigo-600 transition-colors cursor-pointer" onclick="copiar('+53 50049728')">
+                        <i class="ph ph-phone mr-2"></i> +53 50XXXXXX
+                    </div>
+                    <div class="flex items-center hover:text-indigo-600 transition-colors cursor-pointer" onclick="copiar('bigfamilyteam.ayuda@gmail.com')">
+                        <i class="ph ph-envelope mr-2"></i> info-tienda
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <p class="text-center text-gray-400 text-xs mt-6">
+            &copy; 2026 Easymarkets. Todos los derechos reservados.
+        </p>
+    </div>
+
+    <div id="toast" class="fixed bottom-5 left-1/2 transform -translate-x-1/2 bg-gray-800 text-white px-4 py-2 rounded-lg text-sm shadow-lg opacity-0 transition-opacity duration-300 pointer-events-none z-50">
+        Información copiada
+    </div>
+
+<script>
+    // CONFIGURACIÓN
+    const CONFIG = {
+        whatsapp: "50049728", 
+        telegram: "RolandoStore",
+        email: "bigfamilyteam.ayuda@gmail.com"
+    };
+
+    function enviar(metodo) {
+        const mensajeInput = document.getElementById("mensaje");
+        let texto = mensajeInput.value.trim();
+
+        // Validación simple: si está vacío, sugerimos un texto por defecto
+        if (!texto) {
+            texto = "Hola, estoy interesado en sus servicios.";
+        }
+        
+        const textoCodificado = encodeURIComponent(texto);
+        let url = "";
+
+        if (metodo === 'whatsapp') {
+            url = `https://wa.me/${CONFIG.whatsapp}?text=${textoCodificado}`;
+        } else if (metodo === 'telegram') {
+            url = `https://t.me/${CONFIG.telegram}?text=${textoCodificado}`;
+        } else if (metodo === 'gmail') {
+            url = `mailto:${CONFIG.email}?subject=Consulta desde Web&body=${textoCodificado}`;
+        }
+
+        window.open(url, "_blank");
+    }
+
+    // Función extra para copiar al portapapeles
+    function copiar(texto) {
+        navigator.clipboard.writeText(texto).then(() => {
+            const toast = document.getElementById("toast");
+            toast.innerText = "Copiado: " + texto;
+            toast.classList.remove("opacity-0");
+            setTimeout(() => toast.classList.add("opacity-0"), 2000);
+        });
+    }
+</script>
+
+</body>
+</html>

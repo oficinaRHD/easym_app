@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover">
+  <title>Mensajes · EasyMarket</title>
+  <!-- Font Awesome 6 (iconos modernos) -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    /* === VARIABLES Y RESET (mobile first) === */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    :root {
+      --primary: #2563eb;
+      --primary-dark: #1d4ed8;
+      --primary-soft: #dbeafe;
+      --accent: #7c3aed;
+      --success: #10b981;
+      --warning: #f59e0b;
+      --danger: #ef4444;
+      --gray-50: #f9fafb;
+      --gray-100: #f3f4f6;
+      --gray-200: #e5e7eb;
+      --gray-300: #d1d5db;
+      --gray-400: #9ca3af;
+      --gray-500: #6b7280;
+      --gray-600: #4b5563;
+      --gray-700: #374151;
+      --gray-800: #1f2937;
+      --gray-900: #111827;
+      --shadow-sm: 0 2px 4px rgba(0,0,0,0.05);
+      --shadow-md: 0 4px 12px rgba(0,0,0,0.05);
+      --shadow-lg: 0 10px 25px -5px rgba(0,0,0,0.05);
+      --radius-sm: 12px;
+      --radius-md: 16px;
+      --radius-lg: 24px;
+      --transition: all 0.2s ease;
+      --safe-top: env(safe-area-inset-top);
+      --safe-bottom: env(safe-area-inset-bottom);
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      background: var(--gray-100);
+      color: var(--gray-800);
+      line-height: 1.4;
+      min-height: 100vh;
+      padding-bottom: var(--safe-bottom);
+    }
+
+    /* === HEADER MEJORADO (sticky con blur) === */
+    .mensajes-header {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      background: rgba(255,255,255,0.92);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      padding: calc(12px + var(--safe-top)) 16px 12px;
+      border-bottom: 1px solid rgba(0,0,0,0.05);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .header-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 16px;
+    }
+
+    .header-top h2 {
+      font-size: 1.6rem;
+      font-weight: 700;
+      background: linear-gradient(135deg, var(--gray-900) 0%, var(--primary) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      letter-spacing: -0.02em;
+    }
+
+    .header-actions {
+      display: flex;
+      gap: 8px;
+    }
+
+    .icon-btn {
+      background: white;
+      border: none;
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.3rem;
+      color: var(--gray-600);
+      box-shadow: var(--shadow-sm);
+      cursor: pointer;
+      transition: var(--transition);
+    }
+
+    .icon-btn:active {
+      background: var(--gray-100);
+      transform: scale(0.95);
+    }
+
+    /* === FILTROS EN CARRUSEL HORIZONTAL === */
+    .filtros-scroll {
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      padding: 1px 0 1px;
+      scrollbar-width: none;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .filtros-scroll::-webkit-scrollbar {
+      display: none;
+    }
+
+    .filtro-chip {
+    flex: 0 0 auto;
+    background: white;
+    border: 1px solid var(--gray-200);
+    border-radius: 4px;
+    padding: 10px 20px;
+    font-size: 1rem;
+    font-weight: 500;
+    color: var(--gray-600);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    cursor: pointer;
+    transition: var(--transition);
+    box-shadow: var(--shadow-sm);
+    white-space: nowrap;
+    }
+
+    .filtro-chip i {
+      font-size: 1rem;
+      color: var(--gray-400);
+    }
+
+    .filtro-chip.active {
+      background: var(--primary);
+      border-color: var(--primary);
+      color: white;
+    }
+
+    .filtro-chip.active i {
+      color: white;
+    }
+
+    .filtro-chip:active {
+      transform: scale(0.97);
+    }
+
+    /* Botón de orden compacto */
+    .orden-wrapper {
+      display: flex;
+      justify-content: flex-end;
+      margin-top: 12px;
+    }
+
+    #orden-fecha {
+      background: white;
+      border: 1px solid var(--gray-200);
+      border-radius: 40px;
+      padding: 8px 16px;
+      font-size: 0.9rem;
+      font-weight: 500;
+      color: var(--gray-700);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+      box-shadow: var(--shadow-sm);
+    }
+
+    /* === CONTENEDOR PRINCIPAL === */
+    #contenedor-mensajes {
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    /* === TARJETA DE MENSAJE === */
+    .mensaje {
+      background: white;
+      border-radius: var(--radius-md);
+      padding: 12px;
+      box-shadow: var(--shadow-sm);
+      border-left: 4px solid transparent;
+      transition: var(--transition);
+      cursor: pointer;
+      position: relative;
+      animation: slideIn 0.3s ease;
+    }
+
+    /* Estados */
+    .mensaje.nuevo {
+      border-left-color: var(--primary);
+      background: linear-gradient(to right, white 95%, var(--primary-soft) 30%);
+    }
+
+    .mensaje.visto {
+      opacity: 0.9;
+      border-left-color: var(--gray-300);
+    }
+
+    .mensaje.archivado {
+      opacity: 0.6;
+      filter: grayscale(0.3);
+    }
+
+    .mensaje.requiere-accion {
+      border-left-width: 6px;
+      border-left-color: var(--warning);
+      background: linear-gradient(to right, white 95%, #fef3c7 30%);
+    }
+
+    .mensaje.seleccionada {
+      background: var(--gray-50);
+      transform: scale(0.99);
+      box-shadow: var(--shadow-md);
+    }
+
+    /* Prioridades */
+    .mensaje[data-prioridad="alta"] {
+      border-left-width: 6px;
+      border-left-color: var(--danger);
+    }
+
+    .mensaje[data-prioridad="media"] {
+      border-left-color: var(--warning);
+    }
+
+    .mensaje[data-prioridad="baja"] {
+      border-left-color: var(--success);
+    }
+
+    /* Header del mensaje con título y tag */
+    .header-mensaje {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 8px;
+      margin-bottom: 8px;
+      padding-right: 24px;
+    }
+
+    .titulo {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: var(--gray-800);
+      flex: 1;
+    }
+
+    .tag-accion {
+      background: var(--warning);
+      color: white;
+      font-size: 0.7rem;
+      font-weight: 600;
+      padding: 4px 8px;
+      border-radius: 40px;
+      white-space: nowrap;
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0% { opacity: 1; }
+      50% { opacity: 0.8; }
+      100% { opacity: 1; }
+    }
+
+    /* Indicador de nuevo (punto) */
+    .mensaje.nuevo .titulo::after {
+      content: '';
+      position: absolute;
+      top: 18px;
+      right: 16px;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--primary);
+      box-shadow: 0 0 0 2px white;
+    }
+
+    /* Contenido del mensaje */
+    .contenido {
+      font-size: 0.95rem;
+      color: var(--gray-600);
+      margin-bottom: 14px;
+      line-height: 1.5;
+    }
+
+    /* Meta información */
+    .meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+      font-size: 0.8rem;
+      border-top: 1px solid var(--gray-100);
+      padding-top: 1px;
+      margin-top: 4px;
+    }
+
+    .badge-tipo {
+      background: var(--gray-100);
+      color: var(--gray-700);
+      padding: 4px 10px;
+      border-radius: 40px;
+      font-weight: 500;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      text-transform: capitalize;
+    }
+
+    .prioridad {
+      padding: 4px 10px;
+      border-radius: 40px;
+      font-weight: 500;
+      text-transform: capitalize;
+    }
+
+    .prioridad.alta { 
+      background: #fee2e2; 
+      color: #dc2626; 
+    }
+    .prioridad.media { 
+      background: #fef3c7; 
+      color: #d97706; 
+    }
+    .prioridad.baja { 
+      background: #d1fae5; 
+      color: #059669; 
+    }
+
+    .fecha {
+      color: var(--gray-500);
+      margin-left: auto;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .indicador-estado {
+      padding: 4px 8px;
+      border-radius: 40px;
+      background: var(--gray-100);
+      color: var(--gray-600);
+    }
+
+    /* Estados vacíos y error */
+    .mensaje-vacio, .error {
+      text-align: center;
+      padding: 48px 20px;
+      color: var(--gray-500);
+      font-size: 1rem;
+      background: white;
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .error {
+      color: var(--danger);
+      background: #fee2e2;
+    }
+
+    .mensaje-vacio i {
+      font-size: 3rem;
+      margin-bottom: 16px;
+      opacity: 0.5;
+      color: var(--gray-400);
+    }
+
+    /* Badge de contador */
+    .badge-count {
+      background: var(--primary);
+      color: white;
+      font-size: 0.7rem;
+      font-weight: 600;
+      padding: 2px 6px;
+      border-radius: 40px;
+      margin-left: 6px;
+    }
+
+    /* Loader */
+    .loader {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 40px;
+    }
+
+    .spinner {
+      width: 40px;
+      height: 40px;
+      border: 3px solid var(--gray-200);
+      border-top-color: var(--primary);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    /* Pull to refresh */
+    .pull-to-refresh {
+      text-align: center;
+      padding: 10px;
+      color: var(--gray-400);
+      font-size: 0.8rem;
+    }
+
+    /* Animaciones */
+    @keyframes slideIn {
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* Mejoras táctiles */
+    @media (hover: none) and (pointer: coarse) {
+      .mensaje:active {
+        background: var(--gray-50);
+      }
+      
+      .filtro-chip {
+        padding: 10px 10px;
+      }
+    }
+
+    /* Pantallas grandes */
+    @media (min-width: 768px) {
+      .mensajes-header {
+        padding: 20px 24px;
+      }
+      
+      #contenedor-mensajes {
+        max-width: 700px;
+        margin: 0 auto;
+        padding: 24px;
+      }
+      
+      .filtros-scroll {
+        justify-content: center;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="mensajes-header">
+    <div class="header-top">
+      <h2><i class="fa-regular fa-envelope" style="margin-right: 8px;"></i>Mensajes</h2>
+      <div class="header-actions">
+        <button class="icon-btn" id="refreshBtn" title="Actualizar">
+          <i class="fa-solid fa-rotate-right"></i>
+        </button>
+        <button class="icon-btn" id="markAllReadBtn" title="Marcar todo como leído">
+          <i class="fas fa-check-double"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- Filtros por estado -->
+    <div class="filtros-scroll">
+      <button class="filtro-chip active" data-filtro="estado" data-valor="todos">
+        <i class="fa-regular fa-envelope"></i> Todos
+      </button>
+      <button class="filtro-chip" data-filtro="estado" data-valor="nuevo">
+        <i class="fa-regular fa-circle"></i> Nuevos
+      </button>
+      <button class="filtro-chip" data-filtro="estado" data-valor="leido">
+        <i class="fa-regular fa-eye"></i> Leídos
+      </button>
+      <button class="filtro-chip" data-filtro="estado" data-valor="archivado">
+        <i class="fas fa-box"></i> Archivados
+      </button>
+    </div>
+
+    <!-- Filtros por tipo -->
+    <div class="filtros-scroll" style="margin-top: 8px;">
+      <button class="filtro-chip active" data-filtro="tipo" data-valor="todos">
+        <i class="fa fa-list"></i> Todos
+      </button>
+      <button class="filtro-chip" data-filtro="tipo" data-valor="bienvenida">
+        <i class="fa fa-hand-paper-o"></i> Bienvenida
+      </button>
+      <button class="filtro-chip" data-filtro="tipo" data-valor="promocion">
+        <i class="fa fa-tag"></i> Promoción
+      </button>
+      <button class="filtro-chip" data-filtro="tipo" data-valor="evento">
+        <i class="fa-regular fa-calendar"></i> Evento
+      </button>
+      <button class="filtro-chip" data-filtro="tipo" data-valor="seguridad">
+        <i class="fa fa-shield"></i> Seguridad
+      </button>
+    </div>
+
+    <!-- Filtros por prioridad -->
+    <div class="filtros-scroll" style="margin-top: 8px;">
+      <button class="filtro-chip active" data-filtro="prioridad" data-valor="todas">
+        <i class="fa-regular fa-flag"></i> Todas
+      </button>
+      <button class="filtro-chip" data-filtro="prioridad" data-valor="alta">
+        <i class="fa fa-exclamation-circle"></i> Alta
+      </button>
+      <button class="filtro-chip" data-filtro="prioridad" data-valor="media">
+        <i class="fa-regular fa-circle"></i> Media
+      </button>
+      <button class="filtro-chip" data-filtro="prioridad" data-valor="baja">
+        <i class="fa-regular fa-circle-check"></i> Baja
+      </button>
+    </div>
+
+    <!-- Botón de orden -->
+    <div class="orden-wrapper">
+      <button id="orden-fecha" data-orden="desc">
+        <i class="fa-regular fa-envelope"></i> Más recientes
+      </button>
+    </div>
+  </div>
+
+  <!-- Pull to refresh hint -->
+  <div class="pull-to-refresh" id="pullHint" style="display: none;">
+    <i class="fa-regular fa-arrow-down"></i> Suelta para actualizar
+  </div>
+
+  <main id="contenedor-mensajes">
+    <!-- Loader inicial -->
+    <div class="loader">
+      <div class="spinner"></div>
+    </div>
+  </main>
+
+  <script type="module">
+    function _0x56a9(){const _0xcc18fb=['getElementById','UPDATE','public','clientY','Hace\x20','.indicador-estado','.mensaje','opacity','children','contenido','</span>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<span\x20class=\x22prioridad\x20','todos','length','INSERT','select','mensajes_sistema','from','.badge-count','.filtro-chip','asc','</span>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<span\x20class=\x22indicador-estado\x22>','estado','.filtros-scroll','✉️\x20Nuevo','dataset','0.7','\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<div\x20class=\x27mensaje-vacio\x27>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<i\x20class=\x22fa-regular\x20fa-envelope-open\x22></i>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<p>No\x20tienes\x20mensajes\x20del\x20sistema\x20aún.</p>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20</div>','fecha_envio','orden-fecha','sort','<div\x20class=\x22loader\x22><div\x20class=\x22spinner\x22></div></div>','6929872LYeeqY','1673212VPrPqg','block','requiere-accion','message','nuevo','markAllReadBtn','<div\x20class=\x22error\x22><i\x20class=\x22fa-regular\x20fa-circle-exclamation\x22></i>\x20Error:\x20','order','Mensaje\x20del\x20sistema','\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<div\x20class=\x22header-mensaje\x22>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<h4\x20class=\x22titulo\x22>','ordenFecha','usuario_id=eq.','mensaje\x20','beforeunload','189sGXXaQ','.loader','1128528IPbbUu','style','pullHint','seleccionada','closest','Ahora\x20mismo','prioridad','</p>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<div\x20class=\x22meta\x22>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<span\x20class=\x22badge-tipo\x22><i\x20class=\x22fa\x20fa-address-book\x22></i>\x20','</div>','348EdyRGR','accion_requerida','getTime','badge-count','active','remove','media','querySelectorAll','classList','filter','fa-spin','leido','display','</span>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<span\x20class=\x22fecha\x22><i\x20class=\x22fa-regular\x20fa-clock\x22></i>\x20','touchmove','DOMContentLoaded','contenedor-mensajes','refreshBtn','</h4>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20','add','90706ifQSNr','toLocaleDateString','forEach','update','click','article','touchstart','sistema','appendChild','389896zLOFAx','5ONihmP','postgres_changes','1033536fOcXXz','titulo','querySelector','fecha','\x22><i\x20class=\x22fa-regular\x20fa-flag\x22></i>\x20','createElement','desc','filtro','addEventListener','tipo','</span>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20</div>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20','usuario_id','touches','innerHTML','📖\x20Leído','todas','\x20min','touchend','unsubscribe','564330WEMzAD','channel','none'];_0x56a9=function(){return _0xcc18fb;};return _0x56a9();}function _0x4ac3(_0x55c6f6,_0x44e813){_0x55c6f6=_0x55c6f6-0x77;const _0x56a999=_0x56a9();let _0x4ac31b=_0x56a999[_0x55c6f6];return _0x4ac31b;}const _0x2c428f=_0x4ac3;(function(_0x73904e,_0x2509cd){const _0x1d4576=_0x4ac3,_0xb4df1d=_0x73904e();while(!![]){try{const _0x1364e3=-parseInt(_0x1d4576(0xe4))/0x1+parseInt(_0x1d4576(0x78))/0x2+parseInt(_0x1d4576(0xbe))/0x3+parseInt(_0x1d4576(0xae))/0x4*(parseInt(_0x1d4576(0xe5))/0x5)+parseInt(_0x1d4576(0xc7))/0x6*(-parseInt(_0x1d4576(0xdb))/0x7)+-parseInt(_0x1d4576(0xad))/0x8+parseInt(_0x1d4576(0xbc))/0x9*(parseInt(_0x1d4576(0x8b))/0xa);if(_0x1364e3===_0x2509cd)break;else _0xb4df1d['push'](_0xb4df1d['shift']());}catch(_0x114a89){_0xb4df1d['push'](_0xb4df1d['shift']());}}}(_0x56a9,0x774c6));import{supabase}from'./js/supabase.js';document['addEventListener'](_0x2c428f(0xd6),async()=>{const _0x35a736=_0x2c428f,_0x1c1f7f=document[_0x35a736(0x8e)](_0x35a736(0xd7)),_0x5920c4=document[_0x35a736(0x8e)](_0x35a736(0xc0)),{data:{user:_0x3610c1}}=await supabase['auth']['getUser']();if(!_0x3610c1){_0x1c1f7f['innerHTML']='<div\x20class=\x27error\x27><i\x20class=\x27fa-regular\x20fa-circle-exclamation\x27\x20style=\x27margin-right:\x208px;\x27></i>Acceso\x20denegado.\x20Inicia\x20sesión\x20para\x20continuar.</div>';return;}let _0x26ffff={'estado':_0x35a736(0x99),'tipo':_0x35a736(0x99),'prioridad':_0x35a736(0x87),'ordenFecha':'desc'},_0x140c46=[];function _0x54caa2(_0x50c36b){const _0x23dc44=_0x35a736,_0x211c1c=new Date(_0x50c36b),_0x3b068d=new Date(),_0x603108=_0x3b068d-_0x211c1c,_0x51fc38=Math['floor'](_0x603108/0xea60),_0x45637d=Math['floor'](_0x603108/0x36ee80),_0x4dd674=Math['floor'](_0x603108/0x5265c00);if(_0x51fc38<0x1)return _0x23dc44(0xc3);if(_0x51fc38<0x3c)return'Hace\x20'+_0x51fc38+_0x23dc44(0x88);if(_0x45637d<0x18)return _0x23dc44(0x92)+_0x45637d+'\x20h';if(_0x4dd674<0x7)return _0x23dc44(0x92)+_0x4dd674+'\x20d';return _0x211c1c[_0x23dc44(0xdc)]();}function _0x2a4ea2(_0x141871){const _0x15ba78=_0x35a736;_0x1c1f7f[_0x15ba78(0x85)]='',_0x140c46=_0x141871||[];if(!_0x141871||_0x141871['length']===0x0){_0x1c1f7f[_0x15ba78(0x85)]=_0x15ba78(0xa8);return;}_0x141871[_0x15ba78(0xdd)](_0x21e6ff=>{const _0x1f8cb6=_0x15ba78,_0x31604f=document[_0x1f8cb6(0x7d)](_0x1f8cb6(0xe0));_0x31604f['className']=_0x1f8cb6(0xba)+(_0x21e6ff[_0x1f8cb6(0xa3)]||'nuevo')+'\x20'+(_0x21e6ff[_0x1f8cb6(0xc8)]?_0x1f8cb6(0xb0):''),_0x31604f[_0x1f8cb6(0xa6)]['id']=_0x21e6ff['id'],_0x31604f[_0x1f8cb6(0xa6)]['estado']=_0x21e6ff['estado']||_0x1f8cb6(0xb2),_0x31604f['dataset']['tipo']=_0x21e6ff[_0x1f8cb6(0x81)]||_0x1f8cb6(0xe2),_0x31604f[_0x1f8cb6(0xa6)]['prioridad']=_0x21e6ff[_0x1f8cb6(0xc4)]||_0x1f8cb6(0xcd),_0x31604f[_0x1f8cb6(0xa6)][_0x1f8cb6(0x7b)]=_0x21e6ff['fecha_envio'];const _0x4bf8c8=_0x54caa2(_0x21e6ff[_0x1f8cb6(0xa9)]);_0x31604f[_0x1f8cb6(0x85)]=_0x1f8cb6(0xb7)+(_0x21e6ff[_0x1f8cb6(0x79)]||_0x1f8cb6(0xb6))+_0x1f8cb6(0xd9)+(_0x21e6ff['accion_requerida']?'<span\x20class=\x22tag-accion\x22><i\x20class=\x22fa-regular\x20fa-bell\x22></i>\x20Acción\x20Requerida</span>':'')+'\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20</div>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<p\x20class=\x22contenido\x22>'+(_0x21e6ff[_0x1f8cb6(0x97)]||'')+_0x1f8cb6(0xc5)+(_0x21e6ff['tipo']||_0x1f8cb6(0xe2))+_0x1f8cb6(0x98)+(_0x21e6ff[_0x1f8cb6(0xc4)]||_0x1f8cb6(0xcd))+_0x1f8cb6(0x7c)+(_0x21e6ff[_0x1f8cb6(0xc4)]||_0x1f8cb6(0xcd))+_0x1f8cb6(0xd4)+_0x4bf8c8+_0x1f8cb6(0xa2)+(_0x21e6ff[_0x1f8cb6(0xa3)]==='nuevo'?_0x1f8cb6(0xa5):_0x1f8cb6(0x86))+_0x1f8cb6(0x82),_0x31604f[_0x1f8cb6(0x80)]('click',async()=>{const _0x16615e=_0x1f8cb6;_0x1c1f7f[_0x16615e(0xce)]('.mensaje.seleccionada')[_0x16615e(0xdd)](_0x4b14ab=>_0x4b14ab[_0x16615e(0xcf)][_0x16615e(0xcc)]('seleccionada')),_0x31604f['classList']['add'](_0x16615e(0xc1)),_0x21e6ff[_0x16615e(0xa3)]===_0x16615e(0xb2)&&(await _0x2d545d(_0x21e6ff['id'],_0x31604f),_0x21e6ff[_0x16615e(0xa3)]=_0x16615e(0xd2));}),_0x1c1f7f['appendChild'](_0x31604f);}),_0xe6f42(),_0x27e1d4();}function _0xe6f42(){const _0x563c46=_0x35a736,_0xbb5639=_0x140c46[_0x563c46(0xd0)](_0x2ed00f=>_0x2ed00f[_0x563c46(0xa3)]===_0x563c46(0xb2))[_0x563c46(0x9a)],_0x2b04d7=document[_0x563c46(0x7a)]('[data-filtro=\x22estado\x22][data-valor=\x22nuevo\x22]');if(_0x2b04d7){let _0x1910d7=_0x2b04d7[_0x563c46(0x7a)](_0x563c46(0x9f));if(_0xbb5639>0x0)!_0x1910d7&&(_0x1910d7=document[_0x563c46(0x7d)]('span'),_0x1910d7['className']=_0x563c46(0xca),_0x2b04d7['appendChild'](_0x1910d7)),_0x1910d7['textContent']=_0xbb5639;else _0x1910d7&&_0x1910d7[_0x563c46(0xcc)]();}}async function _0x2d545d(_0x859e00,_0x25d650){const _0x514205=_0x35a736,{error:_0x3ad89c}=await supabase['from'](_0x514205(0x9d))['update']({'estado':_0x514205(0xd2),'fecha_leido':new Date()['toISOString']()})['eq']('id',_0x859e00);if(!_0x3ad89c){_0x25d650['dataset'][_0x514205(0xa3)]=_0x514205(0xd2),_0x25d650[_0x514205(0xcf)][_0x514205(0xcc)](_0x514205(0xb2)),_0x25d650[_0x514205(0xcf)][_0x514205(0xda)]('visto');const _0x39b3d6=_0x25d650[_0x514205(0x7a)](_0x514205(0x93));if(_0x39b3d6)_0x39b3d6['textContent']=_0x514205(0x86);_0xe6f42();}}async function _0x26ab93(){const _0x5548ba=_0x35a736,_0x547f6=_0x140c46[_0x5548ba(0xd0)](_0x51ce1d=>_0x51ce1d[_0x5548ba(0xa3)]===_0x5548ba(0xb2));if(_0x547f6[_0x5548ba(0x9a)]===0x0)return;_0x1c1f7f[_0x5548ba(0xbf)][_0x5548ba(0x95)]=_0x5548ba(0xa7);for(const _0x34fc06 of _0x547f6){await supabase['from'](_0x5548ba(0x9d))[_0x5548ba(0xde)]({'estado':_0x5548ba(0xd2),'fecha_leido':new Date()['toISOString']()})['eq']('id',_0x34fc06['id']);}await _0x1f6747(),_0x1c1f7f[_0x5548ba(0xbf)][_0x5548ba(0x95)]='1';}async function _0x1f6747(){const _0x420ac0=_0x35a736;(_0x1c1f7f[_0x420ac0(0x96)][_0x420ac0(0x9a)]===0x0||_0x1c1f7f[_0x420ac0(0x7a)](_0x420ac0(0xbd)))&&(_0x1c1f7f[_0x420ac0(0x85)]=_0x420ac0(0xac));const {data:_0x4ce16b,error:_0x5a21eb}=await supabase[_0x420ac0(0x9e)](_0x420ac0(0x9d))[_0x420ac0(0x9c)]('*')['eq'](_0x420ac0(0x83),_0x3610c1['id'])[_0x420ac0(0xb5)](_0x420ac0(0xa9),{'ascending':_0x26ffff[_0x420ac0(0xb8)]===_0x420ac0(0xa1)});if(_0x5a21eb){_0x1c1f7f[_0x420ac0(0x85)]=_0x420ac0(0xb4)+_0x5a21eb[_0x420ac0(0xb1)]+_0x420ac0(0xc6);return;}_0x2a4ea2(_0x4ce16b);}function _0x27e1d4(){const _0x93b0fc=_0x35a736,_0x3a9df5=Array[_0x93b0fc(0x9e)](_0x1c1f7f[_0x93b0fc(0xce)](_0x93b0fc(0x94)));_0x3a9df5[_0x93b0fc(0xdd)](_0x423c5a=>{const _0x58aae8=_0x93b0fc,_0x1227f9=_0x26ffff['estado']===_0x58aae8(0x99)||_0x423c5a[_0x58aae8(0xa6)][_0x58aae8(0xa3)]===_0x26ffff[_0x58aae8(0xa3)],_0x55b786=_0x26ffff[_0x58aae8(0x81)]===_0x58aae8(0x99)||_0x423c5a[_0x58aae8(0xa6)][_0x58aae8(0x81)]===_0x26ffff[_0x58aae8(0x81)],_0x18aa3f=_0x26ffff[_0x58aae8(0xc4)]===_0x58aae8(0x87)||_0x423c5a[_0x58aae8(0xa6)]['prioridad']===_0x26ffff[_0x58aae8(0xc4)];_0x423c5a['style'][_0x58aae8(0xd3)]=_0x1227f9&&_0x55b786&&_0x18aa3f?_0x58aae8(0xaf):_0x58aae8(0x8d);});const _0x52052f=_0x3a9df5[_0x93b0fc(0xd0)](_0x1c6573=>_0x1c6573[_0x93b0fc(0xbf)][_0x93b0fc(0xd3)]!==_0x93b0fc(0x8d));_0x52052f[_0x93b0fc(0xab)]((_0x318056,_0x3c68cc)=>{const _0x26b81f=_0x93b0fc,_0x3a9062=new Date(_0x318056[_0x26b81f(0xa6)][_0x26b81f(0x7b)])[_0x26b81f(0xc9)](),_0x46bf87=new Date(_0x3c68cc[_0x26b81f(0xa6)][_0x26b81f(0x7b)])[_0x26b81f(0xc9)]();return _0x26ffff['ordenFecha']==='asc'?_0x3a9062-_0x46bf87:_0x46bf87-_0x3a9062;}),_0x52052f[_0x93b0fc(0xdd)](_0x282e46=>_0x1c1f7f[_0x93b0fc(0xe3)](_0x282e46));}function _0x1c37e5(){const _0x24653e=_0x35a736;document[_0x24653e(0xce)](_0x24653e(0xa4))[_0x24653e(0xdd)](_0x1bb2ac=>{const _0xaf40c4=_0x24653e;_0x1bb2ac[_0xaf40c4(0x80)](_0xaf40c4(0xdf),_0x44d0ef=>{const _0x355965=_0xaf40c4,_0x172dcf=_0x44d0ef['target'][_0x355965(0xc2)](_0x355965(0xa0));if(!_0x172dcf)return;const _0x1dd5ac=_0x172dcf[_0x355965(0xa6)][_0x355965(0x7f)],_0x26b581=_0x172dcf[_0x355965(0xa6)]['valor'];if(!_0x1dd5ac)return;_0x1bb2ac[_0x355965(0xce)]('.filtro-chip')[_0x355965(0xdd)](_0x13617f=>_0x13617f[_0x355965(0xcf)]['remove'](_0x355965(0xcb))),_0x172dcf[_0x355965(0xcf)][_0x355965(0xda)]('active');if(_0x1dd5ac===_0x355965(0xa3))_0x26ffff['estado']=_0x26b581;if(_0x1dd5ac===_0x355965(0x81))_0x26ffff['tipo']=_0x26b581;if(_0x1dd5ac===_0x355965(0xc4))_0x26ffff[_0x355965(0xc4)]=_0x26b581;_0x27e1d4();});});const _0x4c2a7c=document[_0x24653e(0x8e)](_0x24653e(0xaa));_0x4c2a7c?.[_0x24653e(0x80)](_0x24653e(0xdf),()=>{const _0x1c04ce=_0x24653e;_0x26ffff[_0x1c04ce(0xb8)]=_0x26ffff[_0x1c04ce(0xb8)]===_0x1c04ce(0xa1)?_0x1c04ce(0x7e):'asc',_0x4c2a7c[_0x1c04ce(0x85)]=_0x26ffff[_0x1c04ce(0xb8)]===_0x1c04ce(0xa1)?'<i\x20class=\x22fa-regular\x20fa-arrow-up-wide-short\x22></i>\x20Más\x20antiguos':'<i\x20class=\x22fa-regular\x20fa-arrow-down-wide-short\x22></i>\x20Más\x20recientes',_0x27e1d4();});}let _0x1b84ad=0x0;document['addEventListener'](_0x35a736(0xe1),_0x525b47=>{const _0x5c95a4=_0x35a736;window['scrollY']===0x0&&(_0x1b84ad=_0x525b47[_0x5c95a4(0x84)][0x0][_0x5c95a4(0x91)]);},{'passive':!![]}),document[_0x35a736(0x80)](_0x35a736(0xd5),_0x5cea34=>{const _0x72edcd=_0x35a736;if(_0x1b84ad>0x0&&window['scrollY']===0x0){const _0x28d436=_0x5cea34[_0x72edcd(0x84)][0x0][_0x72edcd(0x91)]-_0x1b84ad;_0x28d436>0x3c&&(_0x5920c4[_0x72edcd(0xbf)][_0x72edcd(0xd3)]='block');}},{'passive':!![]}),document['addEventListener'](_0x35a736(0x89),async()=>{const _0x32075b=_0x35a736;_0x5920c4[_0x32075b(0xbf)][_0x32075b(0xd3)]===_0x32075b(0xaf)&&(_0x5920c4[_0x32075b(0xbf)][_0x32075b(0xd3)]=_0x32075b(0x8d),await _0x1f6747()),_0x1b84ad=0x0;}),document['getElementById'](_0x35a736(0xd8))?.['addEventListener']('click',async()=>{const _0x3c9718=_0x35a736,_0x2e6b34=document[_0x3c9718(0x8e)](_0x3c9718(0xd8));_0x2e6b34[_0x3c9718(0xcf)][_0x3c9718(0xda)](_0x3c9718(0xd1)),await _0x1f6747(),setTimeout(()=>_0x2e6b34[_0x3c9718(0xcf)][_0x3c9718(0xcc)](_0x3c9718(0xd1)),0x1f4);}),document[_0x35a736(0x8e)](_0x35a736(0xb3))?.['addEventListener'](_0x35a736(0xdf),_0x26ab93);const _0x1a15b9=supabase[_0x35a736(0x8c)]('cambios-mensajes')['on'](_0x35a736(0x77),{'event':_0x35a736(0x9b),'schema':'public','table':_0x35a736(0x9d),'filter':_0x35a736(0xb9)+_0x3610c1['id']},()=>{_0x1f6747();})['on'](_0x35a736(0x77),{'event':_0x35a736(0x8f),'schema':_0x35a736(0x90),'table':_0x35a736(0x9d),'filter':_0x35a736(0xb9)+_0x3610c1['id']},()=>{_0x1f6747();})['subscribe']();_0x1c37e5(),await _0x1f6747(),window[_0x35a736(0x80)](_0x35a736(0xbb),()=>{const _0x5e5755=_0x35a736;_0x1a15b9[_0x5e5755(0x8a)]();});});
+  </script>
+</body>
+</html>

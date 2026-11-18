@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Marco Legal · EasyMarkets Analytics</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+      background: linear-gradient(145deg, #f0f4fc 0%, #e9eef6 100%);
+      margin: 0;
+      padding: 2rem 1.5rem;
+      color: #1a2c3e;
+    }
+
+    /* Contenedor principal elegante */
+    .legal-container {
+      max-width: 1280px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 2rem;
+    }
+
+    /* Header con identidad de análisis de mercado */
+    .legal-header {
+      text-align: center;
+      margin-bottom: 0.5rem;
+    }
+
+    .badge-market {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.6rem;
+      background: rgba(0, 122, 204, 0.12);
+      backdrop-filter: blur(2px);
+      padding: 0.5rem 1.2rem;
+      border-radius: 60px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      letter-spacing: 0.3px;
+      color: #0066b3;
+      margin-bottom: 1.2rem;
+      border: 1px solid rgba(0, 122, 204, 0.2);
+    }
+
+    .badge-market i {
+      font-size: 1rem;
+    }
+
+    .legal-header h1 {
+      font-size: 2.4rem;
+      font-weight: 700;
+      background: linear-gradient(135deg, #0b2b3f, #1a5d8f);
+      background-clip: text;
+      -webkit-background-clip: text;
+      color: transparent;
+      letter-spacing: -0.02em;
+      margin-bottom: 0.75rem;
+    }
+
+    .header-description {
+      font-size: 1.1rem;
+      color: #4a627a;
+      max-width: 720px;
+      margin: 0 auto;
+      line-height: 1.5;
+    }
+
+    /* Card principal con glassmorphism moderno */
+    .terms-card {
+      background: rgba(255, 255, 255, 0.96);
+      backdrop-filter: blur(0px);
+      border-radius: 2rem;
+      box-shadow: 0 20px 35px -12px rgba(0, 0, 0, 0.08), 0 1px 2px rgba(0, 0, 0, 0.02);
+      overflow: hidden;
+      transition: all 0.2s ease;
+      border: 1px solid rgba(255, 255, 255, 0.5);
+    }
+
+    /* Navegación rápida (índice anclado) */
+    .quick-nav {
+      background: #f8fafd;
+      padding: 1rem 2rem;
+      border-bottom: 1px solid #e9edf2;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.8rem 1.5rem;
+      align-items: center;
+    }
+
+    .nav-label {
+      font-size: 0.8rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: #5b7a9a;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .nav-link {
+      font-size: 0.85rem;
+      font-weight: 500;
+      color: #2c6280;
+      text-decoration: none;
+      transition: 0.2s;
+      padding: 0.25rem 0;
+      border-bottom: 1px dashed transparent;
+    }
+
+    .nav-link:hover {
+      color: #0077be;
+      border-bottom-color: #0077be;
+    }
+
+    /* Cuerpo de contenido mejorado */
+    .legal-content {
+      padding: 2.2rem 2.5rem;
+    }
+
+    /* Bloques de sección */
+    .legal-section {
+      margin-bottom: 2.8rem;
+      scroll-margin-top: 1rem;
+    }
+
+    .section-title {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: #0b3550;
+      margin-bottom: 1.2rem;
+      border-left: 4px solid #2c9bdd;
+      padding-left: 1rem;
+    }
+
+    .section-title i {
+      font-size: 1.5rem;
+      color: #2c9bdd;
+      width: 1.8rem;
+    }
+
+    .legal-text {
+      line-height: 1.65;
+      color: #2c3f4f;
+      margin-bottom: 1rem;
+      font-size: 1rem;
+    }
+
+    .legal-text strong {
+      color: #0f5b87;
+      font-weight: 600;
+    }
+
+    /* Listas modernas con iconos */
+    .styled-list {
+      list-style: none;
+      margin: 1rem 0 1.2rem 0;
+      display: flex;
+      flex-direction: column;
+      gap: 0.7rem;
+    }
+
+    .styled-list li {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.75rem;
+      background: #f9fbfe;
+      padding: 0.85rem 1.2rem;
+      border-radius: 1rem;
+      transition: all 0.2s;
+      border: 1px solid #eef2f8;
+    }
+
+    .styled-list li i {
+      color: #2c9bdd;
+      font-size: 1.1rem;
+      margin-top: 0.2rem;
+      flex-shrink: 0;
+    }
+
+    .styled-list li span {
+      flex: 1;
+      line-height: 1.45;
+    }
+
+    /* Tarjetas de métricas / insight (toque de análisis de mercado) */
+    .insight-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin: 1.5rem 0 1rem;
+    }
+
+    .insight-chip {
+      background: #eef3fc;
+      border-radius: 40px;
+      padding: 0.4rem 1rem;
+      font-size: 0.8rem;
+      font-weight: 500;
+      color: #005f8c;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .alert-note {
+      background: #fef7e0;
+      border-left: 4px solid #f4b942;
+      padding: 1rem 1.5rem;
+      border-radius: 1rem;
+      margin: 1rem 0;
+      font-size: 0.9rem;
+      color: #7a6300;
+    }
+
+    hr {
+      margin: 1.8rem 0;
+      border: none;
+      height: 1px;
+      background: linear-gradient(to right, #e2e8f0, transparent);
+    }
+
+    /* Pie de actualización */
+    .update-footer {
+      background: #f9fbfe;
+      border-radius: 1.2rem;
+      padding: 1rem 1.5rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+      font-size: 0.8rem;
+      color: #4d6a8a;
+      margin-top: 1rem;
+    }
+
+    /* Responsive refinado */
+    @media (max-width: 800px) {
+      body {
+        padding: 1rem;
+      }
+      .legal-content {
+        padding: 1.5rem;
+      }
+      .section-title {
+        font-size: 1.3rem;
+      }
+      .legal-header h1 {
+        font-size: 1.8rem;
+      }
+      .quick-nav {
+        overflow-x: auto;
+        flex-wrap: nowrap;
+        padding: 0.8rem 1.2rem;
+        gap: 1rem;
+      }
+      .nav-label {
+        flex-shrink: 0;
+      }
+    }
+
+    @media (max-width: 550px) {
+      .legal-content {
+        padding: 1.2rem;
+      }
+      .styled-list li {
+        padding: 0.7rem 1rem;
+      }
+      .section-title i {
+        font-size: 1.2rem;
+      }
+    }
+
+    /* efecto sutil al hacer scroll */
+    html {
+      scroll-behavior: smooth;
+    }
+  </style>
+</head>
+<body>
+<div class="legal-container">
+  
+  <!-- Encabezado con identidad de análisis de mercado / comportamiento -->
+  <div class="legal-header">
+    <div class="badge-market">
+      <i class="fas fa-chart-line"></i>
+      <span>Market Intelligence · Data-Driven Governance</span>
+      <i class="fas fa-chart-simple"></i>
+    </div>
+    <h1>Marco Normativo &amp; <br class="mobile-break">Política de Comportamiento</h1>
+    <div class="header-description">
+      Este documento establece las reglas de uso, gobernanza de datos y conducta esperada dentro del ecosistema EasyMarkets.  
+      Al acceder, aceptas los términos que garantizan un entorno transparente y alineado con las mejores prácticas de mercado.
+    </div>
+  </div>
+
+  <!-- Tarjeta principal de términos -->
+  <div class="terms-card">
+    <!-- Barra de navegación rápida (anclas) -->
+    <div class="quick-nav">
+      <span class="nav-label"><i class="fas fa-compass"></i> Explorar</span>
+      <a href="#definiciones" class="nav-link">Definiciones</a>
+      <a href="#naturaleza" class="nav-link">Naturaleza del servicio</a>
+      <a href="#contenido" class="nav-link">Contenido permitido</a>
+      <a href="#supervision" class="nav-link">Supervisión &amp; sanciones</a>
+      <a href="#derechos" class="nav-link">Derechos del usuario</a>
+      <a href="#propiedad" class="nav-link">Propiedad intelectual</a>
+      <a href="#actualizacion" class="nav-link">Actualización</a>
+    </div>
+
+    <div class="legal-content">
+      <!-- Introducción + definiciones -->
+      <div id="definiciones" class="legal-section">
+        <div class="section-title">
+          <i class="fas fa-chart-pie"></i>
+          <h2>1. Definiciones &amp; alcance analítico</h2>
+        </div>
+        <p class="legal-text">La presente Política de Privacidad y Marco de Gobernanza resulta de aplicación al uso, por parte del Usuario, de los Servicios EasyMarkets. Para un correcto entendimiento en el contexto de análisis de comportamiento de mercado, establecemos:</p>
+        <div class="insight-grid">
+          <span class="insight-chip"><i class="fas fa-user"></i> Usuario: persona física o jurídica</span>
+          <span class="insight-chip"><i class="fas fa-chart-line"></i> EasyMarkets Insights</span>
+          <span class="insight-chip"><i class="fas fa-store"></i> Exposición comercial</span>
+        </div>
+        <p class="legal-text"><strong>El Usuario</strong> será aquella persona física o jurídica que acceda y/o use cualquiera de los Servicios de EasyMarkets por cualquier medio (web, dispositivos móviles o API).</p>
+        <p class="legal-text"><strong>Los Servicios de EasyMarkets</strong> abarcan servicios, productos y acciones promocionales, gratuitos o de pago, que consisten en el acceso a informaciones, contenidos, comunicaciones comerciales, tiendas, bibliotecas de recursos y análisis de tendencias de mercado que EasyMarkets pone a disposición de los Usuarios en Internet.</p>
+        <p class="legal-text">Mediante la navegación en este Sitio Web, usted comprende y acepta esta Política de Privacidad como Usuario de cualquiera de los medios o Servicios de EasyMarkets, así como el tratamiento agregado de datos con fines de inteligencia comercial.</p>
+      </div>
+
+      <!-- Naturaleza del servicio -->
+      <div id="naturaleza" class="legal-section">
+        <div class="section-title">
+          <i class="fas fa-handshake"></i>
+          <h2>2. Naturaleza del ecosistema</h2>
+        </div>
+        <p class="legal-text">Esta plataforma opera como un <strong>espacio de exposición, gestión comercial y análisis de comportamiento de mercado</strong>. No realiza transacciones monetarias directas, ni proporciona pasarelas de pago, intermediación financiera o custodia de fondos. Cualquier acuerdo económico entre usuarios se realiza fuera del alcance del sitio, bajo su exclusiva responsabilidad, respetando siempre la legalidad vigente.</p>
+        <div class="alert-note">
+          <i class="fas fa-chart-line" style="margin-right: 10px;"></i> 
+          <strong>Enfoque analítico:</strong> La plataforma recopila métricas de interacción con el objetivo de ofrecer insights de tendencias de compra, preferencias de categorías y comportamiento agregado, sin comprometer datos personales sensibles.
+        </div>
+      </div>
+
+      <!-- Contenido permitido + bloque mejorado de ejemplos prohibidos -->
+      <div id="contenido" class="legal-section">
+        <div class="section-title">
+          <i class="fas fa-image"></i>
+          <h2>3. Política de contenido y bienes permitidos</h2>
+        </div>
+        <p class="legal-text">Los usuarios deben respetar las normas de publicación establecidas. Está estrictamente prohibido subir imágenes o contenido ajeno al ámbito comercial, incluyendo material violento, explícito, ofensivo o que infrinja derechos de terceros. La plataforma se reserva el derecho de eliminar cualquier contenido que no cumpla con estas directrices.</p>
+        <p class="legal-text">Queda prohibida la publicación de productos que no puedan ser fabricados de manera artesanal o importado sin infringir las leyes nacionales. Esto incluye, pero no se limita a:</p>
+        <ul class="styled-list">
+          <li><i class="fas fa-flask"></i><span>Combustibles, derivados energéticos no certificados.</span></li>
+          <li><i class="fas fa-capsules"></i><span>Medicamentos industriales o farmacéuticos sin registro sanitario.</span></li>
+          <li><i class="fas fa-industry"></i><span>Productos químicos regulados, precursores o de uso restringido.</span></li>
+        </ul>
+        <p class="legal-text">El objetivo es garantizar que los artículos publicados correspondan a bienes legítimos, seguros y compatibles con la normativa vigente, fomentando un entorno <strong>confiable, ético y orientado a la economía creativa</strong>.</p>
+      </div>
+
+      <!-- Supervisión y sanciones -->
+      <div id="supervision" class="legal-section">
+        <div class="section-title">
+          <i class="fas fa-shield-alt"></i>
+          <h2>4. Supervisión continua y medidas correctivas</h2>
+        </div>
+        <p class="legal-text">El sistema realiza revisiones periódicas automatizadas y revisiones humanas estratégicas del contenido publicado. En caso de incumplimiento de las normas, se podrán aplicar medidas progresivas:</p>
+        <ul class="styled-list">
+          <li><i class="fas fa-ban"></i><span><strong>Retiro inmediato</strong> de productos o contenido infractor.</span></li>
+          <li><i class="fas fa-user-lock"></i><span><strong>Suspensión temporal o permanente</strong> de cuentas con previa notificación.</span></li>
+          <li><i class="fas fa-clock"></i><span><strong>Bloqueo de acceso</strong> por tiempo determinado o indefinido en casos graves.</span></li>
+        </ul>
+        <p class="legal-text">Estas acciones serán notificadas al usuario junto con el motivo correspondiente, garantizando el derecho a réplica. La plataforma se reserva la facultad de actuar sin previo aviso en situaciones de riesgo legal o daño reputacional colectivo.</p>
+      </div>
+
+      <!-- Derechos del usuario + canal de atención -->
+      <div id="derechos" class="legal-section">
+        <div class="section-title">
+          <i class="fas fa-envelope-open-text"></i>
+          <h2>5. Derechos y atención al usuario</h2>
+        </div>
+        <p class="legal-text">Todo usuario tiene derecho a recibir información clara, acceder a sus datos conforme a la normativa aplicable y comunicarse con el equipo de soporte para realizar consultas, reportar problemas o proponer mejoras. El canal de atención está disponible dentro del módulo de servicio al cliente y a través del correo electrónico habilitado en la sección de ayuda.</p>
+        <p class="legal-text">Además, los usuarios pueden solicitar la revisión de decisiones automatizadas relacionadas con la moderación de contenido, garantizando la transparencia algorítmica y la equidad.</p>
+      </div>
+
+      <!-- Propiedad y derechos reservados -->
+      <div id="propiedad" class="legal-section">
+        <div class="section-title">
+          <i class="fas fa-balance-scale"></i>
+          <h2>6. Propiedad intelectual y activos de mercado</h2>
+        </div>
+        <p class="legal-text">Todo el contenido, diseño, estructura, funcionalidades, marcas, logotipos, análisis de mercado y sistemas de inteligencia comercial presentes en esta plataforma están protegidos por derechos de autor y leyes de propiedad industrial. <strong>EasyMarkets se reserva todos los derechos</strong> sobre su marca, código, arquitectura de datos, paneles de análisis y elementos visuales. Queda prohibida la reproducción total o parcial, ingeniería inversa o uso no autorizado sin consentimiento expreso por escrito.</p>
+        <p class="legal-text">Los insights y dashboards de comportamiento del mercado generados son propiedad exclusiva de la plataforma, utilizados para mejorar la experiencia comercial.</p>
+      </div>
+
+      <!-- Actualización de términos -->
+      <div id="actualizacion" class="legal-section">
+        <div class="section-title">
+          <i class="fas fa-calendar-alt"></i>
+          <h2>7. Actualización dinámica de términos</h2>
+        </div>
+        <p class="legal-text">Estos términos pueden ser modificados en cualquier momento para reflejar cambios en el modelo de negocio, actualizaciones legales o mejoras en los sistemas de análisis de mercado. Se recomienda a los usuarios revisar esta sección periódicamente para mantenerse informados sobre cambios relevantes. La versión vigente será siempre la publicada en este enlace.</p>
+        <div class="update-footer">
+          <span><i class="far fa-clock"></i> Última revisión: marzo 2026</span>
+          <span><i class="fas fa-chart-simple"></i> Aprobado por el comité de cumplimiento</span>
+          <span><i class="fas fa-shield-hooded"></i> Versión 2.4 – Market Ready</span>
+        </div>
+      </div>
+      <hr />
+      <p class="legal-text" style="font-size: 0.85rem; text-align: center; color: #5f7f9e;">
+        <i class="fas fa-chart-line"></i> Este marco legal opera en conjunto con el Observatorio de Tendencias y el panel de inteligencia de mercado.
+      </p>
+    </div>
+  </div>
+</div>
+</body>
+</html>

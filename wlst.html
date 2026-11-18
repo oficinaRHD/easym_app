@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Wishlist | EasyMarkets</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="css/wishlist.css?v=0069">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+</head>
+<body>
+    <header class="wishlist-header">
+        <div class="container header-container">
+            <div class="header-top">
+                <div class="brand-section">
+                    <a class="btn-back" onclick="window.history.back()">
+                        <i class="fa-solid fa-chevron-left"></i>
+                        <span>Volver</span>
+                    </a>
+                    <h1 class="site-title">P.<span>Guardados</span></h1>
+                </div>
+                
+            </div>
+
+            <div class="header-controls">
+                <form id="wishlist-filters" class="filters-grid">
+                    <div class="select-wrapper">
+                        <i class="fa-solid fa-coins"></i>
+                        <select id="filtro-moneda" name="moneda">
+                            <option value="todas">Todas las monedas</option>
+                            <option value="USD">MLC - MLC</option>
+                            <option value="CUP">CUP - CUP</option>
+                        </select>
+                    </div>
+
+                    <div class="button-group">
+                        <button id="orden-fecha" class="btn-filter" data-orden="desc" type="button">
+                            <i class="fa-solid fa-calendar-days"></i> Recientes
+                        </button>
+                        <button id="orden-precio" class="btn-filter" data-orden="asc" type="button">
+                            <i class="fa-solid fa-arrow-up-wide-short"></i> Precio
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </header>
+
+    <main class="container">
+        <div id="contenedor-wishlist" class="wishlist-grid">
+            </div>
+    </main>
+
+    <script type="module" src="/js/wishlist.js?v=0001"></script>
+</body>
+</html>

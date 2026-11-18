@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <title>Centro de Ayuda | EasyMarkets</title>
+    <!-- Tailwind CSS + Google Fonts + Material Symbols -->
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#6366f1',
+                        'primary-dim': '#4f46e5',
+                        secondary: '#10b981',
+                        tertiary: '#f59e0b',
+                        surface: '#f8fafc',
+                        'surface-container': '#ffffff',
+                        'surface-container-lowest': '#ffffff',
+                        'on-background': '#0f172a',
+                        'on-surface-variant': '#475569',
+                        outline: '#e2e8f0',
+                        'outline-variant': '#cbd5e1',
+                    },
+                    borderRadius: {
+                        '2xl': '1.5rem',
+                        'xl': '1rem',
+                    },
+                    fontFamily: {
+                        headline: ['Plus Jakarta Sans', 'sans-serif'],
+                        body: ['Inter', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { font-family: 'Inter', sans-serif; background: #f8fafc; }
+        h1, h2, h3, .font-headline { font-family: 'Plus Jakarta Sans', sans-serif; }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        .carousel-track {
+            scroll-behavior: smooth;
+            -webkit-overflow-scrolling: touch;
+        }
+        .carousel-track::-webkit-scrollbar {
+            height: 6px;
+        }
+        .carousel-track::-webkit-scrollbar-track {
+            background: #e2e8f0;
+            border-radius: 10px;
+        }
+        .carousel-track::-webkit-scrollbar-thumb {
+            background: #94a3b8;
+            border-radius: 10px;
+        }
+        details.faq-item summary {
+            list-style: none;
+            cursor: pointer;
+        }
+        details.faq-item summary::-webkit-details-marker {
+            display: none;
+        }
+        .faq-answer {
+            transition: all 0.2s ease;
+        }
+        mark {
+            background: #fef08a;
+            color: #0f172a;
+            border-radius: 4px;
+            padding: 0 2px;
+        }
+        .hidden-section {
+            display: none !important;
+        }
+    </style>
+</head>
+<body class="bg-surface text-on-background antialiased">
+
+    <!-- TopBar fija (ocultable al hacer scroll) -->
+    <header id="topbar" class="fixed top-0 w-full z-50 bg-white/90 dark:bg-slate-900/90 backdrop-blur-xl shadow-sm px-5 py-3 flex justify-between items-center transition-transform duration-300">
+        <div class="flex items-center gap-6">
+            <a href="index.html" class="text-2xl font-bold tracking-tight bg-gradient-to-r from-indigo-500 to-indigo-400 bg-clip-text text-transparent">Acceso rapido</a>
+            <nav class="hidden md:flex gap-5">
+                <a href="index.html" class="text-slate-600 hover:text-indigo-500 font-medium transition">Tienda</a>
+                <a href="boulevar.html" class="text-slate-600 hover:text-indigo-500 font-medium transition">Boulevar</a>
+                <a href="pd.html" class="text-slate-600 hover:text-indigo-500 font-medium transition">Pedidos</a>
+                <a href="boks.html" class="text-slate-600 hover:text-indigo-500 font-medium transition">Fanfic-Books</a>
+                <a href="bbo.html" class="text-slate-600 hover:text-indigo-500 font-medium transition">Biblioteca</a>
+            </nav>
+        </div>
+        <div class="flex items-center gap-3">
+            <div class="relative hidden sm:block">
+                <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-lg">search</span>
+                <input type="text" id="globalSearchInput" class="pl-9 pr-4 py-1.5 bg-slate-100 border-none rounded-full text-sm w-56 focus:ring-2 focus:ring-indigo-300 transition" placeholder="Buscar en ayuda...">
+            </div>
+            <button id="themeToggle" class="text-slate-500 hover:text-indigo-500 transition">
+                <span class="material-symbols-outlined">dark_mode</span>
+            </button>
+            <a href="prf.html" class="w-8 h-8 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-600">
+                <span class="material-symbols-outlined text-sm">Cuenta</span>
+            </a>
+        </div>
+    </header>
+
+    <!-- Layout con sidebar fijo -->
+    <div class="flex pt-16 min-h-screen">
+        <!-- Sidebar izquierda (navegación de ayuda) -->
+        <aside class="fixed left-0 top-16 h-[calc(100vh-4rem)] w-64 bg-white dark:bg-slate-950 border-r border-slate-200 dark:border-slate-800 hidden lg:flex flex-col p-4 overflow-y-auto z-40">
+            <div class="px-3 py-4 mb-2">
+                <h3 class="font-bold text-lg text-on-background">Centro de Ayuda</h3>
+                <p class="text-slate-500 text-xs">Soluciones y guías</p>
+            </div>
+            <nav class="flex flex-col gap-1" id="sidebarNav">
+                <a href="#registro" class="nav-link-sidebar flex items-center gap-3 px-4 py-2.5 text-slate-600 hover:bg-indigo-50 rounded-xl transition-all">
+                    <span class="material-symbols-outlined text-indigo-400">app_registration</span>
+                    <span>Registro de Cuenta</span>
+                </a>
+                <a href="#publicacion" class="nav-link-sidebar flex items-center gap-3 px-4 py-2.5 text-slate-600 hover:bg-indigo-50 rounded-xl transition-all">
+                    <span class="material-symbols-outlined text-indigo-400">inventory_2</span>
+                    <span>Publicar Productos</span>
+                </a>
+                <a href="#pedido" class="nav-link-sidebar flex items-center gap-3 px-4 py-2.5 text-slate-600 hover:bg-indigo-50 rounded-xl transition-all">
+                    <span class="material-symbols-outlined text-indigo-400">shopping_cart</span>
+                    <span>Colocar Pedido</span>
+                </a>
+                <a href="#gestionar-tiendas" class="nav-link-sidebar flex items-center gap-3 px-4 py-2.5 text-slate-600 hover:bg-indigo-50 rounded-xl transition-all">
+                    <span class="material-symbols-outlined text-indigo-400">storefront</span>
+                    <span>Gestionar Tiendas</span>
+                </a>
+                <a href="#supervisar" class="nav-link-sidebar flex items-center gap-3 px-4 py-2.5 text-slate-600 hover:bg-indigo-50 rounded-xl transition-all">
+                    <span class="material-symbols-outlined text-indigo-400">visibility</span>
+                    <span>Supervisar Tienda</span>
+                </a>
+                <a href="#perfil" class="nav-link-sidebar flex items-center gap-3 px-4 py-2.5 text-slate-600 hover:bg-indigo-50 rounded-xl transition-all">
+                    <span class="material-symbols-outlined text-indigo-400">location_on</span>
+                    <span>Obtener Plus Code</span>
+                </a>
+                <a href="#faq" class="nav-link-sidebar flex items-center gap-3 px-4 py-2.5 text-slate-600 hover:bg-indigo-50 rounded-xl transition-all">
+                    <span class="material-symbols-outlined text-indigo-400">help</span>
+                    <span>Preguntas Frecuentes</span>
+                </a>
+            </nav>
+            <div class="mt-auto p-4 bg-indigo-50/40 rounded-2xl border border-indigo-100 mt-6">
+                <p class="text-xs font-semibold text-indigo-600 mb-1">¿Necesitas ayuda adicional?</p>
+                <p class="text-xs text-slate-500 mb-3">Nuestro equipo está disponible 24/7</p>
+                <a href="ctt.html" class="w-full py-2 bg-indigo-600 text-white rounded-xl text-xs font-semibold hover:bg-indigo-700 transition">Contactar Soporte </a>
+            </div>
+        </aside>
+
+        <!-- Contenido principal -->
+        <main class="flex-1 lg:ml-64 w-full">
+            <!-- Hero con buscador -->
+            <section class="relative py-20 px-6 sm:px-10 bg-gradient-to-br from-indigo-50/80 via-white to-emerald-50/30 overflow-hidden">
+                <div class="max-w-4xl mx-auto text-center relative z-10">
+                    <h1 class="text-4xl sm:text-5xl font-extrabold tracking-tight text-slate-900 mb-4">¿Cómo podemos <span class="text-indigo-600">ayudarte</span> hoy?</h1>
+                    <p class="text-lg text-slate-500 mb-8">Encuentra tutoriales, guías visuales y respuestas rápidas</p>
+                    <div class="relative max-w-2xl mx-auto">
+                        <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-slate-400">search</span>
+                        <input type="text" id="heroSearchInput" class="w-full pl-12 pr-4 py-4 bg-white border border-slate-200 rounded-2xl shadow-lg text-slate-700 placeholder-slate-400 focus:ring-2 focus:ring-indigo-300 focus:border-indigo-300 transition" placeholder="Ej. cómo crear cuenta, publicar producto, plus code...">
+                    </div>
+                    <div class="flex flex-wrap justify-center gap-3 mt-6 text-sm text-slate-500">
+                        <span>Tendencias:</span>
+                        <a href="#" class="hover:text-indigo-600 transition" data-search="registro">Registro de cuenta</a>
+                        <span>•</span>
+                        <a href="#" class="hover:text-indigo-600 transition" data-search="publicar">Publicar producto</a>
+                        <span>•</span>
+                        <a href="#" class="hover:text-indigo-600 transition" data-search="pedido">Estado de pedido</a>
+                    </div>
+                </div>
+            </section>
+
+            <div class="max-w-6xl mx-auto px-4 sm:px-6 py-10 space-y-10" id="contentWrapper">
+                <!-- Sección Registro -->
+                <section id="registro" class="section-card bg-white rounded-2xl shadow-sm border border-slate-100 p-6 md:p-8 transition-all" data-keywords="registro cuenta usuario crear login contraseña">
+                    <div class="flex items-center gap-3 mb-5">
+                        <span class="material-symbols-outlined text-indigo-500 text-3xl">app_registration</span>
+                        <h2 class="text-2xl font-bold font-headline">Registro y Acceso a tu Cuenta</h2>
+                    </div>
+                    <p class="text-slate-500 mb-6">Guía completa para crear tu cuenta y comenzar a vender o comprar en LifeReading.</p>
+                    <div class="carousel-container relative group" data-carousel="c1">
+                        <button class="scroll-btn left absolute left-0 top-1/2 -translate-y-1/2 z-10 bg-white rounded-full shadow-md p-1.5 opacity-0 group-hover:opacity-100 transition" data-scroll-target="c1" data-scroll-amount="-320">
+                            <span class="material-symbols-outlined">chevron_left</span>
+                        </button>
+                        <div class="carousel-track flex gap-5 overflow-x-auto scroll-smooth pb-4 hide-scrollbar" id="c1">
+                            <div class="carousel-item min-w-[260px] sm:min-w-[300px] flex-shrink-0 snap-start bg-slate-100 rounded-xl overflow-hidden shadow cursor-pointer">
+                                <img src="https://i.postimg.cc/rpBd5Zm6/22.jpg" alt="Paso 1" class="w-full h-44 object-cover">
+                                <div class="p-3 bg-white"><span class="font-semibold">1. Identifícate</span><p class="text-xs text-slate-500">Accede al panel de registro</p></div>
+                            </div>
+                            <div class="carousel-item min-w-[260px] sm:min-w-[300px] flex-shrink-0 snap-start bg-slate-100 rounded-xl overflow-hidden shadow cursor-pointer">
+                                <img src="https://i.postimg.cc/d3zG3Qyk/crearcuenta.jpg" alt="Paso 2" class="w-full h-44 object-cover">
+                                <div class="p-3 bg-white"><span class="font-semibold">2. Crear cuenta</span><p class="text-xs text-slate-500">Completa tus datos básicos</p></div>
+                            </div>
+                            <div class="carousel-item min-w-[260px] sm:min-w-[300px] flex-shrink-0 snap-start bg-slate-100 rounded-xl overflow-hidden shadow cursor-pointer">
+                                <img src="https://i.postimg.cc/Y0JQ02Wh/registroform.jpg" alt="Paso 3" class="w-full h-44 object-cover">
+                                <div class="p-3 bg-white"><span class="font-semibold">3. Elegir plan</span><p class="text-xs text-slate-500">Selecciona el tipo de cuenta</p></div>
+                            </div>
+                            <div class="carousel-item min-w-[260px] sm:min-w-[300px] flex-shrink-0 snap-start bg-slate-100 rounded-xl overflow-hidden shadow cursor-pointer">
+                                <img src="https://i.postimg.cc/Bb8xJPXb/registrok2.jpg" alt="Paso 4" class="w-full h-44 object-cover">
+                                <div class="p-3 bg-white"><span class="font-semibold">4. Formulario final</span><p class="text-xs text-slate-500">Verifica tu correo</p></div>
+                            </div>
+                        </div>
+                        <button class="scroll-btn right absolute right-0 top-1/2 -translate-y-1/2 z-10 bg-white rounded-full shadow-md p-1.5 opacity-0 group-hover:opacity-100 transition" data-scroll-target="c1" data-scroll-amount="320">
+                            <span class="material-symbols-outlined">chevron_right</span>
+                        </button>
+                    </div>
+                </section>
+
+                <!-- Sección Publicación -->
+                <section id="publicacion" class="section-card bg-white rounded-2xl shadow-sm border border-slate-100 p-6 md:p-8" data-keywords="publicar producto vender subir inventario listar">
+                    <div class="flex items-center gap-3 mb-5"><span class="material-symbols-outlined text-indigo-500 text-3xl">inventory_2</span><h2 class="text-2xl font-bold font-headline">Publicación de Productos</h2></div>
+                    <p class="text-slate-500 mb-6">Aprende a gestionar tu inventario y publicar productos de forma profesional.</p>
+                    <div class="carousel-container relative group" data-carousel="c2">
+                        <button class="scroll-btn left absolute left-0 top-1/2 -translate-y-1/2 z-10 bg-white rounded-full shadow-md p-1.5 opacity-0 group-hover:opacity-100 transition" data-scroll-target="c2" data-scroll-amount="-320"><span class="material-symbols-outlined">chevron_left</span></button>
+                        <div class="carousel-track flex gap-5 overflow-x-auto scroll-smooth pb-4 hide-scrollbar" id="c2">
+                            <div class="carousel-item min-w-[260px] flex-shrink-0 snap-start bg-slate-100 rounded-xl overflow-hidden shadow"><img src="https://i.postimg.cc/pV7fqC1g/home.jpg" class="w-full h-44 object-cover"><div class="p-3 bg-white"><span class="font-semibold">Menú principal</span><p class="text-xs text-slate-500">Accede a gestión</p></div></div>
+                            <div class="carousel-item min-w-[260px] flex-shrink-0 snap-start bg-slate-100 rounded-xl overflow-hidden shadow"><img src="https://i.postimg.cc/2yPnyjZF/gestion.jpg" class="w-full h-44 object-cover"><div class="p-3 bg-white"><span class="font-semibold">Panel de gestión</span><p class="text-xs text-slate-500">Administra productos</p></div></div>
+                            <div class="carousel-item min-w-[260px] flex-shrink-0 snap-start bg-slate-100 rounded-xl overflow-hidden shadow"><img src="https://i.postimg.cc/cCKQdtrN/nuevo.jpg" class="w-full h-44 object-cover"><div class="p-3 bg-white"><span class="font-semibold">Formulario</span><p class="text-xs text-slate-500">Completa detalles</p></div></div>
+                            <div class="carousel-item min-w-[260px] flex-shrink-0 snap-start bg-slate-100 rounded-xl overflow-hidden shadow"><img src="https://i.postimg.cc/C1rGysM9/publicar.jpg" class="w-full h-44 object-cover"><div class="p-3 bg-white"><span class="font-semibold">Publicar</span><p class="text-xs text-slate-500">Producto en línea</p></div></div>
+                        </div>
+                        <button class="scroll-btn right absolute right-0 top-1/2 -translate-y-1/2 z-10 bg-white rounded-full shadow-md p-1.5 opacity-0 group-hover:opacity-100 transition" data-scroll-target="c2" data-scroll-amount="320"><span class="material-symbols-outlined">chevron_right</span></button>
+                    </div>
+                </section>
+
+                <!-- Sección Pedido -->
+                <section id="pedido" class="section-card bg-white rounded-2xl shadow-sm border border-slate-100 p-6 md:p-8" data-keywords="pedido solicitud comprar buscar publicación">
+                    <div class="flex items-center gap-3 mb-5"><span class="material-symbols-outlined text-indigo-500 text-3xl">shopping_cart</span><h2 class="text-2xl font-bold font-headline">Colocar un Pedido</h2></div>
+                    <p class="text-slate-500 mb-6">Genera solicitudes de compra y encuentra coincidencias con publicaciones activas.</p>
+                    <div class="carousel-container relative group" data-carousel="c3">
+                        <button class="scroll-btn left absolute left-0 top-1/2 -translate-y-1/2 z-10 bg-white rounded-full shadow-md p-1.5 opacity-0 group-hover:opacity-100 transition" data-scroll-target="c3" data-scroll-amount="-320"><span class="material-symbols-outlined">chevron_left</span></button>
+                        <div class="carousel-track flex gap-5 overflow-x-auto scroll-smooth pb-4 hide-scrollbar" id="c3">
+                            <div class="carousel-item min-w-[260px] flex-shrink-0 snap-start bg-slate-100 rounded-xl overflow-hidden shadow"><img src="https://i.postimg.cc/1XLDXRqw/pedidos.jpg" class="w-full h-44 object-cover"><div class="p-3 bg-white"><span class="font-semibold">Mis pedidos</span><p class="text-xs text-slate-500">Sección de solicitudes</p></div></div>
+                            <div class="carousel-item min-w-[260px] flex-shrink-0 snap-start bg-slate-100 rounded-xl overflow-hidden shadow"><img src="https://i.postimg.cc/1RGQm71t/pedido.jpg" class="w-full h-44 object-cover"><div class="p-3 bg-white"><span class="font-semibold">Completar pedido</span><p class="text-xs text-slate-500">Detalles de la compra</p></div></div>
+                        </div>
+                        <button class="scroll-btn right absolute right-0 top-1/2 -translate-y-1/2 z-10 bg-white rounded-full shadow-md p-1.5 opacity-0 group-hover:opacity-100 transition" data-scroll-target="c3" data-scroll-amount="320"><span class="material-symbols-outlined">chevron_right</span></button>
+                    </div>
+                </section>
+
+                <!-- Gestionar Tiendas -->
+                <section id="gestionar-tiendas" class="section-card bg-white rounded-2xl shadow-sm border border-slate-100 p-6 md:p-8" data-keywords="gestionar tiendas multi gestor vincular tienda administrar">
+                    <div class="flex items-center gap-3 mb-5"><span class="material-symbols-outlined text-indigo-500 text-3xl">storefront</span><h2 class="text-2xl font-bold font-headline">Gestionar Múltiples Tiendas</h2></div>
+                    <p class="text-slate-500 mb-6">Administra varias tiendas desde un solo panel, vincula gestores y personaliza accesos.</p>
+                    <div class="carousel-container relative group" data-carousel="c4">
+                        <button class="scroll-btn left absolute left-0 top-1/2 -translate-y-1/2 z-10 bg-white rounded-full shadow-md p-1.5 opacity-0 group-hover:opacity-100 transition" data-scroll-target="c4" data-scroll-amount="-320"><span class="material-symbols-outlined">chevron_left</span></button>
+                        <div class="carousel-track flex gap-5 overflow-x-auto scroll-smooth pb-4 hide-scrollbar" id="c4">
+                            <div class="carousel-item min-w-[260px] flex-shrink-0 snap-start bg-slate-100 rounded-xl overflow-hidden shadow"><img src="https://i.postimg.cc/0jL7j5wC/tu_cuenta.jpg" class="w-full h-44 object-cover"><div class="p-3 bg-white"><span class="font-semibold">Panel usuarios</span></div></div>
+                            <div class="carousel-item min-w-[260px] flex-shrink-0 snap-start bg-slate-100 rounded-xl overflow-hidden shadow"><img src="https://i.postimg.cc/2yZRktCR/multg.jpg" class="w-full h-44 object-cover"><div class="p-3 bg-white"><span class="font-semibold">Multi-Gestor</span></div></div>
+                            <div class="carousel-item min-w-[260px] flex-shrink-0 snap-start bg-slate-100 rounded-xl overflow-hidden shadow"><img src="https://i.postimg.cc/nLXtSrNh/vincular.jpg" class="w-full h-44 object-cover"><div class="p-3 bg-white"><span class="font-semibold">Vincular tienda</span></div></div>
+                            <div class="carousel-item min-w-[260px] flex-shrink-0 snap-start bg-slate-100 rounded-xl overflow-hidden shadow"><img src="https://i.postimg.cc/BbVyd9k2/vincularcode-(1).jpg" class="w-full h-44 object-cover"><div class="p-3 bg-white"><span class="font-semibold">Código acceso</span></div></div>
+                        </div>
+                        <button class="scroll-btn right absolute right-0 top-1/2 -translate-y-1/2 z-10 bg-white rounded-full shadow-md p-1.5 opacity-0 group-hover:opacity-100 transition" data-scroll-target="c4" data-scroll-amount="320"><span class="material-symbols-outlined">chevron_right</span></button>
+                    </div>
+                </section>
+
+                <!-- Supervisar Tienda -->
+                <section id="supervisar" class="section-card bg-white rounded-2xl shadow-sm border border-slate-100 p-6 md:p-8" data-keywords="supervisar tienda gestores acceso llave permisos">
+                    <div class="flex items-center gap-3 mb-5"><span class="material-symbols-outlined text-indigo-500 text-3xl">visibility</span><h2 class="text-2xl font-bold font-headline">Supervisar mi Tienda</h2></div>
+                    <p class="text-slate-500 mb-6">Concede acceso seguro a gestores profesionales con permisos específicos.</p>
+                    <div class="carousel-container relative group" data-carousel="c5">
+                        <button class="scroll-btn left absolute left-0 top-1/2 -translate-y-1/2 z-10 bg-white rounded-full shadow-md p-1.5 opacity-0 group-hover:opacity-100 transition" data-scroll-target="c5" data-scroll-amount="-320"><span class="material-symbols-outlined">chevron_left</span></button>
+                        <div class="carousel-track flex gap-5 overflow-x-auto scroll-smooth pb-4 hide-scrollbar" id="c5">
+                            <div class="carousel-item min-w-[260px] flex-shrink-0 snap-start bg-slate-100 rounded-xl overflow-hidden shadow"><img src="https://i.postimg.cc/0jL7j5wC/tu_cuenta.jpg" class="w-full h-44 object-cover"><div class="p-3 bg-white"><span class="font-semibold">Panel usuarios</span></div></div>
+                            <div class="carousel-item min-w-[260px] flex-shrink-0 snap-start bg-slate-100 rounded-xl overflow-hidden shadow"><img src="https://i.postimg.cc/CK6wwt3M/easysinc.jpg" class="w-full h-44 object-cover"><div class="p-3 bg-white"><span class="font-semibold">EasySinc</span></div></div>
+                            <div class="carousel-item min-w-[260px] flex-shrink-0 snap-start bg-slate-100 rounded-xl overflow-hidden shadow"><img src="https://i.postimg.cc/5tDD7MhZ/genllave.jpg" class="w-full h-44 object-cover"><div class="p-3 bg-white"><span class="font-semibold">Generar llave</span></div></div>
+                            <div class="carousel-item min-w-[260px] flex-shrink-0 snap-start bg-slate-100 rounded-xl overflow-hidden shadow"><img src="https://i.postimg.cc/bNFgHRfD/permis-(1).jpg" class="w-full h-44 object-cover"><div class="p-3 bg-white"><span class="font-semibold">Permisos</span></div></div>
+                        </div>
+                        <button class="scroll-btn right absolute right-0 top-1/2 -translate-y-1/2 z-10 bg-white rounded-full shadow-md p-1.5 opacity-0 group-hover:opacity-100 transition" data-scroll-target="c5" data-scroll-amount="320"><span class="material-symbols-outlined">chevron_right</span></button>
+                    </div>
+                </section>
+
+                <!-- Plus Code -->
+                <section id="perfil" class="section-card bg-white rounded-2xl shadow-sm border border-slate-100 p-6 md:p-8" data-keywords="perfil plus code maps ubicación local coordenadas">
+                    <div class="flex items-center gap-3 mb-5"><span class="material-symbols-outlined text-indigo-500 text-3xl">location_on</span><h2 class="text-2xl font-bold font-headline">Obtener el Plus Code</h2></div>
+                    <p class="text-slate-500 mb-6">Comparte tu ubicación exacta para que los compradores te encuentren fácilmente.</p>
+                    <div class="carousel-container relative group" data-carousel="c6">
+                        <button class="scroll-btn left absolute left-0 top-1/2 -translate-y-1/2 z-10 bg-white rounded-full shadow-md p-1.5 opacity-0 group-hover:opacity-100 transition" data-scroll-target="c6" data-scroll-amount="-320"><span class="material-symbols-outlined">chevron_left</span></button>
+                        <div class="carousel-track flex gap-5 overflow-x-auto scroll-smooth pb-4 hide-scrollbar" id="c6">
+                            <div class="carousel-item min-w-[260px] flex-shrink-0 snap-start bg-slate-100 rounded-xl overflow-hidden shadow"><img src="https://i.postimg.cc/RhGWQG3N/google-mapss.jpg" class="w-full h-44 object-cover"><div class="p-3 bg-white"><span class="font-semibold">Abrir Maps</span></div></div>
+                            <div class="carousel-item min-w-[260px] flex-shrink-0 snap-start bg-slate-100 rounded-xl overflow-hidden shadow"><img src="https://i.postimg.cc/gcCcKZs5/fijar.jpg" class="w-full h-44 object-cover"><div class="p-3 bg-white"><span class="font-semibold">Fijar ubicación</span></div></div>
+                            <div class="carousel-item min-w-[260px] flex-shrink-0 snap-start bg-slate-100 rounded-xl overflow-hidden shadow"><img src="https://i.postimg.cc/2jsjxZGX/ubication.jpg" class="w-full h-44 object-cover"><div class="p-3 bg-white"><span class="font-semibold">Detalles plus code</span></div></div>
+                            <div class="carousel-item min-w-[260px] flex-shrink-0 snap-start bg-slate-100 rounded-xl overflow-hidden shadow"><img src="https://i.postimg.cc/m2hLr0Ld/pluscode-(1).jpg" class="w-full h-44 object-cover"><div class="p-3 bg-white"><span class="font-semibold">Copiar código</span></div></div>
+                        </div>
+                        <button class="scroll-btn right absolute right-0 top-1/2 -translate-y-1/2 z-10 bg-white rounded-full shadow-md p-1.5 opacity-0 group-hover:opacity-100 transition" data-scroll-target="c6" data-scroll-amount="320"><span class="material-symbols-outlined">chevron_right</span></button>
+                    </div>
+                </section>
+
+                <!-- FAQ Preguntas Frecuentes -->
+                <section id="faq" class="section-card bg-white rounded-2xl shadow-sm border border-slate-100 p-6 md:p-8" data-keywords="faq preguntas frecuentes contraseña factura cuenta">
+                    <div class="flex items-center gap-3 mb-6"><span class="material-symbols-outlined text-indigo-500 text-3xl">help</span><h2 class="text-2xl font-bold font-headline">Preguntas Frecuentes</h2></div>
+                    <div class="space-y-3">
+                        <details class="faq-item border border-slate-200 rounded-xl p-4 bg-white"><summary class="faq-question font-semibold flex justify-between items-center cursor-pointer">¿Cómo restablezco mi contraseña?<span class="material-symbols-outlined text-indigo-400">expand_more</span></summary><div class="faq-answer text-slate-500 text-sm pt-3">Haz clic en “¿Olvidaste tu contraseña?” en la pantalla de inicio. Recibirás un enlace por correo (válido 15 min).</div></details>
+                        <details class="faq-item border border-slate-200 rounded-xl p-4 bg-white"><summary class="faq-question font-semibold flex justify-between items-center cursor-pointer">¿Puedo editar un producto con ventas?<span class="material-symbols-outlined text-indigo-400">expand_more</span></summary><div class="faq-answer text-slate-500 text-sm pt-3">Sí, puedes editar cualquier producto incluso si ya tiene ventas. Los cambios se reflejan automáticamente.</div></details>
+                        <details class="faq-item border border-slate-200 rounded-xl p-4 bg-white"><summary class="faq-question font-semibold flex justify-between items-center cursor-pointer">¿Puedo tener varios gestores asociados a mi tienda?<span class="material-symbols-outlined text-indigo-400">expand_more</span></summary><div class="faq-answer text-slate-500 text-sm pt-3">Sí, puedes tener múltiples gestores con diferentes niveles de permiso.</div></details>
+                        <details class="faq-item border border-slate-200 rounded-xl p-4 bg-white"><summary class="faq-question font-semibold flex justify-between items-center cursor-pointer">¿Qué tiempo permanece un pedido activo?<span class="material-symbols-outlined text-indigo-400">expand_more</span></summary><div class="faq-answer text-slate-500 text-sm pt-3">Los pedidos activos expiran después de 5 días si no se encuentran coincidencias.</div></details>
+                        <details class="faq-item border border-slate-200 rounded-xl p-4 bg-white"><summary class="faq-question font-semibold flex justify-between items-center cursor-pointer">¿Cómo contacto con soporte técnico?<span class="material-symbols-outlined text-indigo-400">expand_more</span></summary><div class="faq-answer text-slate-500 text-sm pt-3">Usa el chat en vivo o escribe a soporte@lifereading.com. Atención L-V 7am a 12am.</div></details>
+                    </div>
+                </section>
+                <div id="noResults" class="hidden text-center py-12 bg-white rounded-2xl shadow-sm"><span class="material-symbols-outlined text-4xl text-slate-300">search_off</span><p class="text-slate-500 mt-2">No encontramos resultados para tu búsqueda</p></div>
+            </div>
+            <!-- footer -->
+            <footer class="border-t border-slate-200 py-8 text-center text-slate-400 text-sm mt-12">© 2025 Life Reading — Centro de ayuda integral</footer>
+        </main>
+    </div>
+
+    <script>
+        // Scroll buttons logic
+       // ==================== GALERÍA MODAL (FULLSCREEN) ====================
+// Crear estructura del modal
+const modalOverlay = document.createElement('div');
+modalOverlay.className = 'fixed inset-0 z-[100] bg-black/95 backdrop-blur-md hidden items-center justify-center transition-all duration-300';
+modalOverlay.style.display = 'none';
+
+const modalContainer = document.createElement('div');
+modalContainer.className = 'relative w-full h-full flex flex-col items-center justify-center px-4 py-12';
+
+// Botón cerrar
+const closeBtn = document.createElement('button');
+closeBtn.className = 'absolute top-5 right-5 z-20 w-12 h-12 bg-white/10 hover:bg-white/20 rounded-full flex items-center justify-center transition-all backdrop-blur-sm border border-white/20';
+closeBtn.innerHTML = '<span class="material-symbols-outlined text-white text-2xl">close</span>';
+
+// Contenedor del carrusel modal
+const modalTrack = document.createElement('div');
+modalTrack.className = 'flex gap-6 overflow-x-auto snap-x snap-mandatory scroll-smooth w-full max-w-6xl mx-auto hide-scrollbar items-center';
+modalTrack.style.scrollBehavior = 'smooth';
+modalTrack.style.padding = '2rem 1rem';
+
+// Botones navegación
+const navLeft = document.createElement('button');
+navLeft.className = 'absolute left-4 top-1/2 -translate-y-1/2 z-20 w-12 h-12 bg-white/10 hover:bg-white/20 rounded-full flex items-center justify-center transition-all backdrop-blur-sm border border-white/20 opacity-0 hover:opacity-100 transition-opacity';
+navLeft.innerHTML = '<span class="material-symbols-outlined text-white text-3xl">chevron_left</span>';
+
+const navRight = document.createElement('button');
+navRight.className = 'absolute right-4 top-1/2 -translate-y-1/2 z-20 w-12 h-12 bg-white/10 hover:bg-white/20 rounded-full flex items-center justify-center transition-all backdrop-blur-sm border border-white/20 opacity-0 hover:opacity-100 transition-opacity';
+navRight.innerHTML = '<span class="material-symbols-outlined text-white text-3xl">chevron_right</span>';
+
+// Indicador de posición
+const indicator = document.createElement('div');
+indicator.className = 'absolute bottom-8 left-1/2 -translate-x-1/2 bg-black/50 backdrop-blur-sm px-4 py-2 rounded-full text-white text-sm font-medium z-20';
+
+modalContainer.appendChild(closeBtn);
+modalContainer.appendChild(navLeft);
+modalContainer.appendChild(navRight);
+modalContainer.appendChild(modalTrack);
+modalContainer.appendChild(indicator);
+modalOverlay.appendChild(modalContainer);
+document.body.appendChild(modalOverlay);
+
+// Variables para la galería actual
+let currentImages = [];
+let currentIndex = 0;
+let currentSectionId = '';
+
+// Función para abrir galería con imágenes de una sección específica
+function openGallery(images, startIndex, sectionId) {
+    currentImages = images;
+    currentIndex = startIndex;
+    currentSectionId = sectionId;
+    
+    // Limpiar y llenar el track del modal
+    modalTrack.innerHTML = '';
+    
+    images.forEach((img, idx) => {
+        const slideDiv = document.createElement('div');
+        slideDiv.className = 'snap-start shrink-0 w-full max-w-3xl mx-auto flex flex-col items-center justify-center min-h-[60vh]';
+        
+        const imgElement = document.createElement('img');
+        imgElement.src = img.src;
+        imgElement.alt = img.alt || `Paso ${idx + 1}`;
+        imgElement.className = 'max-w-full max-h-[75vh] object-contain rounded-2xl shadow-2xl bg-slate-900/50';
+        
+        const captionDiv = document.createElement('div');
+        captionDiv.className = 'mt-4 text-center text-white/80 text-sm bg-black/40 backdrop-blur-sm px-4 py-2 rounded-full';
+        captionDiv.innerText = img.caption || `${idx + 1} / ${images.length}`;
+        
+        slideDiv.appendChild(imgElement);
+        slideDiv.appendChild(captionDiv);
+        modalTrack.appendChild(slideDiv);
+    });
+    
+    // Centrar en el índice seleccionado
+    setTimeout(() => {
+        const slides = modalTrack.children;
+        if (slides[currentIndex]) {
+            slides[currentIndex].scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'center' });
+        }
+        updateIndicator();
+    }, 100);
+    
+    modalOverlay.style.display = 'flex';
+    document.body.style.overflow = 'hidden';
+}
+
+// Actualizar indicador de posición
+function updateIndicator() {
+    const scrollPos = modalTrack.scrollLeft;
+    const slideWidth = modalTrack.children[0]?.offsetWidth || 0;
+    const newIndex = Math.round(scrollPos / (slideWidth + 24)); // 24 es el gap
+    if (newIndex >= 0 && newIndex < currentImages.length) {
+        currentIndex = newIndex;
+        indicator.innerText = `${currentIndex + 1} / ${currentImages.length}`;
+    }
+}
+
+// Cerrar modal
+function closeGallery() {
+    modalOverlay.style.display = 'none';
+    document.body.style.overflow = '';
+    currentImages = [];
+    currentIndex = 0;
+}
+
+// Navegación modal
+navLeft.addEventListener('click', () => {
+    const slides = modalTrack.children;
+    if (slides[currentIndex - 1]) {
+        slides[currentIndex - 1].scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'center' });
+    }
+});
+
+navRight.addEventListener('click', () => {
+    const slides = modalTrack.children;
+    if (slides[currentIndex + 1]) {
+        slides[currentIndex + 1].scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'center' });
+    }
+});
+
+// Actualizar índice al hacer scroll
+modalTrack.addEventListener('scroll', () => {
+    requestAnimationFrame(updateIndicator);
+});
+
+// Cerrar con tecla ESC
+document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && modalOverlay.style.display === 'flex') {
+        closeGallery();
+    }
+});
+
+closeBtn.addEventListener('click', closeGallery);
+modalOverlay.addEventListener('click', (e) => {
+    if (e.target === modalOverlay) closeGallery();
+});
+
+// ==================== CAPTURAR TODOS LOS CARRUSELES ====================
+document.querySelectorAll('.carousel-container').forEach(container => {
+    const sectionCard = container.closest('.section-card');
+    const sectionId = sectionCard?.id || 'default';
+    const carouselTrack = container.querySelector('.carousel-track');
+    
+    if (!carouselTrack) return;
+    
+    // Recopilar todas las imágenes de este carrusel
+    const items = carouselTrack.querySelectorAll('.carousel-item');
+    const galleryImages = [];
+    
+    items.forEach((item, idx) => {
+        const img = item.querySelector('img');
+        const captionSpan = item.querySelector('.font-semibold');
+        const descSpan = item.querySelector('.text-xs');
+        
+        let caption = '';
+        if (captionSpan) {
+            caption = captionSpan.innerText;
+            if (descSpan) caption += ` - ${descSpan.innerText}`;
+        } else {
+            caption = `Paso ${idx + 1}`;
+        }
+        
+        if (img && img.src) {
+            galleryImages.push({
+                src: img.src,
+                alt: img.alt || caption,
+                caption: caption,
+                originalItem: item
+            });
+        }
+    });
+    
+    // Hacer clickeable cada item del carrusel
+    items.forEach((item, idx) => {
+        item.style.cursor = 'pointer';
+        item.addEventListener('click', (e) => {
+            e.stopPropagation();
+            if (galleryImages.length > 0) {
+                openGallery(galleryImages, idx, sectionId);
+            }
+        });
+    });
+    
+    // También hacer clickeable las imágenes directamente
+    const allImages = carouselTrack.querySelectorAll('img');
+    allImages.forEach((img, idx) => {
+        img.style.cursor = 'pointer';
+        img.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const parentItem = img.closest('.carousel-item');
+            const actualIndex = Array.from(items).indexOf(parentItem);
+            if (galleryImages.length > 0 && actualIndex >= 0) {
+                openGallery(galleryImages, actualIndex, sectionId);
+            }
+        });
+    });
+});
+
+// ==================== TAMBIÉN PARA SECCIONES COMPLETAS (OPCIONAL) ====================
+// Al hacer clic en el título de la sección, abre la galería desde el inicio
+document.querySelectorAll('.section-card').forEach(section => {
+    const sectionTitle = section.querySelector('.font-headline, h2');
+    const container = section.querySelector('.carousel-container');
+    
+    if (sectionTitle && container) {
+        sectionTitle.style.cursor = 'pointer';
+        sectionTitle.addEventListener('click', () => {
+            const track = container.querySelector('.carousel-track');
+            const items = track?.querySelectorAll('.carousel-item');
+            if (items && items.length > 0) {
+                // Recopilar imágenes nuevamente para esta sección
+                const sectionGallery = [];
+                items.forEach((item, idx) => {
+                    const img = item.querySelector('img');
+                    const captionSpan = item.querySelector('.font-semibold');
+                    const descSpan = item.querySelector('.text-xs');
+                    let caption = '';
+                    if (captionSpan) {
+                        caption = captionSpan.innerText;
+                        if (descSpan) caption += ` - ${descSpan.innerText}`;
+                    } else {
+                        caption = `Paso ${idx + 1}`;
+                    }
+                    if (img && img.src) {
+                        sectionGallery.push({
+                            src: img.src,
+                            alt: img.alt || caption,
+                            caption: caption
+                        });
+                    }
+                });
+                if (sectionGallery.length > 0) {
+                    openGallery(sectionGallery, 0, section.id);
+                }
+            }
+        });
+    }
+});
+
+console.log('✅ Galería modal activada: haz clic en cualquier imagen o tarjeta del carrusel');
+            
+    </script>
+</body>
+</html>

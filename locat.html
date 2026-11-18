@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detector de Provincia - Cuba</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        /* Banner principal */
+        .banner {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 90%;
+            max-width: 800px;
+            z-index: 1000;
+            animation: slideDown 0.5s ease-out;
+        }
+
+        @keyframes slideDown {
+            from {
+                top: -100px;
+                opacity: 0;
+            }
+            to {
+                top: 20px;
+                opacity: 1;
+            }
+        }
+
+        .banner-content {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            border-radius: 15px;
+            padding: 20px 30px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 15px;
+            border-left: 8px solid #ffd700;
+            backdrop-filter: blur(10px);
+        }
+
+        .banner-icon {
+            font-size: 48px;
+            animation: pulse 1.5s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.1);
+            }
+        }
+
+        .banner-text {
+            flex: 1;
+            color: white;
+        }
+
+        .banner-text h2 {
+            font-size: 1.2rem;
+            margin-bottom: 5px;
+            opacity: 0.9;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .banner-text .provincia {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #ffd700;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .banner-status {
+            background: rgba(0,0,0,0.3);
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            color: #ffd700;
+        }
+
+        /* Tarjeta de información adicional */
+        .info-card {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            max-width: 600px;
+            width: 100%;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            text-align: center;
+            margin-top: 100px;
+        }
+
+        .info-card h1 {
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        .info-card p {
+            color: #666;
+            line-height: 1.6;
+            margin: 15px 0;
+        }
+
+        .loading-spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255,255,255,0.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .detalle-ubicacion {
+            background: #f0f0f0;
+            border-radius: 10px;
+            padding: 15px;
+            margin-top: 20px;
+            text-align: left;
+            font-size: 0.9rem;
+        }
+
+        button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-top: 15px;
+            font-size: 1rem;
+            transition: transform 0.2s;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+        }
+
+        /* Provincias de Cuba con sus colores característicos */
+        .provincia-Pinar-del-Río { border-left-color: #ff6b6b; }
+        .provincia-Artemisa { border-left-color: #4ecdc4; }
+        .provincia-La-Habana { border-left-color: #45b7d1; }
+        .provincia-Mayabeque { border-left-color: #96ceb4; }
+        .provincia-Matanzas { border-left-color: #feca57; }
+        .provincia-Cienfuegos { border-left-color: #ff9ff3; }
+        .provincia-Villa-Clara { border-left-color: #54a0ff; }
+        .provincia-Sancti-Spíritus { border-left-color: #5f27cd; }
+        .provincia-Ciego-de-Ávila { border-left-color: #00d2d3; }
+        .provincia-Camagüey { border-left-color: #ff6b6b; }
+        .provincia-Las-Tunas { border-left-color: #feca57; }
+        .provincia-Granma { border-left-color: #ff9f43; }
+        .provincia-Holguín { border-left-color: #10ac84; }
+        .provincia-Santiago-de-Cuba { border-left-color: #ee5a24; }
+        .provincia-Guantánamo { border-left-color: #0abde3; }
+        .provincia-Isla-de-la-Juventud { border-left-color: #c8d6e5; }
+    </style>
+</head>
+<body>
+    <div>
+        <!-- Banner dinámico que se mostrará cuando se detecte la provincia -->
+        <div id="provinciaBanner" class="banner" style="display: none;">
+            <div class="banner-content" id="bannerContent">
+                <div class="banner-icon">🇨🇺</div>
+                <div class="banner-text">
+                    <h2>📍 UBICACIÓN DETECTADA</h2>
+                    <div class="provincia" id="provinciaNombre">Cargando...</div>
+                    <p style="font-size: 0.85rem; margin-top: 5px;" id="ciudadInfo"></p>
+                </div>
+                <div class="banner-status" id="statusBadge">
+                    <span id="metodoTexto">Detectando...</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tarjeta principal -->
+        <div class="info-card">
+            <div style="font-size: 64px;">🇨🇺</div>
+            <h1>Detector de Provincia en Cuba</h1>
+            <p>Este sistema detecta automáticamente la provincia cubana donde te encuentras.</p>
+            
+            <div id="loadingMessage">
+                <div class="loading-spinner"></div>
+                <p style="margin-top: 10px;">Detectando tu ubicación...</p>
+            </div>
+
+            <div id="resultadoDetalle" style="display: none;">
+                <div class="detalle-ubicacion">
+                    <strong>📊 Método utilizado:</strong> <span id="metodoUsado">-</span><br>
+                    <strong>🌍 Provincia:</strong> <span id="provinciaDetalle">-</span><br>
+                    <strong>🏙️ Ciudad/Municipio:</strong> <span id="ciudadDetalle">-</span><br>
+                    <strong>📍 Coordenadas:</strong> <span id="coordenadas">-</span><br>
+                    <strong>📡 Precisión:</strong> <span id="precision">-</span>
+                </div>
+                <button onclick="forzarRedeteccion()">🔄 Volver a detectar</button>
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        // Mapeo de provincias cubanas (para normalizar nombres)
+        const provinciasCuba = [
+            "Pinar del Río", "Artemisa", "La Habana", "Mayabeque", "Matanzas",
+            "Cienfuegos", "Villa Clara", "Sancti Spíritus", "Ciego de Ávila",
+            "Camagüey", "Las Tunas", "Granma", "Holguín", "Santiago de Cuba",
+            "Guantánamo", "Isla de la Juventud"
+        ];
+
+        // Función para normalizar y encontrar la provincia cubana
+        function encontrarProvinciaCubana(texto) {
+            if (!texto) return null;
+            
+            texto = texto.toLowerCase().trim();
+            
+            // Mapeo de posibles variaciones a nombres oficiales
+            const variaciones = {
+                "pinar del rio": "Pinar del Río",
+                "pinardelrio": "Pinar del Río",
+                "artemisa": "Artemisa",
+                "la habana": "La Habana",
+                "habana": "La Habana",
+                "ciudad de la habana": "La Habana",
+                "mayabeque": "Mayabeque",
+                "matanzas": "Matanzas",
+                "cienfuegos": "Cienfuegos",
+                "villa clara": "Villa Clara",
+                "villaclara": "Villa Clara",
+                "sancti spiritus": "Sancti Spíritus",
+                "sancti spíritus": "Sancti Spíritus",
+                "sanctispiritus": "Sancti Spíritus",
+                "ciego de avila": "Ciego de Ávila",
+                "ciego de ávila": "Ciego de Ávila",
+                "camaguey": "Camagüey",
+                "camagüey": "Camagüey",
+                "las tunas": "Las Tunas",
+                "lastunas": "Las Tunas",
+                "granma": "Granma",
+                "holguin": "Holguín",
+                "holguín": "Holguín",
+                "santiago de cuba": "Santiago de Cuba",
+                "santiago": "Santiago de Cuba",
+                "guantanamo": "Guantánamo",
+                "guantánamo": "Guantánamo",
+                "isla de la juventud": "Isla de la Juventud",
+                "isla de la juventud": "Isla de la Juventud"
+            };
+            
+            // Buscar coincidencia directa
+            for (const [key, value] of Object.entries(variaciones)) {
+                if (texto.includes(key)) {
+                    return value;
+                }
+            }
+            
+            // Buscar por palabras clave
+            for (const provincia of provinciasCuba) {
+                if (texto.includes(provincia.toLowerCase())) {
+                    return provincia;
+                }
+            }
+            
+            return null;
+        }
+
+        // Función para actualizar el banner con la provincia detectada
+        function actualizarBanner(provincia, ciudad, metodo, precision = null) {
+            const banner = document.getElementById('provinciaBanner');
+            const provinciaNombreElem = document.getElementById('provinciaNombre');
+            const ciudadInfoElem = document.getElementById('ciudadInfo');
+            const metodoTextoElem = document.getElementById('metodoTexto');
+            const bannerContent = document.getElementById('bannerContent');
+            
+            // Actualizar contenido
+            provinciaNombreElem.textContent = provincia;
+            if (ciudad && ciudad !== provincia) {
+                ciudadInfoElem.innerHTML = `📍 ${ciudad}, ${provincia}`;
+            } else {
+                ciudadInfoElem.innerHTML = `📍 Provincia: ${provincia}`;
+            }
+            
+            let metodoDisplay = '';
+            if (metodo === 'gps') {
+                metodoDisplay = '🎯 GPS (Alta precisión)';
+            } else if (metodo === 'ip') {
+                metodoDisplay = '🌐 Por IP (Estimado)';
+            } else {
+                metodoDisplay = '📡 Detectado';
+            }
+            metodoTextoElem.innerHTML = metodoDisplay;
+            
+            // Aplicar clase específica para el color del borde
+            const provinciaClass = `provincia-${provincia.replace(/ /g, '-').replace(/ó/g, 'o').replace(/í/g, 'i').replace(/á/g, 'a').replace(/é/g, 'e').replace(/ú/g, 'u')}`;
+            bannerContent.className = `banner-content ${provinciaClass}`;
+            
+            // Mostrar banner con animación
+            banner.style.display = 'block';
+            
+            // Actualizar detalles en la tarjeta
+            document.getElementById('provinciaDetalle').textContent = provincia;
+            document.getElementById('metodoUsado').textContent = metodo === 'gps' ? 'Geolocalización GPS (precisa)' : 'Geolocalización por IP (aproximada)';
+            if (precision) {
+                document.getElementById('precision').textContent = precision;
+            }
+        }
+
+        // Método 1: Usar IP (BigDataCloud - gratuito, sin API key)
+        async function detectarPorIP() {
+            try {
+                const response = await fetch('https://api.bigdatacloud.net/data/reverse-geocode-client?localityLanguage=es');
+                const data = await response.json();
+                
+                console.log('Datos por IP:', data);
+                
+                const ciudad = data.city || data.locality || data.principalSubdivision;
+                let provincia = data.principalSubdivision || data.region;
+                
+                // Buscar provincia cubana
+                let provinciaEncontrada = encontrarProvinciaCubana(provincia);
+                if (!provinciaEncontrada && ciudad) {
+                    provinciaEncontrada = encontrarProvinciaCubana(ciudad);
+                }
+                
+                if (provinciaEncontrada && data.countryCode === 'CU') {
+                    return {
+                        provincia: provinciaEncontrada,
+                        ciudad: ciudad,
+                        metodo: 'ip',
+                        lat: data.latitude,
+                        lon: data.longitude
+                    };
+                }
+                
+                return null;
+            } catch (error) {
+                console.error('Error en detección por IP:', error);
+                return null;
+            }
+        }
+
+        // Método 2: Usar GPS del navegador
+        function detectarPorGPS() {
+            return new Promise((resolve) => {
+                if (!navigator.geolocation) {
+                    resolve(null);
+                    return;
+                }
+                
+                navigator.geolocation.getCurrentPosition(
+                    async (position) => {
+                        try {
+                            const { latitude, longitude, accuracy } = position.coords;
+                            
+                            // Usar Nominatim (OpenStreetMap) para reverse geocoding
+                            const response = await fetch(
+                                `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}&accept-language=es`
+                            );
+                            const data = await response.json();
+                            
+                            console.log('Datos por GPS:', data);
+                            
+                            const address = data.address;
+                            let provincia = address.state || address.region || address.province;
+                            const ciudad = address.city || address.town || address.village || address.municipality;
+                            
+                            let provinciaEncontrada = encontrarProvinciaCubana(provincia);
+                            if (!provinciaEncontrada && ciudad) {
+                                provinciaEncontrada = encontrarProvinciaCubana(ciudad);
+                            }
+                            
+                            if (provinciaEncontrada) {
+                                resolve({
+                                    provincia: provinciaEncontrada,
+                                    ciudad: ciudad || provinciaEncontrada,
+                                    metodo: 'gps',
+                                    lat: latitude,
+                                    lon: longitude,
+                                    precision: `${Math.round(accuracy)} metros`
+                                });
+                            } else {
+                                resolve(null);
+                            }
+                        } catch (error) {
+                            console.error('Error en reverse geocoding:', error);
+                            resolve(null);
+                        }
+                    },
+                    (error) => {
+                        console.log('Error de GPS (permiso denegado o error):', error.message);
+                        resolve(null);
+                    },
+                    {
+                        enableHighAccuracy: true,
+                        timeout: 10000,
+                        maximumAge: 0
+                    }
+                );
+            });
+        }
+
+        // Función principal de detección
+        async function detectarProvincia() {
+            const loadingMessage = document.getElementById('loadingMessage');
+            const resultadoDetalle = document.getElementById('resultadoDetalle');
+            
+            // Ocultar banner mientras detectamos
+            document.getElementById('provinciaBanner').style.display = 'none';
+            loadingMessage.style.display = 'block';
+            resultadoDetalle.style.display = 'none';
+            
+            // Intentar primero con GPS (más preciso)
+            let resultado = await detectarPorGPS();
+            
+            // Si GPS falla o no detecta provincia cubana, usar IP
+            if (!resultado) {
+                console.log('GPS no detectó provincia cubana, usando IP...');
+                resultado = await detectarPorIP();
+            }
+            
+            // Ocultar loading
+            loadingMessage.style.display = 'none';
+            
+            if (resultado) {
+                // Actualizar banner y detalles
+                actualizarBanner(
+                    resultado.provincia,
+                    resultado.ciudad,
+                    resultado.metodo,
+                    resultado.precision
+                );
+                
+                if (resultado.lat && resultado.lon) {
+                    document.getElementById('coordenadas').textContent = 
+                        `${resultado.lat.toFixed(4)}°, ${resultado.lon.toFixed(4)}°`;
+                } else {
+                    document.getElementById('coordenadas').textContent = 'No disponible';
+                }
+                
+                resultadoDetalle.style.display = 'block';
+            } else {
+                // No se pudo detectar provincia cubana
+                document.getElementById('provinciaBanner').style.display = 'block';
+                document.getElementById('provinciaNombre').textContent = 'No se pudo detectar';
+                document.getElementById('ciudadInfo').innerHTML = '⚠️ No se pudo determinar la provincia';
+                document.getElementById('metodoTexto').innerHTML = '❌ Error';
+                document.getElementById('statusBadge').style.backgroundColor = 'rgba(255,0,0,0.3)';
+                
+                resultadoDetalle.style.display = 'block';
+                document.getElementById('provinciaDetalle').textContent = 'No detectada';
+                document.getElementById('metodoUsado').textContent = 'Fallo en la detección';
+                document.getElementById('coordenadas').textContent = 'No disponible';
+                document.getElementById('precision').textContent = 'No disponible';
+            }
+        }
+
+        // Función para forzar nueva detección
+        window.forzarRedeteccion = function() {
+            detectarProvincia();
+        };
+
+        // Iniciar detección al cargar la página
+        detectarProvincia();
+    </script>
+</body>
+</html>

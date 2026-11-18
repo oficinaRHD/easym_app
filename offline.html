@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sin conexión</title>
+    <style>
+        /* ===== Reset y estilos base ===== */
+        *,
+        *::before,
+        *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg: #f6f9fc;
+            --card-bg: #ffffff;
+            --text-primary: #1e293b;
+            --text-secondary: #475569;
+            --accent: #3b82f6;
+            --accent-hover: #2563eb;
+            --shadow: 0 20px 60px -12px rgba(0, 0, 0, 0.15);
+            --radius: 32px;
+            --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            --status-online: #22c55e;
+            --status-offline: #ef4444;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+                "Helvetica Neue", Arial, sans-serif;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--bg);
+            padding: 24px;
+            margin: 0;
+        }
+
+        /* ===== Tarjeta principal ===== */
+        .offline-card {
+            max-width: 520px;
+            width: 100%;
+            background: var(--card-bg);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            padding: 48px 40px 40px;
+            text-align: center;
+            transition: transform var(--transition), box-shadow var(--transition);
+            animation: fadeUp 0.8s ease-out;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .offline-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 28px 72px -16px rgba(0, 0, 0, 0.2);
+        }
+
+        /* ===== Icono SVG animado ===== */
+        .icon-wrapper {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 24px;
+        }
+
+        .icon-wrapper svg {
+            width: 96px;
+            height: 96px;
+            fill: none;
+            stroke: var(--accent);
+            stroke-width: 1.8;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        /* ===== Tipografía ===== */
+        h1 {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 12px;
+            letter-spacing: -0.02em;
+        }
+
+        .subtitle {
+            font-size: 1rem;
+            color: var(--text-secondary);
+            line-height: 1.6;
+            margin-bottom: 8px;
+        }
+
+        /* ===== Estado de conexión ===== */
+        .connection-status {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin: 16px 0 28px;
+            padding: 8px 16px;
+            border-radius: 40px;
+            background: #f1f5f9;
+            font-size: 0.95rem;
+            font-weight: 500;
+            color: var(--text-secondary);
+            transition: background 0.3s, color 0.3s;
+        }
+
+        .connection-status .led {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            flex-shrink: 0;
+            transition: background 0.3s;
+        }
+
+        .connection-status .led.online {
+            background: var(--status-online);
+            animation: none;
+        }
+
+        .connection-status .led.offline {
+            background: var(--status-offline);
+            animation: pulse 1.5s ease-in-out infinite;
+        }
+
+        .connection-status .status-text {
+            transition: color 0.3s;
+        }
+
+        .connection-status.online {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .connection-status.offline {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        /* ===== Botón ===== */
+        .btn-retry {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            background: var(--accent);
+            color: #fff;
+            border: none;
+            padding: 14px 36px;
+            font-size: 1rem;
+            font-weight: 600;
+            border-radius: 60px;
+            cursor: pointer;
+            transition: background var(--transition), transform 0.15s;
+            box-shadow: 0 8px 24px -6px rgba(59, 130, 246, 0.35);
+            margin-top: 4px;
+            width: auto;
+            min-width: 180px;
+        }
+
+        .btn-retry:hover {
+            background: var(--accent-hover);
+            transform: scale(1.02);
+        }
+
+        .btn-retry:active {
+            transform: scale(0.96);
+        }
+
+        .btn-retry svg {
+            width: 20px;
+            height: 20px;
+            stroke: currentColor;
+            stroke-width: 2.2;
+            fill: none;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+            transition: transform 0.6s ease;
+        }
+
+        .btn-retry:active svg {
+            transform: rotate(180deg);
+        }
+
+        /* ===== Pie ===== */
+        .footer-note {
+            margin-top: 32px;
+            font-size: 0.8rem;
+            color: #94a3b8;
+            letter-spacing: 0.3px;
+        }
+
+        /* ===== Animaciones ===== */
+        @keyframes fadeUp {
+            0% {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes float {
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-10px);
+            }
+        }
+
+        @keyframes pulse {
+            0%,
+            100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0.4;
+            }
+        }
+
+        /* ===== Responsive ===== */
+        @media (max-width: 480px) {
+            .offline-card {
+                padding: 32px 20px 28px;
+            }
+            h1 {
+                font-size: 1.6rem;
+            }
+            .icon-wrapper svg {
+                width: 72px;
+                height: 72px;
+            }
+            .btn-retry {
+                padding: 12px 28px;
+                font-size: 0.95rem;
+                width: 100%;
+                min-width: unset;
+                justify-content: center;
+            }
+            .connection-status {
+                font-size: 0.85rem;
+                padding: 6px 14px;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .icon-wrapper svg,
+            .offline-card,
+            .connection-status .led.offline {
+                animation: none;
+            }
+            .btn-retry:active svg {
+                transform: none;
+            }
+        }
+
+        /* ===== Tema oscuro ===== */
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --bg: #0f172a;
+                --card-bg: #1e293b;
+                --text-primary: #f1f5f9;
+                --text-secondary: #cbd5e1;
+                --shadow: 0 20px 60px -12px rgba(0, 0, 0, 0.6);
+            }
+            .connection-status {
+                background: #334155;
+                color: #e2e8f0;
+            }
+            .connection-status.online {
+                background: #14532d;
+                color: #bbf7d0;
+            }
+            .connection-status.offline {
+                background: #7f1d1d;
+                color: #fecaca;
+            }
+            .footer-note {
+                color: #64748b;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="offline-card" role="main" aria-labelledby="offline-title">
+        <!-- Icono SVG (wifi-off) -->
+        <div class="icon-wrapper" aria-hidden="true">
+            <svg viewBox="0 0 24 24" stroke="currentColor">
+                <!-- Línea de wifi tachada -->
+                <path d="M2 8.5L3.5 7" stroke-width="2" />
+                <path d="M5.5 5.5L7 4" stroke-width="2" />
+                <path d="M8.5 3.5L10 2" stroke-width="2" />
+                <!-- Ondas de wifi rotas -->
+                <path d="M5 13.5a8 8 0 0 1 6.5-3.5" stroke-width="1.8" />
+                <path d="M2 10.5a12 12 0 0 1 7-4.5" stroke-width="1.8" />
+                <path d="M9.5 17.5a3 3 0 0 1 3.5 0" stroke-width="1.8" />
+                <path d="M13.5 10.5a8 8 0 0 1 4.5 3" stroke-width="1.8" />
+                <path d="M17.5 7.5a12 12 0 0 1 4 3.5" stroke-width="1.8" />
+                <!-- Tachadura cruzada -->
+                <line x1="2" y1="18" x2="22" y2="2" stroke-width="2" stroke-linecap="round" />
+                <!-- Punto de conexión (pequeño) -->
+                <circle cx="12" cy="20" r="2" stroke-width="1.5" />
+            </svg>
+        </div>
+
+        <h1 id="offline-title">Sin conexión</h1>
+        <p class="subtitle">
+            No pudimos cargar esta página porque tu dispositivo no está conectado a Internet.
+        </p>
+
+        <!-- Estado de conexión en tiempo real -->
+        <div class="connection-status" id="connectionStatus" role="status" aria-live="polite">
+            <span class="led offline" id="statusLed"></span>
+            <span class="status-text" id="statusText">Verificando conexión…</span>
+        </div>
+
+        <!-- Botón reintentar -->
+        <button id="retryBtn" class="btn-retry" aria-label="Reintentar conexión">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M21 12a9 9 0 1 1-9-9" />
+                <path d="M21 3v6h-6" />
+            </svg>
+            Reintentar
+        </button>
+
+        <p class="footer-note">La página se recargará automáticamente al recuperar la señal</p>
+    </div>
+
+    <script>
+        (function() {
+            'use strict';
+
+            const statusContainer = document.getElementById('connectionStatus');
+            const led = document.getElementById('statusLed');
+            const statusText = document.getElementById('statusText');
+            const retryBtn = document.getElementById('retryBtn');
+
+            // Actualiza la interfaz según el estado de conexión
+            function updateConnectionStatus() {
+                const isOnline = navigator.onLine;
+
+                // Actualizar clases del contenedor
+                statusContainer.classList.remove('online', 'offline');
+                statusContainer.classList.add(isOnline ? 'online' : 'offline');
+
+                // Actualizar LED
+                led.className = 'led';
+                led.classList.add(isOnline ? 'online' : 'offline');
+
+                // Actualizar texto
+                if (isOnline) {
+                    statusText.textContent = 'Conexión restablecida. Redirigiendo…';
+                    // Redirigir después de 2 segundos
+                    setTimeout(() => {
+                        window.location.href = 'index.html';
+                    }, 2000);
+                } else {
+                    statusText.textContent = 'Sin conexión a internet';
+                }
+            }
+
+            // Eventos de cambio de conexión
+            window.addEventListener('online', updateConnectionStatus);
+            window.addEventListener('offline', updateConnectionStatus);
+
+            // Estado inicial
+            updateConnectionStatus();
+
+            // Botón reintentar: recarga la página (forzando un nuevo intento)
+            retryBtn.addEventListener('click', function() {
+                // Si estamos online, redirige; si no, recarga para que el navegador intente de nuevo
+                if (navigator.onLine) {
+                    window.location.href = 'index.html';
+                } else {
+                    window.location.reload();
+                }
+            });
+
+        })();
+    </script>
+</body>
+</html>

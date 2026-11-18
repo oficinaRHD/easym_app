@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+  <title>Mi Membresía | EasyMarket</title>
+  
+  <!-- Bootstrap Icons -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+  
+  <!-- Google Fonts - Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --primary: #2563eb;
+      --primary-dark: #1d4ed8;
+      --primary-soft: #dbeafe;
+      --primary-light: #60a5fa;
+      --success: #10b981;
+      --success-soft: #d1fae5;
+      --warning: #f59e0b;
+      --warning-soft: #fef3c7;
+      --danger: #ef4444;
+      --danger-soft: #fee2e2;
+      --gray-50: #f9fafb;
+      --gray-100: #f3f4f6;
+      --gray-200: #e5e7eb;
+      --gray-300: #d1d5db;
+      --gray-400: #9ca3af;
+      --gray-500: #6b7280;
+      --gray-600: #4b5563;
+      --gray-700: #374151;
+      --gray-800: #1f2937;
+      --gray-900: #111827;
+      --bg-body: #f0f2f5;
+      --bg-card: #ffffff;
+      --shadow-sm: 0 2px 4px rgba(0,0,0,0.05);
+      --shadow-md: 0 4px 12px rgba(0,0,0,0.05);
+      --shadow-lg: 0 10px 25px -5px rgba(0,0,0,0.1);
+      --shadow-xl: 0 20px 30px -10px rgba(0,0,0,0.15);
+      --radius-sm: 8px;
+      --radius-md: 12px;
+      --radius-lg: 16px;
+      --radius-xl: 24px;
+      --transition: all 0.2s ease;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: linear-gradient(145deg, var(--gray-100) 0%, #e6ecf5 100%);
+      color: var(--gray-800);
+      min-height: 100vh;
+      line-height: 1.5;
+      margin: 0;
+      padding: 0;
+    }
+
+    #contenedor-membresia {
+      max-width: 1400px;
+      margin: 2rem auto;
+      padding: 0 1.5rem;
+    }
+
+    .dashboard-wrapper {
+      animation: fadeIn 0.5s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Grid 3 columnas para incluir la tarjeta de verificación */
+    .dashboard-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.8rem;
+      margin-bottom: 2rem;
+    }
+
+    @media (max-width: 1100px) {
+      .dashboard-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 700px) {
+      .dashboard-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .card {
+      background: rgba(255, 255, 255, 0.85);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-radius: var(--radius-xl);
+      padding: 2rem;
+      box-shadow: var(--shadow-lg), 0 0 0 1px rgba(255,255,255,0.5) inset;
+      border: 1px solid rgba(255,255,255,0.3);
+      transition: var(--transition);
+    }
+
+    .card:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-xl), 0 0 0 1px rgba(255,255,255,0.7) inset;
+    }
+
+    /* Tarjeta de verificación destacada */
+    .verificacion-card {
+      background: linear-gradient(145deg, #ffffff, var(--gray-50));
+      border: 1px solid var(--primary-soft);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .verificacion-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, var(--primary), var(--primary-light), #8b5cf6);
+    }
+
+    .verificacion-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 1.5rem;
+      padding-bottom: 1rem;
+      border-bottom: 2px solid var(--gray-200);
+    }
+
+    .verificacion-header i {
+      font-size: 2rem;
+      color: var(--primary);
+      background: var(--primary-soft);
+      padding: 12px;
+      border-radius: 50%;
+    }
+
+    .verificacion-header h3 {
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: var(--gray-800);
+    }
+
+    /* Estado de verificación */
+    .status-verificacion {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 16px;
+      border-radius: 40px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      margin-bottom: 1.5rem;
+    }
+
+    .status-verificacion.pendiente {
+      background: var(--warning-soft);
+      color: #92400e;
+    }
+
+    .status-verificacion.verificado {
+      background: var(--success-soft);
+      color: #166534;
+    }
+
+    .status-verificacion.rechazado {
+      background: var(--danger-soft);
+      color: #991b1b;
+    }
+
+    .status-verificacion.en_revision {
+      background: var(--primary-soft);
+      color: var(--primary-dark);
+    }
+
+    /* Formulario moderno */
+    .form-grupo {
+      margin-bottom: 1.2rem;
+    }
+
+    .form-grupo label {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-weight: 600;
+      font-size: 0.85rem;
+      color: var(--gray-700);
+      margin-bottom: 0.5rem;
+    }
+
+    .form-grupo input, .form-grupo select {
+      width: 100%;
+      padding: 0.9rem 1rem;
+      border: 2px solid var(--gray-200);
+      border-radius: var(--radius-md);
+      font-size: 0.95rem;
+      transition: var(--transition);
+      font-family: 'Inter', monospace;
+    }
+
+    .form-grupo input:focus, .form-grupo select:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px var(--primary-soft);
+    }
+
+    .btn-verificar {
+      width: 100%;
+      background: linear-gradient(135deg, var(--primary), var(--primary-light));
+      color: white;
+      border: none;
+      padding: 1rem;
+      border-radius: var(--radius-md);
+      font-weight: 700;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: var(--transition);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      margin-top: 1rem;
+    }
+
+    .btn-verificar:hover:not(:disabled) {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 16px -4px rgba(37, 99, 235, 0.4);
+    }
+
+    .btn-verificar:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    /* Perfil */
+    .user-header {
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+    }
+
+    .avatar-circle {
+      width: 80px;
+      height: 80px;
+      background: linear-gradient(135deg, var(--primary), var(--primary-light), #8b5cf6);
+      background-size: 200% 200%;
+      animation: gradientShift 6s ease infinite;
+      color: white;
+      font-size: 2.5rem;
+      font-weight: 700;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 15px 25px -5px rgba(37, 99, 235, 0.4);
+      border: 3px solid white;
+    }
+
+    @keyframes gradientShift {
+      0%, 100% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+    }
+
+    .rol-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 16px;
+      background: var(--primary-soft);
+      color: var(--primary-dark);
+      border-radius: 40px;
+      font-weight: 600;
+      font-size: 0.85rem;
+      margin-top: 1rem;
+    }
+
+    .badge {
+      padding: 8px 18px;
+      border-radius: 40px;
+      font-weight: 700;
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .badge.activo {
+      background: var(--success-soft);
+      color: #166534;
+      border: 1px solid var(--success);
+    }
+
+    .badge.expirado {
+      background: var(--danger-soft);
+      color: #991b1b;
+      border: 1px solid var(--danger);
+    }
+
+    .dias-restantes {
+      font-size: 2.5rem;
+      font-weight: 800;
+      color: var(--gray-900);
+      line-height: 1.2;
+      margin: 0.5rem 0 0.2rem;
+    }
+
+    .progress-container {
+      width: 100%;
+      height: 8px;
+      background: var(--gray-200);
+      border-radius: 40px;
+      overflow: hidden;
+      margin: 1rem 0;
+    }
+
+    .progress-bar {
+      height: 100%;
+      background: linear-gradient(90deg, var(--primary), var(--primary-light));
+      border-radius: 40px;
+      transition: width 1s ease;
+    }
+
+    /* Tablas */
+    .table-responsive {
+      overflow-x: auto;
+      margin-top: 1.5rem;
+    }
+
+    .pagos-tabla {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.95rem;
+    }
+
+    .pagos-tabla th {
+      text-align: left;
+      padding: 1rem;
+      background: var(--gray-100);
+      font-weight: 600;
+    }
+
+    .pagos-tabla td {
+      padding: 1rem;
+      border-bottom: 1px solid var(--gray-200);
+    }
+
+    .recibo-id {
+      font-family: monospace;
+      background: var(--gray-100);
+      padding: 4px 8px;
+      border-radius: var(--radius-sm);
+      font-size: 0.85rem;
+    }
+
+    /* Toast notifications */
+    .toast-notification {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: white;
+      padding: 1rem 1.5rem;
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-xl);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      z-index: 1000;
+      animation: slideIn 0.3s ease;
+      border-left: 4px solid;
+    }
+
+    .toast-notification.success { border-left-color: var(--success); }
+    .toast-notification.error { border-left-color: var(--danger); }
+    .toast-notification.info { border-left-color: var(--primary); }
+
+    @keyframes slideIn {
+      from {
+        transform: translateX(100%);
+        opacity: 0;
+      }
+      to {
+        transform: translateX(0);
+        opacity: 1;
+      }
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 3rem 2rem;
+      color: var(--gray-400);
+    }
+
+    .error-container {
+      text-align: center;
+      padding: 3rem 2rem;
+      background: var(--danger-soft);
+      border-radius: var(--radius-lg);
+      color: #991b1b;
+    }
+
+    .loader {
+      text-align: center;
+      padding: 3rem;
+    }
+
+    .spinner {
+      width: 40px;
+      height: 40px;
+      border: 3px solid var(--gray-200);
+      border-top-color: var(--primary);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      margin: 0 auto 1rem;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--primary), var(--primary-light));
+      color: white;
+      border: none;
+      padding: 1rem 2.5rem;
+      border-radius: 40px;
+      font-weight: 700;
+      font-size: 1rem;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .solicitud-info {
+      background: var(--gray-50);
+      border-radius: var(--radius-md);
+      padding: 1rem;
+      margin-top: 1rem;
+    }
+
+    .solicitud-info p {
+      margin: 0.5rem 0;
+      font-size: 0.9rem;
+    }
+  </style>
+</head>
+<body>
+
+  <main id="contenedor-membresia"></main>
+
+  <script type="module">
+    const _0x77dd2a=_0x3d22;function _0x1a12(){const _0x5acc5d=['shield-lock','floor','Vendedor\x20Verificado','estado','single','\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20</div>\x0a\x20\x20\x20\x20\x20\x20\x20\x20','\x22></i>\x0a\x20\x20\x20\x20\x20\x20\x20\x20<span>','</span>\x0a\x20\x20\x20\x20\x20\x20','</div>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<div>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<h3>','max','4GbgLHc','getUser','username','innerHTML','fecha_inicio','rechazado','3407985MLBLQy','Usuario\x20Básico','charAt','formVerificacion','success','email','6188910SJJcka','select','join','solicitar_verificacion_pago','limit','\x22>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<i\x20class=\x22bi\x20bi-','querySelector','5454470covXzG','id,\x20username,\x20email,\x20fecha_registro,\x20esVendedor','En\x20revisión','</td>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20</tr>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20','toLocaleString','getElementById','</small>','button','Por\x20favor\x20completa\x20todos\x20los\x20campos','\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<div\x20class=\x22status-verificacion\x20','Activa','check-circle-fill','submit','✅\x20Solicitud\x20enviada\x20correctamente.\x20En\x20breve\x20será\x20revisada.','verificado','tipo_plan','\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20','length','6632560zxbKbQ','en_revision','</span></td>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<td>$','\x20(plan\x20','Error\x20al\x20enviar\x20la\x20solicitud','membresias','planes_config','\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<div\x20class=\x22error-container\x22>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<i\x20class=\x22bi\x20bi-shield-exclamation\x22></i>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<h3>Acceso\x20Denegado</h3>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<p>Debes\x20iniciar\x20sesión\x20para\x20ver\x20tu\x20membresía.</p>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<button\x20onclick=\x22window.location.href=\x27login.html\x27\x22\x20class=\x22btn-primary\x22\x20style=\x22margin-top:1rem;\x22>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<i\x20class=\x22bi\x20bi-box-arrow-in-right\x22></i>\x20Iniciar\x20Sesión\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20</button>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20</div>','telefono','fecha_inicio,\x20fecha_fin,\x20estado,\x20periodo_gratis,\x20tipo_plan','</span></td>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<td>','info-circle-fill',')</small>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20</div>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<button\x20type=\x22submit\x22\x20class=\x22btn-verificar\x22>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<i\x20class=\x22bi\x20bi-check2-circle\x22></i>\x20Enviar\x20Comprobante\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20</button>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20</form>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20','expirado','fecha_pago','<div\x20class=\x22loader\x22><div\x20class=\x22spinner\x22></div><p>Cargando\x20información...</p></div>','\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20</div>','\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<div\x20class=\x22card\x22\x20style=\x22text-align:\x20center;\x22>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<i\x20class=\x22bi\x20bi-star-fill\x22\x20style=\x22font-size:\x202rem;\x20color:\x20var(--warning);\x22></i>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<h3\x20style=\x22margin-top:\x200.5rem;\x22>¡Conviértete\x20en\x20Vendedor!</h3>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<p>Activa\x20tu\x20membresía\x20por\x20solo\x20$29.99/mes</p>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<button\x20class=\x22btn-primary\x22\x20style=\x22margin-top:\x201rem;\x22\x20onclick=\x22window.location.href=\x27registro-vendedor.html\x27\x22>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<i\x20class=\x22bi\x20bi-arrow-up-circle\x22></i>\x20Solicitar\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20</button>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20</div>','usuario_id','observacion','\x22></i>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20','</small>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20</div>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20</div>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<div\x20class=\x22rol-badge\x22>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<i\x20class=\x22bi\x20bi-','activo','6464423ReNdnm','Profesional','DOMContentLoaded','Error\x20de\x20conexión.\x20Intenta\x20nuevamente.','min','auth','order','<i\x20class=\x22bi\x20bi-check2-circle\x22></i>\x20Enviar\x20Comprobante','toLocaleDateString','\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20</tbody>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20</table>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20</div>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20</div>','monto_mensual','check-circle','monto','894804MViama','info','person','exclamation-circle','error','remove','Pendiente\x20de\x20revisión','activa','esVendedor','div','fecha_registro','\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<div\x20class=\x22dashboard-wrapper\x22>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<div\x20class=\x22dashboard-grid\x22>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<!--\x20Perfil\x20-->\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<div\x20class=\x22card\x22>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<div\x20class=\x22user-header\x22>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<div\x20class=\x22avatar-circle\x22>','<small><i\x20class=\x22bi\x20bi-calendar-x\x22></i>\x20Vence:\x20','\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<tr>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<td>','value','x-circle-fill','disabled','</td>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<td><span\x20class=\x22recibo-id\x22>','65493HJEyFp','id_transaccion','\x22\x20required>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<small\x20style=\x22color:\x20var(--gray-500);\x22>Monto\x20esperado:\x20$','from','\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<div\x20class=\x22card\x22>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<div\x20style=\x22display:\x20flex;\x20justify-content:\x20space-between;\x20align-items:\x20center;\x20margin-bottom:\x201rem;\x22>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<h3><i\x20class=\x22bi\x20bi-shield-check\x22></i>\x20Membresía</h3>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<span\x20class=\x22badge\x20','Expirada','fecha_fin','\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20</div>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20</div>\x0a\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<!--\x20Estado\x20Membresía\x20-->\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20','</p>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<p><i\x20class=\x22bi\x20bi-calendar\x22></i>\x20<strong>Solicitado:</strong>\x20','100rgbkDj','%\x22></div></div>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20','\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<div\x20class=\x22error-container\x22>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<i\x20class=\x22bi\x20bi-bug-fill\x22></i>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<h3>Error\x20Inesperado</h3>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<p>No\x20pudimos\x20cargar\x20la\x20información.</p>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<button\x20onclick=\x22location.reload()\x22\x20class=\x22btn-primary\x22\x20style=\x22margin-top:1rem;\x22>Reintentar</button>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20</div>','toUpperCase','reload','rpc','className','appendChild','\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20</span>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20</div>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<div\x20class=\x22dias-restantes\x22>','fecha_solicitud','pendiente','</p>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<p><i\x20class=\x22bi\x20bi-cash\x22></i>\x20<strong>Monto:</strong>\x20$','\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20</div>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<div\x20class=\x22solicitud-info\x22>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<p><i\x20class=\x22bi\x20bi-receipt\x22></i>\x20<strong>ID\x20Transacción:</strong>\x20'];_0x1a12=function(){return _0x5acc5d;};return _0x1a12();}(function(_0x2de9d7,_0x1c375f){const _0x3212f9=_0x3d22,_0x1e40da=_0x2de9d7();while(!![]){try{const _0x54938c=parseInt(_0x3212f9(0x214))/0x1+-parseInt(_0x3212f9(0x22f))/0x2*(parseInt(_0x3212f9(0x226))/0x3)+parseInt(_0x3212f9(0x246))/0x4*(parseInt(_0x3212f9(0x1de))/0x5)+parseInt(_0x3212f9(0x1d7))/0x6+-parseInt(_0x3212f9(0x207))/0x7+-parseInt(_0x3212f9(0x1f0))/0x8+parseInt(_0x3212f9(0x1d1))/0x9;if(_0x54938c===_0x1c375f)break;else _0x1e40da['push'](_0x1e40da['shift']());}catch(_0x1029db){_0x1e40da['push'](_0x1e40da['shift']());}}}(_0x1a12,0x86b3b));import{supabase}from'./js/supabase.js';function showToast(_0x1ec8a7,_0x41ff99=_0x77dd2a(0x215)){const _0x4563cb=_0x77dd2a,_0x38df20=document['createElement'](_0x4563cb(0x21d));_0x38df20[_0x4563cb(0x235)]='toast-notification\x20'+_0x41ff99,_0x38df20[_0x4563cb(0x249)]='\x0a\x20\x20\x20\x20\x20\x20\x20\x20<i\x20class=\x22bi\x20bi-'+(_0x41ff99===_0x4563cb(0x1d5)?_0x4563cb(0x1e9):_0x41ff99==='error'?_0x4563cb(0x223):_0x4563cb(0x1fb))+_0x4563cb(0x242)+_0x1ec8a7+_0x4563cb(0x243),document['body'][_0x4563cb(0x236)](_0x38df20),setTimeout(()=>_0x38df20[_0x4563cb(0x219)](),0xfa0);}function _0x3d22(_0x147041,_0x52f74e){_0x147041=_0x147041-0x1d1;const _0x1a1237=_0x1a12();let _0x3d222d=_0x1a1237[_0x147041];return _0x3d222d;}document['addEventListener'](_0x77dd2a(0x209),async()=>{const _0x568c03=_0x77dd2a,_0xdb0543=document[_0x568c03(0x1e3)]('contenedor-membresia');_0xdb0543['innerHTML']=_0x568c03(0x1ff);try{const {data:{user:_0x49fdd7}}=await supabase[_0x568c03(0x20c)][_0x568c03(0x247)]();if(!_0x49fdd7){_0xdb0543['innerHTML']=_0x568c03(0x1f7);return;}const {data:_0x4dcef6}=await supabase[_0x568c03(0x229)]('usuarios')[_0x568c03(0x1d8)](_0x568c03(0x1df))['eq']('id',_0x49fdd7['id'])[_0x568c03(0x240)]();if(!_0x4dcef6)throw new Error('Usuario\x20no\x20encontrado');const {data:_0x3fc6ca}=await supabase[_0x568c03(0x229)](_0x568c03(0x1f5))[_0x568c03(0x1d8)](_0x568c03(0x1f9))['eq'](_0x568c03(0x202),_0x49fdd7['id'])[_0x568c03(0x20d)]('fecha_fin',{'ascending':![]})['limit'](0x1)[_0x568c03(0x240)]();let _0x3394d8=0x0,_0x5cd13b=0x0,_0x181d9d='pendiente';if(_0x3fc6ca&&_0x3fc6ca[_0x568c03(0x23f)]===_0x568c03(0x21b)){const _0x114f60=new Date(_0x3fc6ca[_0x568c03(0x22c)]),_0x396a36=new Date();_0x5cd13b=Math[_0x568c03(0x245)](0x0,Math[_0x568c03(0x23d)]((_0x114f60-_0x396a36)/(0x3e8*0x3c*0x3c*0x18))),_0x181d9d=_0x5cd13b>0x0?_0x568c03(0x206):_0x568c03(0x1fd);if(_0x181d9d==='activo'){const _0x4b73ec=new Date(_0x3fc6ca[_0x568c03(0x24a)]),_0x269203=Math[_0x568c03(0x23d)]((_0x114f60-_0x4b73ec)/(0x3e8*0x3c*0x3c*0x18)),_0x23e36a=Math[_0x568c03(0x23d)]((_0x396a36-_0x4b73ec)/(0x3e8*0x3c*0x3c*0x18));_0x3394d8=_0x269203>0x0?_0x23e36a/_0x269203*0x64:0x0,_0x3394d8=Math[_0x568c03(0x20b)](0x64,Math['max'](0x0,_0x3394d8));}}const {data:_0x53b304}=await supabase['from']('comprobantes_usuario')[_0x568c03(0x1d8)]('*')['eq'](_0x568c03(0x202),_0x49fdd7['id'])['order'](_0x568c03(0x238),{'ascending':![]})[_0x568c03(0x1db)](0x5),_0x3ea74d=_0x53b304?.['find'](_0x5708e5=>_0x5708e5[_0x568c03(0x23f)]===_0x568c03(0x239)||_0x5708e5[_0x568c03(0x23f)]===_0x568c03(0x1f1));let _0x4f1b1b=29.99,_0x2372da=_0x568c03(0x208);if(_0x3fc6ca&&_0x3fc6ca[_0x568c03(0x1ed)]){_0x2372da=_0x3fc6ca[_0x568c03(0x1ed)];const {data:_0xeae6eb}=await supabase[_0x568c03(0x229)](_0x568c03(0x1f6))[_0x568c03(0x1d8)](_0x568c03(0x211))['eq'](_0x568c03(0x1ed),_0x2372da)['single']();_0xeae6eb&&(_0x4f1b1b=_0xeae6eb[_0x568c03(0x211)]);}const _0x1fe38b=_0x4dcef6[_0x568c03(0x248)]?.[_0x568c03(0x1d3)](0x0)[_0x568c03(0x232)]()||'?',_0x5e7482=_0x4dcef6['esVendedor']===0x63;_0xdb0543[_0x568c03(0x249)]=_0x568c03(0x21f)+_0x1fe38b+_0x568c03(0x244)+_0x4dcef6[_0x568c03(0x248)]+'</h3>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<small><i\x20class=\x22bi\x20bi-envelope\x22></i>\x20'+_0x4dcef6[_0x568c03(0x1d6)]+'</small><br>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<small><i\x20class=\x22bi\x20bi-calendar3\x22></i>\x20Miembro\x20desde:\x20'+new Date(_0x4dcef6[_0x568c03(0x21e)])[_0x568c03(0x20f)]()+_0x568c03(0x205)+(_0x5e7482?_0x568c03(0x23c):_0x4dcef6['esVendedor']?'shop':_0x568c03(0x216))+_0x568c03(0x204)+(_0x5e7482?'Administrador':_0x4dcef6[_0x568c03(0x21c)]?_0x568c03(0x23e):_0x568c03(0x1d2))+_0x568c03(0x22d)+(_0x4dcef6['esVendedor']&&_0x3fc6ca?_0x568c03(0x22a)+_0x181d9d+_0x568c03(0x1dc)+(_0x181d9d===_0x568c03(0x206)?_0x568c03(0x212):_0x568c03(0x217))+'\x22></i>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20'+(_0x181d9d===_0x568c03(0x206)?_0x568c03(0x1e8):_0x568c03(0x22b))+_0x568c03(0x237)+_0x5cd13b+'\x20<span>días\x20restantes</span></div>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<div\x20class=\x22progress-container\x22><div\x20class=\x22progress-bar\x22\x20style=\x22width:'+_0x3394d8+_0x568c03(0x230)+(_0x3fc6ca[_0x568c03(0x22c)]?_0x568c03(0x220)+new Date(_0x3fc6ca[_0x568c03(0x22c)])['toLocaleDateString']()+_0x568c03(0x1e4):'')+_0x568c03(0x1ee)+(_0x3fc6ca[_0x568c03(0x1ed)]?'<small><i\x20class=\x22bi\x20bi-tag\x22></i>\x20Plan:\x20'+_0x3fc6ca[_0x568c03(0x1ed)]+_0x568c03(0x1e4):'')+_0x568c03(0x200):_0x568c03(0x201))+'\x0a\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<!--\x20Tarjeta\x20de\x20Verificación\x20de\x20Pago\x20-->\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<div\x20class=\x22card\x20verificacion-card\x22>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<div\x20class=\x22verificacion-header\x22>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<i\x20class=\x22bi\x20bi-credit-card-2-front\x22></i>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<h3>Verificar\x20Pago</h3>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20</div>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20'+(!_0x4dcef6['esVendedor']?'\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<div\x20class=\x22empty-state\x22\x20style=\x22padding:\x201rem;\x22>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<i\x20class=\x22bi\x20bi-lock\x22></i>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<p>Activa\x20tu\x20membresía\x20de\x20vendedor\x20para\x20realizar\x20pagos</p>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20</div>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20':_0x3ea74d?_0x568c03(0x1e7)+_0x3ea74d[_0x568c03(0x23f)]+_0x568c03(0x1dc)+(_0x3ea74d[_0x568c03(0x23f)]===_0x568c03(0x239)?'hourglass-split':_0x3ea74d[_0x568c03(0x23f)]===_0x568c03(0x1f1)?'arrow-repeat':_0x568c03(0x212))+'\x22></i>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20Estado:\x20'+(_0x3ea74d['estado']===_0x568c03(0x239)?_0x568c03(0x21a):_0x3ea74d['estado']===_0x568c03(0x1f1)?_0x568c03(0x1e0):_0x3ea74d[_0x568c03(0x23f)])+_0x568c03(0x23b)+_0x3ea74d[_0x568c03(0x227)]+_0x568c03(0x23a)+_0x3ea74d[_0x568c03(0x213)]+_0x568c03(0x22e)+new Date(_0x3ea74d[_0x568c03(0x238)])[_0x568c03(0x1e2)]()+'</p>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20</div>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20':'\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<form\x20id=\x22formVerificacion\x22>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<div\x20class=\x22form-grupo\x22>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<label><i\x20class=\x22bi\x20bi-calendar-event\x22></i>\x20Fecha\x20del\x20Pago</label>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<input\x20type=\x22date\x22\x20id=\x22fecha_pago\x22\x20required>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20</div>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<div\x20class=\x22form-grupo\x22>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<label><i\x20class=\x22bi\x20bi-phone\x22></i>\x20Teléfono\x20(asociado\x20a\x20la\x20transferencia)</label>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<input\x20type=\x22tel\x22\x20id=\x22telefono\x22\x20placeholder=\x22Ej:\x200414\x201234567\x22\x20required>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20</div>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<div\x20class=\x22form-grupo\x22>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<label><i\x20class=\x22bi\x20bi-upc-scan\x22></i>\x20ID\x20de\x20Transacción</label>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<input\x20type=\x22text\x22\x20id=\x22id_transaccion\x22\x20placeholder=\x22Código\x20único\x20de\x20tu\x20comprobante\x22\x20required>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20</div>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<div\x20class=\x22form-grupo\x22>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<label><i\x20class=\x22bi\x20bi-cash-stack\x22></i>\x20Monto\x20Pagado</label>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<input\x20type=\x22number\x22\x20id=\x22monto\x22\x20step=\x220.01\x22\x20placeholder=\x22Ej:\x20'+_0x4f1b1b+_0x568c03(0x228)+_0x4f1b1b+_0x568c03(0x1f3)+_0x2372da+_0x568c03(0x1fc))+'\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20</div>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20</div>\x0a\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<!--\x20Historial\x20de\x20Verificaciones\x20-->\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20'+(_0x53b304&&_0x53b304[_0x568c03(0x1ef)]>0x0?'\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<div\x20class=\x22card\x22\x20style=\x22margin-top:\x202rem;\x22>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<h3><i\x20class=\x22bi\x20bi-clock-history\x22></i>\x20Historial\x20de\x20Verificaciones</h3>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<div\x20class=\x22table-responsive\x22>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<table\x20class=\x22pagos-tabla\x22>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<thead>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<tr><th>Fecha</th><th>Transacción</th><th>Monto</th><th>Estado</th><th>Observación</th></tr>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20</thead>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<tbody>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20'+_0x53b304['map'](_0xe241d4=>_0x568c03(0x221)+new Date(_0xe241d4[_0x568c03(0x238)])[_0x568c03(0x20f)]()+_0x568c03(0x225)+_0xe241d4[_0x568c03(0x227)]+_0x568c03(0x1f2)+_0xe241d4[_0x568c03(0x213)]+'</td>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<td><span\x20class=\x22badge\x20'+(_0xe241d4['estado']===_0x568c03(0x1ec)?'activo':_0xe241d4[_0x568c03(0x23f)]===_0x568c03(0x24b)?_0x568c03(0x1fd):_0x568c03(0x239))+'\x22\x20style=\x22font-size:0.7rem;\x22>'+_0xe241d4[_0x568c03(0x23f)]+_0x568c03(0x1fa)+(_0xe241d4[_0x568c03(0x203)]||'-')+_0x568c03(0x1e1))[_0x568c03(0x1d9)]('')+_0x568c03(0x210):_0x4dcef6[_0x568c03(0x21c)]?'\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<div\x20class=\x22card\x22\x20style=\x22margin-top:\x202rem;\x20text-align:\x20center;\x22>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<i\x20class=\x22bi\x20bi-inbox\x22\x20style=\x22font-size:\x203rem;\x20color:\x20var(--gray-400);\x22></i>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<p\x20style=\x22margin-top:\x201rem;\x22>No\x20hay\x20solicitudes\x20de\x20verificación\x20previas</p>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20</div>':'')+_0x568c03(0x241);if(!_0x3ea74d&&_0x4dcef6['esVendedor']){const _0x5c0704=document[_0x568c03(0x1e3)](_0x568c03(0x1d4));_0x5c0704&&_0x5c0704['addEventListener'](_0x568c03(0x1ea),async _0x9f0099=>{const _0x3a00a7=_0x568c03;_0x9f0099['preventDefault']();const _0x150300=document[_0x3a00a7(0x1e3)](_0x3a00a7(0x1fe))[_0x3a00a7(0x222)],_0x3e20f0=document['getElementById'](_0x3a00a7(0x1f8))[_0x3a00a7(0x222)],_0x50e784=document[_0x3a00a7(0x1e3)](_0x3a00a7(0x227))[_0x3a00a7(0x222)],_0xf69239=parseFloat(document['getElementById'](_0x3a00a7(0x213))[_0x3a00a7(0x222)]);if(!_0x150300||!_0x3e20f0||!_0x50e784||!_0xf69239){showToast(_0x3a00a7(0x1e6),_0x3a00a7(0x218));return;}const _0x2af1d3=_0x5c0704[_0x3a00a7(0x1dd)](_0x3a00a7(0x1e5));_0x2af1d3[_0x3a00a7(0x224)]=!![],_0x2af1d3[_0x3a00a7(0x249)]='<i\x20class=\x22bi\x20bi-hourglass-split\x22></i>\x20Enviando...';try{const {data:_0x2a2494,error:_0x1faac2}=await supabase[_0x3a00a7(0x234)](_0x3a00a7(0x1da),{'p_fecha_pago':_0x150300,'p_telefono':_0x3e20f0,'p_id_transaccion':_0x50e784,'p_monto':_0xf69239});if(_0x1faac2)throw _0x1faac2;_0x2a2494[_0x3a00a7(0x1d5)]?(showToast(_0x3a00a7(0x1eb),'success'),setTimeout(()=>location[_0x3a00a7(0x233)](),0x7d0)):(showToast(_0x2a2494['error']||_0x3a00a7(0x1f4),_0x3a00a7(0x218)),_0x2af1d3['disabled']=![],_0x2af1d3[_0x3a00a7(0x249)]=_0x3a00a7(0x20e));}catch(_0x10e207){console[_0x3a00a7(0x218)](_0x10e207),showToast(_0x3a00a7(0x20a),_0x3a00a7(0x218)),_0x2af1d3[_0x3a00a7(0x224)]=![],_0x2af1d3[_0x3a00a7(0x249)]=_0x3a00a7(0x20e);}});}}catch(_0x5668c4){console[_0x568c03(0x218)](_0x5668c4),_0xdb0543[_0x568c03(0x249)]=_0x568c03(0x231);}});
+  </script>
+</body>
+</html>

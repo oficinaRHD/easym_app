@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Gestión de Pedidos - EasyMarket</title>    
+    <!-- Font Awesome 6 (Free) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <!-- Font Awesome 4 (legacy) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <!-- Estilos del bottom-nav -->
+    <link rel="stylesheet" href="/css/global_btn_nav.css">
+    <link rel="stylesheet" href="/css/pedido.css">
+</head>
+
+<body>
+
+    <!-- HEADER DESKTOP -->
+    <header class="main-header">
+        
+         <!-- HEADER DESKTOP 
+        <div class="header-desktop">
+            <div class="logo">
+                <img src="/img/logo-easymarketsy.png" alt="EasyMarket" class="logo-img">
+            </div>
+            <div class="header-actions">
+              
+            </div>
+        </div>
+        -->
+
+        <!-- HEADER MÓVIL -->
+        <div class="header-mobile">
+            <div class="logo">
+                <img src="/img/logo-easymarketsy.png" alt="EasyMarket" class="logo-img">
+            </div>
+            <div class="header-mobile-actions">
+                 <!-- limpio por ahora -->
+            </div>
+        </div>
+    </header>
+
+    <!-- CONTENIDO PRINCIPAL -->
+    <main class="container">
+        <div class="page-title">
+            <i class="fas fa-clipboard-list"></i>
+            <span>Gestión de Pedidos</span>
+        </div>
+
+        <div id="notificacion" class="notification"></div>
+
+        <div class="grid-2cols">
+            <!-- FORMULARIO -->
+            <div class="form-card">
+                <div class="form-header">
+                    <h2>
+                        <i class="fas fa-plus-circle"></i>
+                        Nuevo Pedido
+                    </h2>
+                </div>
+                <div class="form-body">
+                    <form id="formPedido">
+                        <div class="form-group">
+                            <label>Categoría</label>
+                            <select id="categoria" required>
+                                <option value="" disabled selected>Cargando categorías...</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Subcategoría</label>
+                            <select id="Subcategoria" required>
+                                <option value="" disabled selected>Seleccione categoría primero</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Estado</label>
+                            <select id="estado" required>
+                                <option value="Nuevo">Nuevo</option>
+                                <option value="Conservado">Conservado</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Moneda</label>
+                            <select id="moneda">
+                                <option value="CUP">CUP</option>
+                                <option value="USD">USD</option>
+                                <option value="EUR">EUR</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Provincia</label>
+                            <select id="provincia" required></select>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Rango de Precio</label>
+                            <div class="price-group">
+                                <input type="number" id="precioMin" placeholder="Mínimo">
+                                <input type="number" id="precioMax" placeholder="Máximo">
+                            </div>
+                        </div>
+
+                        <div id="cont-atributos"></div>
+
+                        <input type="hidden" id="editPedidoId" value="">
+
+                        <div class="form-actions">
+                            <button type="submit" id="btnCrear" class="btn-primary">
+                                <i class="fas fa-save"></i> Crear Pedido
+                            </button>
+                            <button type="button" id="btnCancelarEdicion" class="btn-secondary hidden">
+                                <i class="fas fa-times"></i> Cancelar
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- LISTA DE PEDIDOS -->
+            <div>
+                <div class="pedidos-header">
+                    <h2>Mis Pedidos</h2>
+                    <span class="total-badge" id="totalPedidos">0 Total</span>
+                </div>
+                <div id="listaPedidos" class="pedidos-grid">
+                    <div class="empty-state">
+                        <i class="fas fa-inbox"></i>
+                        <p>No tienes pedidos activos</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- BOTTOM NAVIGATION -->
+    <script src="/js/bottom-nav-pedido.js"></script>
+    <bottom-nav></bottom-nav>
+
+    <script type="module">
+        import { supabase } from './js/supabase.js';
+        import { CategoriasManager } from './js/categorias-manager.js';
+
+        let catManager;
+
+        // Navegación header
+        //document.getElementById('menuBtnDesktop')?.addEventListener('click', () => {
+        //    if (typeof window.toggleMenu === 'function') window.toggleMenu();
+         //   else window.location.href = 'index.html';
+       // });
+        document.getElementById('menuBtnMobile')?.addEventListener('click', () => {
+            if (typeof window.toggleMenu === 'function') window.toggleMenu();
+            else window.location.href = 'index.html';
+        });
+        document.getElementById('userBtnMobile')?.addEventListener('click', () => {
+            window.location.href = 't-c.html';
+        });
+        document.getElementById('homeBtnDesktop')?.addEventListener('click', () => {
+            window.location.href = 'index.html';
+        });
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            catManager = new CategoriasManager({
+                selectCatId: 'categoria',
+                selectSubId: 'Subcategoria',
+                contAtributosId: 'cont-atributos'
+            });
+            await catManager.init();
+
+            const { data: { session } } = await supabase.auth.getSession();
+            if (!session) {
+                window.location.href = '/login.html';
+                return;
+            }
+
+            cargarPedidos();
+            cargarProvincias();
+        });
+
+        window.prepararEdicion = async (id) => {
+            const { data: p, error } = await supabase
+                .from('pedidos')
+                .select('*')
+                .eq('PedidoId', id)
+                .single();
+
+            if (error) return mostrarAlerta("Error al obtener datos", "error");
+
+            document.getElementById('editPedidoId').value = p.PedidoId;
+            document.getElementById('categoria').value = p.Categoria;
+            document.getElementById('precioMin').value = p.PrecioMin;
+            document.getElementById('precioMax').value = p.PrecioMax;
+            document.getElementById('estado').value = p.Estado;
+            document.getElementById('moneda').value = p.Moneda;
+            document.getElementById('provincia').value = p.Provincia;
+
+            if (catManager) {
+                await catManager.handleCategoriaChange();
+            }
+
+            if (p.SubcategoriaId) {
+                document.getElementById('Subcategoria').value = p.SubcategoriaId;
+            }
+
+            if (p.AtributosExtra) {
+                Object.entries(p.AtributosExtra).forEach(([key, value]) => {
+                    const input = document.querySelector(`[name="attr_${key}"]`);
+                    if (input) input.value = value;
+                });
+            }
+
+            const btn = document.getElementById('btnCrear');
+            btn.innerHTML = '<i class="fas fa-pen"></i> Actualizar Pedido';
+            document.getElementById('btnCancelarEdicion').classList.remove('hidden');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        };
+
+        document.getElementById('formPedido').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const btn = document.getElementById('btnCrear');
+            const pedidoId = document.getElementById('editPedidoId').value;
+            btn.disabled = true;
+
+            const atributosExtra = catManager ? catManager.getAtributosValues() : {};
+            const { data: { user } } = await supabase.auth.getUser();
+
+            const datosPedido = {
+                UsuarioId: user.id,
+                Categoria: document.getElementById('categoria').value,
+                SubcategoriaId: document.getElementById('Subcategoria').value,
+                PrecioMin: parseFloat(document.getElementById('precioMin').value) || 0,
+                PrecioMax: parseFloat(document.getElementById('precioMax').value) || 0,
+                Estado: document.getElementById('estado').value,
+                Moneda: document.getElementById('moneda').value,
+                Provincia: document.getElementById('provincia').value,
+                AtributosExtra: atributosExtra
+            };
+
+            let error;
+            if (pedidoId) {
+                const res = await supabase.from('pedidos').update(datosPedido).eq('PedidoId', pedidoId);
+                error = res.error;
+            } else {
+                const res = await supabase.from('pedidos').insert([datosPedido]);
+                error = res.error;
+            }
+
+            if (!error) {
+                mostrarAlerta(pedidoId ? 'Pedido actualizado' : 'Pedido creado', 'success');
+                document.getElementById('btnCancelarEdicion').click();
+                cargarPedidos();
+            } else {
+                mostrarAlerta('Error: ' + error.message, 'error');
+            }
+            btn.disabled = false;
+            btn.innerHTML = '<i class="fas fa-save"></i> Crear Pedido';
+        });
+
+        document.getElementById('btnCancelarEdicion').addEventListener('click', () => {
+            document.getElementById('formPedido').reset();
+            document.getElementById('editPedidoId').value = '';
+            document.getElementById('cont-atributos').innerHTML = '';
+            const btn = document.getElementById('btnCrear');
+            btn.innerHTML = '<i class="fas fa-save"></i> Crear Pedido';
+            btn.disabled = false;
+            document.getElementById('btnCancelarEdicion').classList.add('hidden');
+        });
+
+        async function cargarPedidos() {
+            const { data: { user } } = await supabase.auth.getUser();
+            const { data } = await supabase.from('pedidos')
+                .select('*').eq('UsuarioId', user.id).order('FechaCreacion', { ascending: false });
+
+            const cont = document.getElementById('listaPedidos');
+            document.getElementById('totalPedidos').textContent = `${data?.length || 0} Total`;
+
+            if (!data || data.length === 0) {
+                cont.innerHTML = `<div class="empty-state"><i class="fas fa-inbox"></i><p>No tienes pedidos activos</p></div>`;
+                return;
+            }
+
+            cont.innerHTML = data.map(p => `
+                <div class="pedido-card fade-in">
+                    <div class="pedido-card-body">
+                        <div class="pedido-header">
+                            <div>
+                                <div class="pedido-id">#${p.PedidoId}</div>
+                                <div class="pedido-categoria">${p.Categoria}</div>
+                            </div>
+                            <span class="estado-badge ${p.Estado === 'Nuevo' ? 'nuevo' : 'conservado'}">${p.Estado}</span>
+                        </div>
+                        <div class="pedido-info">
+                            <p><i class="fas fa-tag"></i> ${p.SubcategoriaId || 'Sin subcategoría'}</p>
+                            <p><i class="fas fa-dollar-sign"></i> ${p.PrecioMin} - ${p.PrecioMax} ${p.Moneda}</p>
+                            <p><i class="fas fa-map-marker-alt"></i> ${p.Provincia}</p>
+                        </div>
+                    </div>
+                    <div class="pedido-card-footer">
+                        <div class="action-buttons">
+                            <button onclick="window.prepararEdicion(${p.PedidoId})" class="action-btn edit">
+                                <i class="fas fa-pen"></i>
+                            </button>
+                            <button onclick="window.eliminarPedido(${p.PedidoId})" class="action-btn delete">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                        <select onchange="window.actualizarEstado(${p.PedidoId}, this.value)" class="estado-select">
+                            <option value="Nuevo" ${p.Estado === 'Nuevo' ? 'selected' : ''}>Nuevo</option>
+                            <option value="Conservado" ${p.Estado === 'Conservado' ? 'selected' : ''}>Conservado</option>
+                        </select>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        window.actualizarEstado = async (id, nuevoEstado) => {
+            await supabase.from('pedidos').update({ Estado: nuevoEstado }).eq('PedidoId', id);
+            cargarPedidos();
+        };
+
+        window.eliminarPedido = async (id) => {
+            if (confirm('¿Eliminar este pedido?')) {
+                await supabase.from('pedidos').delete().eq('PedidoId', id);
+                cargarPedidos();
+            }
+        };
+
+        function cargarProvincias() {
+            const provs = ["Pinar del Río", "Artemisa", "La Habana", "Mayabeque", "Matanzas", "Cienfuegos", "Villa Clara", "Sancti Spíritus", "Ciego de Ávila", "Camagüey", "Las Tunas", "Holguín", "Granma", "Santiago de Cuba", "Guantánamo", "Isla de la Juventud"];
+            document.getElementById('provincia').innerHTML = provs.map(p => `<option value="${p}">${p}</option>`).join('');
+        }
+
+        function mostrarAlerta(msg, tipo) {
+            const alert = document.getElementById('notificacion');
+            alert.className = `notification ${tipo === 'success' ? 'success' : 'error'}`;
+            alert.innerHTML = `<i class="fas ${tipo === 'success' ? 'fa-check-circle' : 'fa-exclamation-circle'}"></i> ${msg}`;
+            alert.style.display = 'block';
+            setTimeout(() => {
+                alert.style.display = 'none';
+            }, 3000);
+        }
+    </script>
+
+</body>
+
+    </html>

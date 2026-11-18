@@ -1,0 +1,697 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover">
+  <title>Notificaciones · EasyMarket</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+      background: #f5f5f5;
+      color: #1a1a1a;
+    }
+
+    /* Contenedor principal */
+    .notifications-container {
+      max-width: 768px;
+      margin: 0 auto;
+      min-height: 100vh;
+      background: #f5f5f5;
+    }
+
+    /* Header ultra minimalista */
+    .notifications-header {
+      background: white;
+      padding: 20px 20px 12px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      border-bottom: 1px solid #e5e5e5;
+    }
+
+    .header-title {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 20px;
+    }
+
+    .header-title h1 {
+      font-size: 28px;
+      font-weight: 600;
+      letter-spacing: -0.3px;
+      color: #1a1a1a;
+    }
+
+    .header-actions {
+      display: flex;
+      gap: 8px;
+    }
+
+    .icon-btn {
+      background: transparent;
+      border: none;
+      width: 36px;
+      height: 36px;
+      border-radius: 8px;
+      font-size: 18px;
+      color: #666;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .icon-btn:hover {
+      background: #f0f0f0;
+    }
+
+    .icon-btn:active {
+      transform: scale(0.95);
+    }
+
+    /* Barra de filtros minimalista - estilo dropdown simplificado */
+    .filter-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .filter-group {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: #f5f5f5;
+      padding: 4px 8px;
+      border-radius: 10px;
+      flex: 1;
+      min-width: 0;
+    }
+
+    .filter-label {
+      font-size: 13px;
+      color: #888;
+      font-weight: 500;
+      white-space: nowrap;
+    }
+
+    .filter-select {
+      background: transparent;
+      border: none;
+      font-size: 13px;
+      color: #1a1a1a;
+      font-weight: 500;
+      padding: 6px 0;
+      cursor: pointer;
+      outline: none;
+      font-family: inherit;
+      flex: 1;
+      min-width: 0;
+    }
+
+    .filter-select option {
+      background: white;
+      color: #1a1a1a;
+    }
+
+    .order-btn {
+      background: #f5f5f5;
+      border: none;
+      padding: 6px 12px;
+      border-radius: 10px;
+      font-size: 13px;
+      color: #1a1a1a;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      white-space: nowrap;
+    }
+
+    .order-btn:hover {
+      background: #e5e5e5;
+    }
+
+    /* Separador sutil */
+    .divider {
+      height: 1px;
+      background: linear-gradient(to right, transparent, #e5e5e5, transparent);
+      margin: 12px 0 0;
+    }
+
+    /* Pull to refresh */
+    .pull-refresh {
+      text-align: center;
+      padding: 12px;
+      font-size: 13px;
+      color: #999;
+    }
+
+    /* Lista de notificaciones */
+    .notifications-list {
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    /* Tarjeta de notificación minimalista */
+    .notification-card {
+      background: white;
+      border-radius: 12px;
+      padding: 16px;
+      transition: all 0.2s;
+      border: 1px solid #e5e5e5;
+      cursor: pointer;
+    }
+
+    .notification-card:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    }
+
+    .notification-card.seleccionada {
+      border-left: 3px solid #ff6a00;
+      background: #fefaf5;
+    }
+
+    .notification-card.nuevo {
+      background: white;
+    }
+
+    .notification-card.visto {
+      opacity: 0.75;
+    }
+
+    .card-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      margin-bottom: 8px;
+    }
+
+    .card-title {
+      font-size: 15px;
+      font-weight: 600;
+      color: #1a1a1a;
+      line-height: 1.4;
+      flex: 1;
+    }
+
+    .card-priority {
+      font-size: 10px;
+      padding: 2px 8px;
+      border-radius: 12px;
+      font-weight: 500;
+      letter-spacing: 0.3px;
+      margin-left: 8px;
+      white-space: nowrap;
+    }
+
+    .card-priority.alta {
+      background: #fee;
+      color: #e74c3c;
+    }
+
+    .card-priority.media {
+      background: #fff3e0;
+      color: #f39c12;
+    }
+
+    .card-priority.baja {
+      background: #e8f5e9;
+      color: #27ae60;
+    }
+
+    .card-message {
+      font-size: 13px;
+      color: #666;
+      line-height: 1.5;
+      margin-bottom: 12px;
+      white-space: pre-line;
+    }
+
+    .card-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 11px;
+      color: #999;
+    }
+
+    .card-meta {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .card-meta span {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .card-link {
+      color: #ff6a00;
+      text-decoration: none;
+      font-size: 12px;
+      font-weight: 500;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    /* Estados */
+    .empty-state {
+      text-align: center;
+      padding: 60px 20px;
+      color: #bbb;
+    }
+
+    .empty-state i {
+      font-size: 48px;
+      margin-bottom: 16px;
+      opacity: 0.5;
+    }
+
+    .loader {
+      text-align: center;
+      padding: 60px 20px;
+    }
+
+    .spinner {
+      width: 32px;
+      height: 32px;
+      border: 2px solid #e5e5e5;
+      border-top-color: #ff6a00;
+      border-radius: 50%;
+      animation: spin 0.6s linear infinite;
+      margin: 0 auto;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    .error-state {
+      text-align: center;
+      padding: 40px 20px;
+      color: #e74c3c;
+    }
+
+    /* Responsive */
+    @media (max-width: 480px) {
+      .notifications-header {
+        padding: 16px 16px 12px;
+      }
+      
+      .header-title h1 {
+        font-size: 24px;
+      }
+      
+      .notifications-list {
+        padding: 12px;
+      }
+      
+      .filter-group {
+        padding: 4px 6px;
+      }
+      
+      .filter-label {
+        font-size: 12px;
+      }
+      
+      .filter-select {
+        font-size: 12px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="notifications-container">
+    <div class="notifications-header">
+      <div class="header-title">
+        <h1>Notificaciones</h1>
+        <div class="header-actions">
+          <button class="icon-btn" id="refreshBtn" title="Actualizar">
+            <i class="fa-solid fa-rotate-right"></i>
+          </button>
+          <button class="icon-btn" id="markAllReadBtn" title="Marcar todas como leídas">
+            <i class="fas fa-check-double"></i>
+          </button>
+        </div>
+      </div>
+      
+      <!-- Barra de filtros minimalista -->
+      <div class="filter-bar">
+        <div class="filter-group">
+          <span class="filter-label">Estado</span>
+          <select class="filter-select" id="filtroEstado">
+            <option value="todas">Todas</option>
+            <option value="nuevo">Nuevas</option>
+            <option value="visto">Vistas</option>
+          </select>
+        </div>
+        
+        <div class="filter-group">
+          <span class="filter-label">Tipo</span>
+          <select class="filter-select" id="filtroTipo">
+            <option value="todas">Todos</option>
+            <option value="sistema">Sistema</option>
+            <option value="pedido">Pedido</option>
+            <option value="mensaje">Mensaje</option>
+          </select>
+        </div>
+        
+        <div class="filter-group">
+          <span class="filter-label">Prioridad</span>
+          <select class="filter-select" id="filtroPrioridad">
+            <option value="todas">Todas</option>
+            <option value="alta">Alta</option>
+            <option value="media">Media</option>
+            <option value="baja">Baja</option>
+          </select>
+        </div>
+        
+        <button class="order-btn" id="ordenFecha">
+          <i class="fa-regular fa-clock"></i>
+          <span>Recientes</span>
+        </button>
+      </div>
+      <div class="divider"></div>
+    </div>
+
+    <div class="pull-refresh" id="pullHint" style="display: none;">
+      <i class="fa-regular fa-arrow-down"></i> Suelta para actualizar
+    </div>
+    
+    <div class="notifications-list" id="contenedorNotificaciones">
+      <div class="loader">
+        <div class="spinner"></div>
+      </div>
+    </div>
+  </div>
+
+  <script type="module">
+    import { supabase } from '/js/supabase.js';
+
+    document.addEventListener("DOMContentLoaded", async () => {
+      const contenedor = document.getElementById("contenedorNotificaciones");
+      const pullHint = document.getElementById("pullHint");
+      
+      // Verificar sesión
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) {
+        contenedor.innerHTML = "<div class='error-state'><i class='fa-regular fa-circle-exclamation'></i><p>Debes iniciar sesión</p></div>";
+        return;
+      }
+
+      // Estado
+      let filtros = {
+        estado: "todas",
+        tipo: "todas",
+        prioridad: "todas",
+        ordenFecha: "desc"
+      };
+      
+      let notificacionesOriginales = [];
+
+      // Helper: fecha relativa
+      function formatRelativeDate(fechaISO) {
+        const fecha = new Date(fechaISO);
+        const ahora = new Date();
+        const diffMs = ahora - fecha;
+        const diffMin = Math.floor(diffMs / 60000);
+        const diffHoras = Math.floor(diffMs / 3600000);
+        const diffDias = Math.floor(diffMs / 86400000);
+
+        if (diffMin < 1) return 'Ahora';
+        if (diffMin < 60) return `Hace ${diffMin} min`;
+        if (diffHoras < 24) return `Hace ${diffHoras} h`;
+        if (diffDias < 7) return `Hace ${diffDias} d`;
+        return fecha.toLocaleDateString();
+      }
+
+      // Renderizar
+      function renderNotificaciones(data) {
+        contenedor.innerHTML = "";
+        notificacionesOriginales = data || [];
+
+        if (!data || data.length === 0) {
+          contenedor.innerHTML = `
+            <div class='empty-state'>
+              <i class="fa-regular fa-bell-slash"></i>
+              <p>Sin notificaciones</p>
+            </div>`;
+          return;
+        }
+
+        data.forEach(notif => {
+          const card = document.createElement("div");
+          card.className = `notification-card ${notif.estado || 'nuevo'}`;
+          card.dataset.id = notif.id;
+          card.dataset.estado = notif.estado || 'nuevo';
+          card.dataset.tipo = notif.tipo || 'sistema';
+          card.dataset.prioridad = notif.prioridad || 'media';
+          card.dataset.fecha = notif.fecha_creacion;
+          card.dataset.url = notif.url || '';
+
+          let previewMessage = notif.mensaje || '';
+          if (previewMessage.length > 100) {
+            previewMessage = previewMessage.substring(0, 100) + '...';
+          }
+
+          card.innerHTML = `
+            <div class="card-header">
+              <div class="card-title">${escapeHtml(notif.titulo || 'Notificación')}</div>
+              <div class="card-priority ${notif.prioridad || 'media'}">${notif.prioridad || 'media'}</div>
+            </div>
+            <div class="card-message">${escapeHtml(previewMessage)}</div>
+            <div class="card-footer">
+              <div class="card-meta">
+                <span><i class="fa-regular fa-clock"></i> ${formatRelativeDate(notif.fecha_creacion)}</span>
+                <span><i class="fa-regular fa-folder"></i> ${notif.tipo || 'sistema'}</span>
+              </div>
+              ${notif.url ? `<a href="${notif.url}" class="card-link" target="_blank" onclick="event.stopPropagation()">Ver <i class="fa-solid fa-arrow-right"></i></a>` : ''}
+            </div>
+          `;
+
+          card.addEventListener("click", async (e) => {
+            if (e.target.closest('.card-link')) return;
+            
+            document.querySelectorAll(".notification-card.seleccionada").forEach(c => c.classList.remove("seleccionada"));
+            card.classList.add("seleccionada");
+            
+            if (notif.estado === 'nuevo') {
+              await marcarComoVista(notif.id, card);
+              notif.estado = 'visto';
+            }
+          });
+
+          contenedor.appendChild(card);
+        });
+
+        actualizarContadores();
+        aplicarFiltrosYOrden();
+      }
+
+      function escapeHtml(str) {
+        if (!str) return '';
+        return str.replace(/[&<>]/g, function(m) {
+          if (m === '&') return '&amp;';
+          if (m === '<') return '&lt;';
+          if (m === '>') return '&gt;';
+          return m;
+        });
+      }
+
+      function actualizarContadores() {
+        // Sin contadores visibles en la UI minimalista
+      }
+
+      async function marcarComoVista(id, element) {
+        const { error } = await supabase
+          .from('notificaciones')
+          .update({ estado: 'visto', fecha_visto: new Date().toISOString() })
+          .eq('id', id);
+
+        if (!error) {
+          element.dataset.estado = 'visto';
+          element.classList.remove('nuevo');
+          element.classList.add('visto');
+          
+          const notif = notificacionesOriginales.find(n => n.id === id);
+          if (notif) notif.estado = 'visto';
+        }
+      }
+
+      async function marcarTodasComoVistas() {
+        const nuevas = notificacionesOriginales.filter(n => n.estado === 'nuevo');
+        if (nuevas.length === 0) return;
+
+        contenedor.style.opacity = '0.6';
+        
+        for (const n of nuevas) {
+          await supabase
+            .from('notificaciones')
+            .update({ estado: 'visto', fecha_visto: new Date().toISOString() })
+            .eq('id', n.id);
+        }
+
+        await cargarNotificaciones();
+        contenedor.style.opacity = '1';
+      }
+
+      async function cargarNotificaciones() {
+        if (contenedor.children.length === 0 || contenedor.querySelector('.loader')) {
+          contenedor.innerHTML = '<div class="loader"><div class="spinner"></div></div>';
+        }
+
+        const { data, error } = await supabase
+          .from('notificaciones')
+          .select('*')
+          .eq('usuario_id', user.id)
+          .order('fecha_creacion', { ascending: filtros.ordenFecha === 'asc' });
+
+        if (error) {
+          contenedor.innerHTML = `<div class='error-state'><i class="fa-regular fa-circle-exclamation"></i><p>Error</p></div>`;
+          return;
+        }
+        
+        renderNotificaciones(data);
+      }
+
+      function aplicarFiltrosYOrden() {
+        const cards = Array.from(contenedor.querySelectorAll(".notification-card"));
+        
+        cards.forEach(card => {
+          const pasaEstado = filtros.estado === "todas" || card.dataset.estado === filtros.estado;
+          const pasaTipo = filtros.tipo === "todas" || card.dataset.tipo === filtros.tipo;
+          const pasaPrioridad = filtros.prioridad === "todas" || card.dataset.prioridad === filtros.prioridad;
+          card.style.display = (pasaEstado && pasaTipo && pasaPrioridad) ? "block" : "none";
+        });
+
+        const visibles = cards.filter(c => c.style.display !== "none");
+        visibles.sort((a, b) => {
+          const fa = new Date(a.dataset.fecha).getTime();
+          const fb = new Date(b.dataset.fecha).getTime();
+          return filtros.ordenFecha === "asc" ? fa - fb : fb - fa;
+        });
+
+        visibles.forEach(card => contenedor.appendChild(card));
+      }
+
+      // Inicializar filtros con selects minimalistas
+      function initFiltros() {
+        const estadoSelect = document.getElementById('filtroEstado');
+        const tipoSelect = document.getElementById('filtroTipo');
+        const prioridadSelect = document.getElementById('filtroPrioridad');
+        const ordenBtn = document.getElementById('ordenFecha');
+        
+        estadoSelect.addEventListener('change', (e) => {
+          filtros.estado = e.target.value;
+          aplicarFiltrosYOrden();
+        });
+        
+        tipoSelect.addEventListener('change', (e) => {
+          filtros.tipo = e.target.value;
+          aplicarFiltrosYOrden();
+        });
+        
+        prioridadSelect.addEventListener('change', (e) => {
+          filtros.prioridad = e.target.value;
+          aplicarFiltrosYOrden();
+        });
+        
+        let ordenAscendente = false;
+        ordenBtn.addEventListener('click', () => {
+          ordenAscendente = !ordenAscendente;
+          filtros.ordenFecha = ordenAscendente ? "asc" : "desc";
+          const icono = ordenBtn.querySelector('i');
+          const texto = ordenBtn.querySelector('span');
+          if (ordenAscendente) {
+            icono.className = "fa-regular fa-clock";
+            texto.textContent = "Antiguas";
+          } else {
+            icono.className = "fa-regular fa-clock";
+            texto.textContent = "Recientes";
+          }
+          aplicarFiltrosYOrden();
+        });
+      }
+
+      // Pull to refresh
+      let touchStart = 0;
+      document.addEventListener('touchstart', (e) => {
+        if (window.scrollY === 0) {
+          touchStart = e.touches[0].clientY;
+        }
+      }, { passive: true });
+
+      document.addEventListener('touchmove', (e) => {
+        if (touchStart > 0 && window.scrollY === 0) {
+          const diff = e.touches[0].clientY - touchStart;
+          if (diff > 60) {
+            pullHint.style.display = 'block';
+          }
+        }
+      }, { passive: true });
+
+      document.addEventListener('touchend', async () => {
+        if (pullHint.style.display === 'block') {
+          pullHint.style.display = 'none';
+          await cargarNotificaciones();
+        }
+        touchStart = 0;
+      });
+
+      // Botones
+      document.getElementById('refreshBtn')?.addEventListener('click', async () => {
+        const btn = document.getElementById('refreshBtn');
+        btn.classList.add('fa-spin');
+        await cargarNotificaciones();
+        setTimeout(() => btn.classList.remove('fa-spin'), 500);
+      });
+
+      document.getElementById('markAllReadBtn')?.addEventListener('click', marcarTodasComoVistas);
+
+      // Suscripción en tiempo real
+      const suscripcion = supabase
+        .channel('cambios-notificaciones')
+        .on('postgres_changes', { 
+          event: 'INSERT', 
+          schema: 'public', 
+          table: 'notificaciones',
+          filter: `usuario_id=eq.${user.id}` 
+        }, () => cargarNotificaciones())
+        .on('postgres_changes', {
+          event: 'UPDATE',
+          schema: 'public',
+          table: 'notificaciones',
+          filter: `usuario_id=eq.${user.id}`
+        }, () => cargarNotificaciones())
+        .subscribe();
+
+      // Inicializar
+      initFiltros();
+      await cargarNotificaciones();
+
+      window.addEventListener('beforeunload', () => {
+        suscripcion.unsubscribe();
+      });
+    });
+  </script>
+</body>
+</html>

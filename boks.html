@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <title>Biblioteca | Fanfic-Books</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons&display=swap" rel="stylesheet">
+     <link rel="stylesheet" href="/css/boks.css?v=0599">
+<meta name="theme-color" content="#121212">
+
+</head>
+
+<body>
+    <!-- tiny indicator visual de que existe la barra superior (se ve siempre) -->
+    <div class="topbar-peek"></div>
+
+    <!-- Topbar ocultable al hacer scroll -->
+    <div class="topbar-wrapper" id="topbarWrapper">
+        <div class="topbar">
+            <a class="brand" href="index.html">📖 Fanfic-Books</a>
+
+            <div class="filters-wrapper">
+                <select id="genreFilter" class="genre-filter">
+                    <option value="todos">Todos</option>
+                    <option value="Fantasía">Fantasía</option>
+                    <option value="Ciencia Ficción">Ciencia Ficción</option>
+                    <option value="Terror">Terror</option>
+                    <option value="Romance">Romance</option>
+                    <option value="Comedia Romántica">Comedia Romántica</option>
+                    <option value="Aventura">Aventura</option>
+                    <option value="Suspenso">Suspenso</option>
+                    <option value="Drama">Drama</option>
+                    <option value="Comedia">Comedia</option>
+                    <option value="Infantil">Infantil</option>
+                    <option value="Juvenil">Juvenil</option>
+                    <option value="Poesía">Poesía</option>
+                    <option value="Misterio">Misterio</option>
+                    <option value="Histórico">Histórico</option>
+                </select>
+                <button class="btn-theme" id="toggleTheme">🌙</button>
+            </div>
+              <div class="nav-search">
+                <input id="buscador" type="search" placeholder="Buscar título o autor...">
+                <span class="material-icons search-icon">search</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Hero simplificado para aprovechar el espacio -->
+    <header class="hero-minimal">
+        <h1>Explora nuestra biblioteca</h1>
+        <p>Libros e historias increibles listos para disfrutar en tu tiempo libre</p>
+    </header>
+
+    <main>
+<div id="installBanner" style="display: none; background: #1e1e1e; color: white; padding: 15px; position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); z-index: 1000; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.3); width: 90%; max-width: 400px; justify-content: space-between; align-items: center; font-family: 'Inter', sans-serif;">
+    <div style="display: flex; align-items: center; gap: 10px;">
+        <span style="font-size: 24px;">📖</span>
+        <div>
+            <strong style="display: block; font-size: 14px;">Fanfic-Books</strong>
+            <span style="font-size: 12px; color: #aaa;">Instala nuestra app en tu dispositivo</span>
+        </div>
+    </div>
+    <button id="btnInstall" style="background: #007bff; color: white; border: none; padding: 8px 16px; border-radius: 20px; font-weight: 600; cursor: pointer; font-size: 13px;">Instalar</button>
+</div>
+
+
+        <div class="section" id="topRatedSection">
+            <div class="section-header">
+                <h2 class="section-title">⭐ Mejor valorados</h2>
+            </div>
+            <div class="grid" id="topRatedContainer">
+                <div class="loading-skeleton">Cargando recomendados...</div>
+            </div>
+        </div>
+
+        <div class="section" id="allBooksSection">
+            <div class="section-header">
+                <h2 class="section-title">📚 Todos los libros</h2>
+            </div>
+            <div class="grid" id="allBooksContainer">
+                <div class="loading-skeleton">Cargando biblioteca...</div>
+            </div>
+        </div>
+    </main>
+
+    <template id="libro-template">
+        <div class="card">
+            <div class="cover-wrapper">
+                <span class="status-badge">📘</span>
+                <img class="cover" src="" alt="Portada" loading="lazy">
+            </div>
+            <div class="card-body">
+                <div class="title"></div>
+                <div class="author"></div>
+                <div class="meta-info">
+                    <div class="stat-group">
+                        <svg viewBox="0 0 24 24" class="stat-icon heart-icon" width="14" height="14">
+                            <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
+                        </svg>
+                        <span class="likes-count">0</span>
+                    </div>
+                    <div class="stat-group">
+                        <svg viewBox="0 0 24 24" class="stat-icon" width="14" height="14" fill="currentColor">
+                            <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" />
+                        </svg>
+                        <span class="rating-count">0</span>
+                    </div>
+                    <div class="stat-group">
+                        <svg viewBox="0 0 24 24" class="stat-icon" width="14" height="14" fill="currentColor">
+                            <path d="M4 6h16v2H4V6zm2-4h12v2H6V2zm16 8H2v12h20V10zm-4 6h-4v-2h4v2z" />
+                        </svg>
+                        <span class="collections-count">0</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </template>
+
+    <script type="module">
+        const _0x418f30=_0x5d1f;(function(_0x27017a,_0x487670){const _0x4c4803=_0x5d1f,_0x28e109=_0x27017a();while(!![]){try{const _0xfc8fec=parseInt(_0x4c4803(0x176))/0x1*(parseInt(_0x4c4803(0x166))/0x2)+parseInt(_0x4c4803(0x15a))/0x3+parseInt(_0x4c4803(0x169))/0x4*(-parseInt(_0x4c4803(0x164))/0x5)+parseInt(_0x4c4803(0x15b))/0x6+parseInt(_0x4c4803(0x168))/0x7*(parseInt(_0x4c4803(0x159))/0x8)+-parseInt(_0x4c4803(0x15f))/0x9*(parseInt(_0x4c4803(0x175))/0xa)+parseInt(_0x4c4803(0x16e))/0xb;if(_0xfc8fec===_0x487670)break;else _0x28e109['push'](_0x28e109['shift']());}catch(_0x56b83b){_0x28e109['push'](_0x28e109['shift']());}}}(_0x796e,0xf176a));function _0x796e(){const _0x7831e8=['6186810IuGPFr','topRatedCount','scrollY','allBooksCount','1251GXGBqX','classList','addEventListener','toggleTheme','body','894745PDCRFo','remove','2tqpccU','getElementById','7JxecJQ','40CRERUF','topbarWrapper','buscador','toggle','setItem','12360865XaJsmP','light','add','dark-mode','themeMode','allBooksContainer','hide','141490RPcIXr','291143SMavHE','getItem','3141368ABbrYz','5719713QbaMPW'];_0x796e=function(){return _0x7831e8;};return _0x796e();}let allBooks=[],topRatedBooks=[];const topRatedContainer=document[_0x418f30(0x167)]('topRatedContainer'),allBooksContainer=document[_0x418f30(0x167)](_0x418f30(0x173)),buscador=document['getElementById'](_0x418f30(0x16b)),genreFilter=document[_0x418f30(0x167)]('genreFilter'),topRatedCountSpan=document['getElementById'](_0x418f30(0x15c)),allBooksCountSpan=document[_0x418f30(0x167)](_0x418f30(0x15e)),topbarWrapper=document['getElementById'](_0x418f30(0x16a));let lastScrollY=window[_0x418f30(0x15d)],ticking=![];function handleScroll(){const _0x31193b=_0x418f30,_0x13d649=window[_0x31193b(0x15d)];if(_0x13d649>0x50&&_0x13d649>lastScrollY)topbarWrapper[_0x31193b(0x160)][_0x31193b(0x170)](_0x31193b(0x174));else(_0x13d649<lastScrollY||_0x13d649<=0x14)&&topbarWrapper['classList']['remove']('hide');lastScrollY=_0x13d649,ticking=![];}window[_0x418f30(0x161)]('scroll',()=>{!ticking&&(requestAnimationFrame(handleScroll),ticking=!![]);}),topbarWrapper['classList'][_0x418f30(0x165)](_0x418f30(0x174));const themeBtn=document[_0x418f30(0x167)](_0x418f30(0x162)),savedTheme=localStorage[_0x418f30(0x177)](_0x418f30(0x172));savedTheme===_0x418f30(0x16f)?(document[_0x418f30(0x163)]['classList'][_0x418f30(0x165)]('dark-mode'),themeBtn['innerHTML']='🌙'):(document['body'][_0x418f30(0x160)][_0x418f30(0x170)](_0x418f30(0x171)),themeBtn['innerHTML']='☀️');function _0x5d1f(_0x391395,_0x24aba4){_0x391395=_0x391395-0x159;const _0x796e9f=_0x796e();let _0x5d1f96=_0x796e9f[_0x391395];return _0x5d1f96;}themeBtn[_0x418f30(0x161)]('click',()=>{const _0x1e9919=_0x418f30,_0x3fdf85=document['body'][_0x1e9919(0x160)][_0x1e9919(0x16c)](_0x1e9919(0x171));themeBtn['innerHTML']=_0x3fdf85?'☀️':'🌙',localStorage[_0x1e9919(0x16d)]('themeMode',_0x3fdf85?'dark':_0x1e9919(0x16f));});
+    </script>    
+     <script type="module" src="js/libro.js"></script>    
+</body>
+
+</html>
